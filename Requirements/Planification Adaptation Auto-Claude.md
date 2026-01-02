@@ -1467,7 +1467,99 @@ Week 5 (6-10 feb):        Build Terminal UI components
 Week 6 (13-17 feb):       Polish + validation
 ```
 
-_(Phase 2 details would continue with similar exhaustive breakdown)_
+### 2.1 Tâche: Oclif Setup & Electron Removal
+
+**Responsable**: Full-Stack Dev  
+**Durée**: 3 jours (30 jan - 1 fév)
+
+**Livrables**:
+
+- [ ] Electron dependencies removed
+- [ ] Oclif framework initialized
+- [ ] Core commands migrated (`start`, `init`)
+- [ ] New entry point `bin/run` validated
+
+**Actions**:
+
+```
+1. Uninstall Electron & Vue dependencies
+2. Install oclif/core and plugins
+3. Create bin/run entry point
+4. Map Agent events to stdout (temporary)
+```
+
+**Critères de Succès**:
+
+- ✅ `npm start` runs the CLI
+- ✅ No Electron binary is built
+- ✅ Size of `node_modules` reduced
+
+### 2.2 Tâche: Terminal UI with Ink
+
+**Responsable**: Full-Stack Dev  
+**Durée**: 5 jours (2-6 fév)
+
+**Livrables**:
+
+- [ ] `src/ui/App.tsx` (Ink root)
+- [ ] Components: `Spinner`, `ProgressBar`, `TaskList`, `LogViewer`
+- [ ] Integration with Agent events
+
+**Actions**:
+
+```
+1. Install ink, react, ink-spinner
+2. Create component library (src/ui/components/)
+3. Implement "App" component that subscribes to Agent state
+4. Handle resize events
+```
+
+**Critères de Succès**:
+
+- ✅ Rich TUI displays during task execution
+- ✅ No flickering / artifacts
+- ✅ Support for standard terminal sizes
+
+### 2.3 Tâche: Interactive Chat Mode (REPL)
+
+**Responsable**: Lead Architect  
+**Durée**: 2 jours (7-8 fév)
+
+**Livrables**:
+
+- [ ] `auto-gemini chat` command
+- [ ] Read-Eval-Print Loop logic
+- [ ] History management (up/down arrow)
+
+**Actions**:
+
+```
+1. Implement inquirer/prompts for input
+2. Maintain session context between turns
+3. Support slash commands (/clear, /save)
+```
+
+**Critères de Succès**:
+
+- ✅ User can chat with Gemini context-aware
+- ✅ Context persists between inputs
+
+### Phase 2 Summary Checklist
+
+```
+✓ PHASE 2: UI MIGRATION (Weeks 4-6)
+
+- [ ] Electron completely removed
+- [ ] Oclif CLI fully functional
+- [ ] Ink TUI implemented and polished
+- [ ] Interactive Chat mode working
+- [ ] Cross-platform terminal testing (Win/Mac/Lin)
+
+EXIT GATE (17 Feb):
+- [ ] UI is robust and responsive
+- [ ] UX approved by Lead
+- [ ] Ready for heavy optimization
+```
 
 ---
 
@@ -1477,7 +1569,95 @@ _(Phase 2 details would continue with similar exhaustive breakdown)_
 
 Rate limiting, context window optimization, performance tuning.
 
-_(Phase 3 details would continue)_
+### 3.1 Tâche: Rate Limiting & Queue System
+
+**Responsable**: Mobile Lead / Architect  
+**Durée**: 4 jours (20-23 fév)
+
+**Livrables**:
+
+- [ ] `src/core/rate-limiter.ts` (Token Bucket)
+- [ ] Request Queue logic with persistence
+- [ ] 429 Error Handler (Backoff strategy)
+
+**Actions**:
+
+```
+1. Implement Token Bucket algorithm (15 RPM / 1000 RPD)
+2. Wrap GeminiClient calls with limiter
+3. Implement "wait or fail" logic for tasks
+4. Persist queue state to SQLite to survive restarts
+```
+
+**Critères de Succès**:
+
+- ✅ No API errors due to rate limits during load test
+- ✅ Queue processes background requests efficiently
+
+### 3.2 Tâche: Context Window Management (1M)
+
+**Responsable**: Full-Stack Dev  
+**Durée**: 5 jours (24-28 fév)
+
+**Livrables**:
+
+- [ ] Context pruning strategy (LRU)
+- [ ] File relevance scoring (Embeddings optional)
+- [ ] Summarization agent hook
+
+**Actions**:
+
+```
+1. Integrate Gemini 1M context handling
+2. Implement "Context window fullness" metric
+3. Create strategy to drop least relevant files if > 90% full
+4. Test with large repository (>50Mb source)
+```
+
+**Critères de Succès**:
+
+- ✅ Can ingest entire Auto-Claude codebase without error
+- ✅ Gracefully handles >1M tokens (trimming/warning)
+
+### 3.3 Tâche: Performance Optimization
+
+**Responsable**: Full-Stack Dev  
+**Durée**: 3 jours (1-3 mars)
+
+**Livrables**:
+
+- [ ] SQLite WAL mode enabled
+- [ ] Streaming parser optimized
+- [ ] Startup time < 500ms
+
+**Actions**:
+
+```
+1. Optimize DB queries (add indexes)
+2. Use 'piscina' for heavy parsing tasks
+3. Profile memory usage (heap snapshots)
+```
+
+**Critères de Succès**:
+
+- ✅ 50 simultaneous sessions possible
+- ✅ Memory usage < 500MB
+
+### Phase 3 Summary Checklist
+
+```
+✓ PHASE 3: OPTIMIZATION (Weeks 7-10)
+
+- [ ] Rate limiter active & tested
+- [ ] 1M Token context managed correctly
+- [ ] Queue system robust against crashes
+- [ ] Performance KPIs met (latency, startup)
+
+EXIT GATE (16 Mar):
+- [ ] System is stable under load
+- [ ] Cost/Usage tracking validated
+- [ ] Ready for final polish
+```
 
 ---
 
@@ -1487,7 +1667,94 @@ _(Phase 3 details would continue)_
 
 Testing, documentation, v1.0 release.
 
-_(Phase 4 details would continue)_
+### 4.1 Tâche: Comprehensive Testing
+
+**Responsable**: Lead + Dev  
+**Durée**: 5 jours (19-23 mars)
+
+**Livrables**:
+
+- [ ] E2E Test Suite (5 key scenarios)
+- [ ] Load Test Report
+- [ ] Security Audit Report
+
+**Actions**:
+
+```
+1. Write E2E tests for: Init, Task, Chat, Session Resume
+2. Run load test (100 concurrent requests mockup)
+3. Audit dependencies (npm audit)
+```
+
+**Critères de Succès**:
+
+- ✅ Text coverage > 80%
+- ✅ Zero critical security issues
+
+### 4.2 Tâche: Documentation & Guides
+
+**Responsable**: Lead Architect  
+**Durée**: 5 jours (26-30 mars)
+
+**Livrables**:
+
+- [ ] README.md rewritten
+- [ ] `docs/getting-started.md`
+- [ ] `docs/architecture.md` finalized
+- [ ] API Reference
+
+**Actions**:
+
+```
+1. Document all CLI commands
+2. Create "How to migrate from Auto-Claude" guide
+3. Write contribution guidelines
+```
+
+**Critères de Succès**:
+
+- ✅ Documentation reviewed by external dev
+- ✅ "Hello World" doable in < 5 mins
+
+### 4.3 Tâche: Build & Release
+
+**Responsable**: Lead Architect  
+**Durée**: 3 jours (2-4 avril)
+
+**Livrables**:
+
+- [ ] GitHub Actions Release Workflow
+- [ ] npm package published
+- [ ] Homebrew tap created
+
+**Actions**:
+
+```
+1. Configure `pkg` for single-binary builds
+2. Setup semantic-release
+3. Test install on clean VM
+```
+
+**Critères de Succès**:
+
+- ✅ `npm install -g auto-gemini-cli` works
+- ✅ Binaries available for Win/Mac/Linux
+
+### Phase 4 Summary Checklist
+
+```
+✓ PHASE 4: POLISH & RELEASE (Weeks 11-14)
+
+- [ ] Testing complete (E2E + Units)
+- [ ] Documentation complete
+- [ ] Release pipeline functional
+- [ ] Security audit passed
+
+EXIT GATE (28 Apr):
+- [ ] v1.0.0 Tagged
+- [ ] Blog post / Announcement draft
+- [ ] PROJECT COMPLETED
+```
 
 ---
 
