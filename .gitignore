@@ -3,3 +3,9 @@ tracker.events
 # Binaires Go
 producer
 tracker
+monitor
+producer.exe
+tracker.exe
+log_monitor.exe
+# Process ID files
+*.pid

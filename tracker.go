@@ -2,26 +2,17 @@
 // +build kafka
 
 /*
-Ce programme Go (`tracker.go`) est un consommateur de messages pour Apache Kafka.
-Son rôle principal est de s'abonner au topic 'orders', de recevoir les messages,
-de les traiter et de maintenir une observabilité complète du système.
+tracker.go is the primary consumer for the Kafka Order Tracking System.
+It subscribes to the 'orders' topic, processes incoming JSON events, and
+maintains high system observability.
 
-Il met en œuvre plusieurs patrons d'architecture et bonnes pratiques essentiels :
-- **Consommation de messages** : Il se connecte à Kafka et écoute en continu les nouveaux messages,
-  suivant le modèle Publisher/Subscriber.
-- **Désérialisation** : Il transforme les messages JSON entrants en structures Go (`Order`).
-- **Observabilité avancée** : Il utilise une stratégie de logging à deux fichiers qui implémente
-  deux patrons distincts :
-  1. **Application Health Monitoring** (`tracker.log`): Pour les logs système structurés
-     (démarrage, arrêt, erreurs, métriques). Ce fichier est optimisé pour le monitoring,
-     les dashboards et l'alerte.
-  2. **Audit Trail** (`tracker.events`): Pour la journalisation exhaustive de chaque
-     message reçu. Ce fichier garantit une traçabilité complète et sert de source de vérité
-     immuable pour les données entrantes.
-- **Métriques système** : Il collecte et affiche périodiquement des métriques de performance
-  (débit, taux de succès, etc.) pour évaluer la santé du service.
-- **Graceful Shutdown** : Il gère les signaux d'arrêt (Ctrl+C) pour s'assurer que les messages
-  en cours de traitement ne sont pas perdus et que les ressources sont correctement libérées.
+Architecture Highlights:
+- **Event Consumption**: Implements a robust consumer loop for the 'orders' topic.
+- **Advanced Observability**: Uses a dual-logging strategy:
+  1. **Health Monitoring** (tracker.log): Structured system metrics and lifecycle events.
+  2. **Audit Trail** (tracker.events): Immutable journal of every received message.
+- **Operational Metrics**: Periodically reports throughput and success rates.
+- **Safe Shutdown**: Leverages context and signal handling for zero-data-loss stop.
 */
 
 package main

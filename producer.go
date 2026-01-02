@@ -2,18 +2,16 @@
 // +build kafka
 
 /*
-Ce programme Go (`producer.go`) agit comme un producteur de messages pour Apache Kafka.
-Son rôle est de simuler la création de commandes enrichies et de les envoyer
-de manière continue à un topic Kafka.
+Package main implements a robust Kafka-based Order Tracking System.
 
-Il implémente une logique de production robuste qui met en œuvre plusieurs bonnes pratiques :
-- **Event Carried State Transfer** : Il génère des données de commande complètes et autonomes.
-- **Publisher/Subscriber** : Il publie des messages dans un topic Kafka.
-- **Guaranteed Delivery** : Il utilise un canal de rapport de livraison (`deliveryReport`)
-  pour s'assurer que chaque message est bien reçu par le broker Kafka.
-- **Graceful Shutdown** : Il intercepte les signaux d'arrêt du système pour terminer proprement
-  son exécution, en s'assurant que tous les messages en attente dans le tampon sont
-  envoyés avant de quitter (`producer.Flush`).
+producer.go acts as a data generator for Apache Kafka.
+Its role is to simulate the creation of enriched order events and stream them
+continuously to a Kafka topic.
+
+Key Features:
+- **Event Carried State Transfer**: Generates complete, self-contained order data.
+- **Reliable Publishing**: Implements delivery reports to guarantee message ingestion.
+- **Graceful Termination**: Ensures all buffered messages are flushed before exit.
 */
 
 package main

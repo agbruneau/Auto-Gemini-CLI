@@ -1,14 +1,11 @@
 /*
-Ce fichier définit le modèle de données partagé pour les messages de commande.
-Il est au cœur de l'approche "Event Carried State Transfer" (ECST) utilisée dans ce projet.
+order.go defines the core data model for order events.
+It implements the **Event Carried State Transfer (ECST)** pattern.
 
-Le principe de l'ECST est d'enrichir chaque événement (ici, une commande) avec
-l'état complet nécessaire à son traitement. Cela permet aux services consommateurs
-(comme le 'tracker') d'être autonomes et de ne pas avoir à interroger d'autres
-services pour obtenir des informations contextuelles (par exemple, les détails du client
-ou le statut de l'inventaire).
-
-Ce découplage renforce la résilience et la scalabilité du système.
+Principle:
+By enriching each event with the full state required for processing,
+consumer services (like the 'tracker') remain autonomous and decoupled
+from external API calls or database lookups.
 */
 
 package main
@@ -23,19 +20,19 @@ import (
 
 // Erreurs de validation
 var (
-	ErrEmptyOrderID       = errors.New("order_id est requis")
-	ErrInvalidSequence    = errors.New("sequence doit être positif")
-	ErrEmptyStatus        = errors.New("status est requis")
-	ErrNoItems            = errors.New("au moins un article est requis")
-	ErrInvalidTotal       = errors.New("le total ne correspond pas aux montants calculés")
-	ErrEmptyCustomerID    = errors.New("customer_id est requis")
-	ErrEmptyCustomerName  = errors.New("le nom du client est requis")
-	ErrInvalidEmail       = errors.New("l'email n'est pas valide")
-	ErrEmptyItemID        = errors.New("item_id est requis")
-	ErrEmptyItemName      = errors.New("le nom de l'article est requis")
-	ErrInvalidQuantity    = errors.New("la quantité doit être positive")
-	ErrInvalidPrice       = errors.New("le prix doit être positif ou nul")
-	ErrInvalidItemTotal   = errors.New("le total de l'article ne correspond pas au calcul")
+	ErrEmptyOrderID      = errors.New("order_id est requis")
+	ErrInvalidSequence   = errors.New("sequence doit être positif")
+	ErrEmptyStatus       = errors.New("status est requis")
+	ErrNoItems           = errors.New("au moins un article est requis")
+	ErrInvalidTotal      = errors.New("le total ne correspond pas aux montants calculés")
+	ErrEmptyCustomerID   = errors.New("customer_id est requis")
+	ErrEmptyCustomerName = errors.New("le nom du client est requis")
+	ErrInvalidEmail      = errors.New("l'email n'est pas valide")
+	ErrEmptyItemID       = errors.New("item_id est requis")
+	ErrEmptyItemName     = errors.New("le nom de l'article est requis")
+	ErrInvalidQuantity   = errors.New("la quantité doit être positive")
+	ErrInvalidPrice      = errors.New("le prix doit être positif ou nul")
+	ErrInvalidItemTotal  = errors.New("le total de l'article ne correspond pas au calcul")
 )
 
 // emailRegex est une expression régulière simple pour valider les emails

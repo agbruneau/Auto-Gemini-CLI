@@ -1,15 +1,13 @@
 /*
-Ce programme Go (`log_monitor.go`) est un moniteur de logs en temps réel pour le système Kafka Demo.
-Il surveille en continu les fichiers tracker.log et tracker.events pour fournir une visualisation
-graphique et ergonomique des métriques système et des événements.
+log_monitor.go provides a real-time Terminal User Interface (TUI) for the Kafka demo.
+It continuously tails 'tracker.log' and 'tracker.events' to provide
+live visualization of system metrics and business events.
 
-Fonctionnalités :
-- Surveillance en temps réel des logs tracker.log (métriques système)
-- Surveillance en temps réel des événements tracker.events (audit trail)
-- Interface graphique interactive avec graphiques et tableaux
-- Métriques en temps réel : débit, taux de succès, messages traités
-- Affichage des logs et événements récents
-- Mise à jour automatique de l'interface
+Features:
+- **Live Dashboard**: Visualizes throughput (msg/s) and success rates.
+- **Log Streaming**: Displays recent system logs and audit events.
+- **Health Indicators**: Provides color-coded status for quick system assessment.
+- **Interactive TUI**: Built with termui for a responsive terminal experience.
 */
 
 package main
@@ -200,9 +198,10 @@ func readNewLines(file *os.File, filename string, currentPos int64, logChan chan
 // et la troncature du fichier.
 //
 // Paramètres:
-//   filename (string): Le chemin du fichier à surveiller.
-//   logChan (chan<- MonitorLogEntry): Canal pour envoyer les entrées de `tracker.log`.
-//   eventChan (chan<- MonitorEventEntry): Canal pour envoyer les entrées de `tracker.events`.
+//
+//	filename (string): Le chemin du fichier à surveiller.
+//	logChan (chan<- MonitorLogEntry): Canal pour envoyer les entrées de `tracker.log`.
+//	eventChan (chan<- MonitorEventEntry): Canal pour envoyer les entrées de `tracker.events`.
 func monitorFile(filename string, logChan chan<- MonitorLogEntry, eventChan chan<- MonitorEventEntry) {
 	file := waitForFile(filename)
 	var currentPos int64
@@ -241,7 +240,8 @@ func monitorFile(filename string, logChan chan<- MonitorLogEntry, eventChan chan
 // Elle met à jour l'état global des métriques de manière concurrente-sûre.
 //
 // Paramètres:
-//   entry (MonitorLogEntry): L'entrée de log à traiter.
+//
+//	entry (MonitorLogEntry): L'entrée de log à traiter.
 func processLog(entry MonitorLogEntry) {
 	monitorMetrics.mu.Lock()
 	defer monitorMetrics.mu.Unlock()
@@ -296,7 +296,8 @@ func processLog(entry MonitorLogEntry) {
 // Elle met à jour l'état global des métriques de manière concurrente-sûre.
 //
 // Paramètres:
-//   entry (MonitorEventEntry): L'événement à traiter.
+//
+//	entry (MonitorEventEntry): L'événement à traiter.
 func processEvent(entry MonitorEventEntry) {
 	monitorMetrics.mu.Lock()
 	defer monitorMetrics.mu.Unlock()
@@ -318,13 +319,13 @@ func processEvent(entry MonitorEventEntry) {
 	monitorMetrics.MessagesReceived++
 
 	// Recalculer les métriques en temps réel
-    uptime := time.Since(monitorMetrics.StartTime)
-    if uptime.Seconds() > 0 {
-        monitorMetrics.CurrentMessagesPerSec = float64(monitorMetrics.MessagesReceived) / uptime.Seconds()
-    }
-    if monitorMetrics.MessagesReceived > 0 {
-        monitorMetrics.CurrentSuccessRate = float64(monitorMetrics.MessagesProcessed) / float64(monitorMetrics.MessagesReceived) * 100
-    }
+	uptime := time.Since(monitorMetrics.StartTime)
+	if uptime.Seconds() > 0 {
+		monitorMetrics.CurrentMessagesPerSec = float64(monitorMetrics.MessagesReceived) / uptime.Seconds()
+	}
+	if monitorMetrics.MessagesReceived > 0 {
+		monitorMetrics.CurrentSuccessRate = float64(monitorMetrics.MessagesProcessed) / float64(monitorMetrics.MessagesReceived) * 100
+	}
 
 	monitorMetrics.LastUpdateTime = time.Now()
 }
@@ -332,7 +333,8 @@ func processEvent(entry MonitorEventEntry) {
 // createMetricsTable initialise et configure le widget de tableau pour les métriques principales.
 //
 // Retourne:
-//   (*widgets.Table): Un pointeur vers le widget de tableau configuré.
+//
+//	(*widgets.Table): Un pointeur vers le widget de tableau configuré.
 func createMetricsTable() *widgets.Table {
 	table := widgets.NewTable()
 	table.Rows = [][]string{
@@ -354,7 +356,8 @@ func createMetricsTable() *widgets.Table {
 // createHealthDashboard initialise le widget de tableau pour le tableau de bord de santé.
 //
 // Retourne:
-//   (*widgets.Table): Un pointeur vers le widget de tableau configuré.
+//
+//	(*widgets.Table): Un pointeur vers le widget de tableau configuré.
 func createHealthDashboard() *widgets.Table {
 	table := widgets.NewTable()
 	table.Rows = [][]string{
@@ -441,13 +444,15 @@ func getErrorStatus(errorCount int64, lastErrorTime time.Time) (HealthStatus, st
 // calculateQualityScore calcule un score de qualité global (0-100) basé sur plusieurs métriques.
 //
 // Paramètres:
-//   successRate (float64): Le taux de succès.
-//   mps (float64): Le débit de messages par seconde.
-//   errorCount (int64): Le nombre d'erreurs.
-//   uptime (time.Duration): La durée de fonctionnement.
+//
+//	successRate (float64): Le taux de succès.
+//	mps (float64): Le débit de messages par seconde.
+//	errorCount (int64): Le nombre d'erreurs.
+//	uptime (time.Duration): La durée de fonctionnement.
 //
 // Retourne:
-//   (float64): Le score de qualité calculé.
+//
+//	(float64): Le score de qualité calculé.
 func calculateQualityScore(successRate, mps float64, errorCount int64, uptime time.Duration) float64 {
 	// Score basé sur le taux de succès (0-50 points)
 	successScore := (successRate / 100.0) * 50.0
@@ -483,7 +488,8 @@ func calculateQualityScore(successRate, mps float64, errorCount int64, uptime ti
 // createLogList initialise le widget de liste pour afficher les logs récents de `tracker.log`.
 //
 // Retourne:
-//   (*widgets.List): Un pointeur vers le widget de liste configuré.
+//
+//	(*widgets.List): Un pointeur vers le widget de liste configuré.
 func createLogList() *widgets.List {
 	list := widgets.NewList()
 	list.Title = "Logs Récents (tracker.log)"
@@ -498,7 +504,8 @@ func createLogList() *widgets.List {
 // createEventList initialise le widget de liste pour afficher les événements récents de `tracker.events`.
 //
 // Retourne:
-//   (*widgets.List): Un pointeur vers le widget de liste configuré.
+//
+//	(*widgets.List): Un pointeur vers le widget de liste configuré.
 func createEventList() *widgets.List {
 	list := widgets.NewList()
 	list.Title = "Événements Récents (tracker.events)"
@@ -513,7 +520,8 @@ func createEventList() *widgets.List {
 // createMessagesPerSecondChart initialise le widget de graphique pour le débit de messages.
 //
 // Retourne:
-//   (*widgets.Plot): Un pointeur vers le widget de graphique configuré.
+//
+//	(*widgets.Plot): Un pointeur vers le widget de graphique configuré.
 func createMessagesPerSecondChart() *widgets.Plot {
 	plot := widgets.NewPlot()
 	plot.Title = "Débit de Messages (msg/s)"
@@ -528,7 +536,8 @@ func createMessagesPerSecondChart() *widgets.Plot {
 // createSuccessRateChart initialise le widget de graphique pour le taux de succès.
 //
 // Retourne:
-//   (*widgets.Plot): Un pointeur vers le widget de graphique configuré.
+//
+//	(*widgets.Plot): Un pointeur vers le widget de graphique configuré.
 func createSuccessRateChart() *widgets.Plot {
 	plot := widgets.NewPlot()
 	plot.Title = "Taux de Succès (%)"

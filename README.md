@@ -1,42 +1,37 @@
-# Système de Suivi de Commandes Kafka (Kafka Order Tracking System)
+# 🚀 Système de Suivi de Commandes Kafka (Kafka Order Tracking)
 
-Bienvenue dans le projet de démonstration **Kafka Order Tracking**. Ce projet est une implémentation de référence en **Go** illustrant une architecture événementielle (EDA) robuste utilisant **Apache Kafka**. Il simule un flux de commandes e-commerce complet, de la production à la consommation, avec une observabilité avancée.
+[![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)](https://golang.org/)
+[![Kafka](https://img.shields.io/badge/Apache_Kafka-3.7.0-white?style=flat&logo=apache-kafka)](https://kafka.apache.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## 📋 Table des Matières
+Bienvenue dans le projet **Kafka Order Tracking**. Cette implémentation de référence en **Go** illustre une architecture orientée événements (EDA) moderne et robuste utilisant **Apache Kafka**.
 
-- [Architecture](#-architecture)
-- [Fonctionnalités et Patterns](#-fonctionnalités-et-patterns)
-- [Prérequis](#-prérequis)
-- [Démarrage Rapide](#-démarrage-rapide)
-- [Utilisation et Monitoring](#-utilisation-et-monitoring)
-- [Arrêt du Système](#-arrêt-du-système)
-- [Structure du Projet](#-structure-du-projet)
-- [Développement et Tests](#-développement-et-tests)
+Le système simule un flux de commandes e-commerce complet — de la génération à la consommation — tout en offrant une observabilité avancée via une interface terminal (TUI) interactive.
 
 ---
 
-## 🏗 Architecture
+## 🏗 Architecture du Système
 
-Le système est composé de trois services principaux découplés, communiquant via Kafka ou observant l'état du système via des logs.
+Le projet repose sur trois services principaux totalement découplés :
 
-1.  **Producteur (`producer`)** : Génère des commandes aléatoires (simulant des achats clients) et les envoie dans le topic Kafka `orders`.
-2.  **Consommateur (`tracker`)** : Écoute le topic `orders`, traite les commandes reçues et enregistre le résultat.
-3.  **Moniteur (`log_monitor`)** : Une interface graphique en terminal (TUI) qui visualise en temps réel les métriques de performance et les logs.
+1.  **📦 Producteur (`producer`)** : Génère des flux de commandes aléatoires enrichies (simulant des achats clients) et les publie dans le topic Kafka `orders`.
+2.  **⚙️ Consommateur (`tracker`)** : S'abonne au topic `orders`, traite les messages en temps réel et maintient une piste d'audit exhaustive.
+3.  **📊 Moniteur (`log_monitor`)** : Une interface graphique en terminal (TUI) offrant une visualisation en temps réel des métriques de performance (débit, latence, succès) et des logs système.
 
 ---
 
-## 🌟 Fonctionnalités et Patterns
+## 🌟 Principes et Design Patterns
 
-Ce projet met en œuvre les meilleures pratiques de l'ingénierie logicielle distribuée :
+Ce projet met en œuvre les standards industriels pour les systèmes distribués :
 
-- **Event-Driven Architecture (EDA)** : Découplage total entre le producteur et le consommateur.
-- **Event Carried State Transfer (ECST)** : Les messages contiennent tout le contexte nécessaire (produit, client, prix), rendant le consommateur autonome (pas d'appels API externes nécessaires).
-- **Guaranteed Delivery** : Le producteur attend l'accusé de réception (ACK) du broker Kafka pour confirmer l'envoi.
-- **Idempotence** : Le script de démarrage assure que les ressources (topics) ne sont créées que si elles n'existent pas.
+- **Event-Driven Architecture (EDA)** : Découplage maximal entre émetteurs et récepteurs.
+- **Event Carried State Transfer (ECST)** : Les messages incluent tout le contexte nécessaire (produit, client, prix), rendant les consommateurs autonomes.
+- **Guaranteed Delivery (At-Least-Once)** : Utilisation des rapports de livraison (ACK) pour garantir l'intégrité des données.
 - **Observabilité Duale** :
-  - `tracker.log` : Logs structurés (JSON) pour la santé technique (erreurs, latence).
-  - `tracker.events` : Piste d'audit immuable de tous les événements métier reçus.
-- **Graceful Shutdown** : Gestion propre des signaux (SIGTERM, SIGINT) pour terminer les processus sans perte de données (flush des messages, fermeture des fichiers).
+  - **Health Monitoring** (`tracker.log`) : Logs techniques structurés (JSON) pour le monitoring.
+  - **Audit Trail** (`tracker.events`) : Journal immuable de tous les événements métier reçus.
+- **Graceful Shutdown** : Gestion rigoureuse des signaux système (SIGTERM, SIGINT) pour un arrêt sans perte de données.
+- **Idempotence Opérationnelle** : Automatisation de la création des ressources Kafka via des scripts robustes.
 
 ---
 
@@ -53,22 +48,19 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 ## 🚀 Démarrage Rapide
 
-Le projet fournit un script d'orchestration pour lancer l'environnement complet en une seule commande.
+Le projet fournit un automate d'orchestration pour déployer l'environnement complet.
 
-1.  Placez-vous à la racine du projet.
-2.  Lancez le script de démarrage :
+1.  **Initialisez l'infrastructure et lancez les services** :
+    ```bash
+    ./start.sh
+    ```
 
-```bash
-./start.sh
-```
+**Actions réalisées par le script :**
 
-**Ce que fait le script :**
-
-- Démarre le conteneur Kafka via Docker Compose.
-- Attend activement que Kafka soit prêt.
-- Crée le topic `orders` de manière idempotente.
-- Lance le **Tracker** (consommateur) en arrière-plan.
-- Lance le **Producer** (producteur) en arrière-plan (mais attache le script à son processus).
+- Déploiement du cluster Kafka (mode KRaft) via Docker Compose.
+- Vérification de la disponibilité du broker.
+- Création idempotente du topic `orders`.
+- Lancement des services Go (**Producer** et **Tracker**) en arrière-plan.
 
 ---
 
