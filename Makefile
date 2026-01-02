@@ -48,17 +48,17 @@ build: build-producer build-tracker build-monitor
 ## build-producer: Compiler le producteur
 build-producer:
 	@echo "🔨 Compilation du producteur..."
-	$(GO) build -tags producer -o $(BINARY_PRODUCER)$(BINARY_EXT) ./...
+	$(GO) build -tags producer -o $(BINARY_PRODUCER)$(BINARY_EXT) ./cmd/producer/main.go
 
 ## build-tracker: Compiler le tracker (consommateur)
 build-tracker:
 	@echo "🔨 Compilation du tracker..."
-	$(GO) build -tags tracker -o $(BINARY_TRACKER)$(BINARY_EXT) ./...
+	$(GO) build -tags tracker -o $(BINARY_TRACKER)$(BINARY_EXT) ./cmd/tracker/main.go
 
 ## build-monitor: Compiler le moniteur de logs
 build-monitor:
 	@echo "🔨 Compilation du moniteur de logs..."
-	$(GO) build -tags monitor -o $(BINARY_MONITOR)$(BINARY_EXT) ./...
+	$(GO) build -tags monitor -o $(BINARY_MONITOR)$(BINARY_EXT) ./cmd/monitor/main.go
 
 # ==============================================================================
 # TESTS
@@ -67,12 +67,12 @@ build-monitor:
 ## test: Exécuter tous les tests
 test:
 	@echo "🧪 Exécution des tests..."
-	$(GO) test -v ./...
+	$(GO) test -tags kafka,producer,tracker,monitor -v ./...
 
 ## test-cover: Exécuter les tests avec couverture
 test-cover:
 	@echo "🧪 Exécution des tests avec couverture..."
-	$(GO) test -v -coverprofile=coverage.out ./...
+	$(GO) test -tags kafka,producer,tracker,monitor -v -coverprofile=coverage.out ./...
 	$(GO) tool cover -html=coverage.out -o coverage.html
 	@echo "📊 Rapport de couverture généré: coverage.html"
 
@@ -143,17 +143,17 @@ stop:
 ## run-producer: Exécuter le producteur directement
 run-producer: docker-up
 	@echo "📤 Lancement du producteur..."
-	$(GO) run -tags kafka producer.go order.go models.go constants.go cmd_producer.go
+	$(GO) run -tags kafka cmd/producer/main.go
 
 ## run-tracker: Exécuter le tracker directement
 run-tracker: docker-up
 	@echo "📥 Lancement du tracker..."
-	$(GO) run -tags kafka tracker.go order.go models.go constants.go cmd_tracker.go
+	$(GO) run -tags kafka cmd/tracker/main.go
 
 ## run-monitor: Exécuter le moniteur de logs
 run-monitor:
 	@echo "📊 Lancement du moniteur de logs..."
-	$(GO) run -tags monitor log_monitor.go models.go constants.go cmd_monitor.go
+	$(GO) run -tags monitor cmd/monitor/main.go
 
 # ==============================================================================
 # KAFKA
@@ -259,4 +259,3 @@ help:
 	@echo "    clean            Nettoyer tous les fichiers"
 	@echo "    clean-logs       Nettoyer les logs uniquement"
 	@echo ""
-

@@ -77,8 +77,8 @@ If you prefer manual control or are on Windows:
 make docker-up
 
 # 2. Launch Services in separate terminals
-go run -tags kafka cmd_producer.go producer.go order.go models.go constants.go
-go run -tags kafka cmd_tracker.go tracker.go order.go models.go constants.go
+go run -tags kafka cmd/producer/main.go
+go run -tags kafka cmd/tracker/main.go
 ```
 
 ---
@@ -123,7 +123,7 @@ make test-cover
 
 We are evolving this demo into a production-ready template. Detailed improvements can be found in [amelioration.md](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/amelioration.md).
 
-- [ ] **1. Architecture**: Migrate to Standard Go Package Structure (`/cmd`, `/internal`, `/pkg`).
+- [x] **1. Architecture**: Migrate to Standard Go Package Structure (`/cmd`, `/internal`, `/pkg`).
 - [ ] **2. Configuration**: Implementation of external configuration (`config.yaml`).
 - [ ] **3. Resilience**: Add Retry Patterns with Exponential Backoff and Dead Letter Queues (DLQ).
 - [ ] **4. CI/CD**: Integrate GitHub Actions for automated testing and linting.
@@ -133,8 +133,15 @@ We are evolving this demo into a production-ready template. Detailed improvement
 
 ## 📂 Project Structure
 
-- **`cmd/`**: Entry points (`cmd_*.go`).
-- **`*.go`**: Core implementations (moving to `internal/` soon).
+- **`cmd/`**: Application entry points.
+  - `producer/`: Order generation service.
+  - `tracker/`: Consumer and validation service.
+  - `monitor/`: TUI dashboard service.
+- **`pkg/`**: Public libraries and shared logic.
+  - `models/`: Shared domain entities (Order, CustomerInfo).
+  - `producer/`: Kafka producer implementation.
+  - `tracker/`: Kafka consumer and observability logic.
+  - `monitor/`: TUI rendering and log parsing logic.
 - **`Makefile`**: Operational orchestration.
 - **`docker-compose.yaml`**: Infrastructure as code.
 - **`*.md`**: Documentation and Roadmap.

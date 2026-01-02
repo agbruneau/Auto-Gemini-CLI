@@ -1,14 +1,16 @@
 /*
-order.go defines the core data model for order events.
-It implements the **Event Carried State Transfer (ECST)** pattern.
+Package models defines the shared domain entities and data structures for the Kafka Order Tracking System.
 
-Principle:
-By enriching each event with the full state required for processing,
-consumer services (like the 'tracker') remain autonomous and decoupled
-from external API calls or database lookups.
+This package contains the core business logic, validation rules, and data transfer objects (DTOs)
+used across the Producer, Tracker, and Monitor services.
+
+Key Concepts:
+- **Event Carried State Transfer (ECST)**: The `Order` struct is a self-contained event carrying
+  all necessary state (Customer, Inventory, Payment) to allow downstream services to function autonomously.
+- **Rich Domain Model**: Entities include built-in validation logic (`Validate()`) to ensure data integrity
+  at the boundaries of the system.
 */
-
-package main
+package models
 
 import (
 	"errors"
