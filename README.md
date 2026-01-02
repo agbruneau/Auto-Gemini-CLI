@@ -19,16 +19,6 @@ Bienvenue dans le projet de démonstration **Kafka Order Tracking**. Ce projet e
 
 Le système est composé de trois services principaux découplés, communiquant via Kafka ou observant l'état du système via des logs.
 
-```mermaid
-graph LR
-    P[Producteur (Producer)] -->|Envoie 'Order'| K{Kafka Topic: orders}
-    K -->|Consomme 'Order'| T[Consommateur (Tracker)]
-    T -->|Écrit| L1[tracker.log (Santé)]
-    T -->|Écrit| L2[tracker.events (Audit)]
-    M[Moniteur (TUI)] -.->|Lit| L1
-    M -.->|Lit| L2
-```
-
 1.  **Producteur (`producer`)** : Génère des commandes aléatoires (simulant des achats clients) et les envoie dans le topic Kafka `orders`.
 2.  **Consommateur (`tracker`)** : Écoute le topic `orders`, traite les commandes reçues et enregistre le résultat.
 3.  **Moniteur (`log_monitor`)** : Une interface graphique en terminal (TUI) qui visualise en temps réel les métriques de performance et les logs.
@@ -39,14 +29,14 @@ graph LR
 
 Ce projet met en œuvre les meilleures pratiques de l'ingénierie logicielle distribuée :
 
-*   **Event-Driven Architecture (EDA)** : Découplage total entre le producteur et le consommateur.
-*   **Event Carried State Transfer (ECST)** : Les messages contiennent tout le contexte nécessaire (produit, client, prix), rendant le consommateur autonome (pas d'appels API externes nécessaires).
-*   **Guaranteed Delivery** : Le producteur attend l'accusé de réception (ACK) du broker Kafka pour confirmer l'envoi.
-*   **Idempotence** : Le script de démarrage assure que les ressources (topics) ne sont créées que si elles n'existent pas.
-*   **Observabilité Duale** :
-    *   `tracker.log` : Logs structurés (JSON) pour la santé technique (erreurs, latence).
-    *   `tracker.events` : Piste d'audit immuable de tous les événements métier reçus.
-*   **Graceful Shutdown** : Gestion propre des signaux (SIGTERM, SIGINT) pour terminer les processus sans perte de données (flush des messages, fermeture des fichiers).
+- **Event-Driven Architecture (EDA)** : Découplage total entre le producteur et le consommateur.
+- **Event Carried State Transfer (ECST)** : Les messages contiennent tout le contexte nécessaire (produit, client, prix), rendant le consommateur autonome (pas d'appels API externes nécessaires).
+- **Guaranteed Delivery** : Le producteur attend l'accusé de réception (ACK) du broker Kafka pour confirmer l'envoi.
+- **Idempotence** : Le script de démarrage assure que les ressources (topics) ne sont créées que si elles n'existent pas.
+- **Observabilité Duale** :
+  - `tracker.log` : Logs structurés (JSON) pour la santé technique (erreurs, latence).
+  - `tracker.events` : Piste d'audit immuable de tous les événements métier reçus.
+- **Graceful Shutdown** : Gestion propre des signaux (SIGTERM, SIGINT) pour terminer les processus sans perte de données (flush des messages, fermeture des fichiers).
 
 ---
 
@@ -73,11 +63,12 @@ Le projet fournit un script d'orchestration pour lancer l'environnement complet 
 ```
 
 **Ce que fait le script :**
-*   Démarre le conteneur Kafka via Docker Compose.
-*   Attend activement que Kafka soit prêt.
-*   Crée le topic `orders` de manière idempotente.
-*   Lance le **Tracker** (consommateur) en arrière-plan.
-*   Lance le **Producer** (producteur) en arrière-plan (mais attache le script à son processus).
+
+- Démarre le conteneur Kafka via Docker Compose.
+- Attend activement que Kafka soit prêt.
+- Crée le topic `orders` de manière idempotente.
+- Lance le **Tracker** (consommateur) en arrière-plan.
+- Lance le **Producer** (producteur) en arrière-plan (mais attache le script à son processus).
 
 ---
 
@@ -93,8 +84,8 @@ Pour une vue d'ensemble visuelle (Tableau de bord, graphiques, logs défilants),
 go run -tags monitor cmd_monitor.go log_monitor.go models.go constants.go
 ```
 
-*   **Touches** : `q` ou `Ctrl+C` pour quitter.
-*   **Fonctionnalités** : Affiche le débit (msg/sec), le taux de succès, et les derniers logs.
+- **Touches** : `q` ou `Ctrl+C` pour quitter.
+- **Fonctionnalités** : Affiche le débit (msg/sec), le taux de succès, et les derniers logs.
 
 ### 2. Observation des Logs Bruts
 
@@ -127,21 +118,21 @@ Ce script utilise les fichiers PID (`producer.pid`, `tracker.pid`) pour envoyer 
 
 L'organisation des fichiers suit une logique modulaire :
 
-*   **Points d'entrée (`cmd_*.go`)** :
-    *   `cmd_producer.go` : `main()` du producteur.
-    *   `cmd_tracker.go` : `main()` du consommateur.
-    *   `cmd_monitor.go` : `main()` du moniteur TUI.
-*   **Logique Métier** :
-    *   `producer.go` : Implémentation de l'envoi Kafka.
-    *   `tracker.go` : Logique de traitement des messages.
-    *   `log_monitor.go` : Logique d'affichage TUI.
-*   **Données partagées** :
-    *   `models.go` : Structures de données (Logs, Métriques).
-    *   `order.go` : Définition de la structure `Order`.
-    *   `constants.go` : Configuration globale (Topics, Fichiers, Timeouts).
-*   **Scripts** :
-    *   `start.sh` / `stop.sh` : Gestion du cycle de vie.
-    *   `docker-compose.yaml` : Infrastructure.
+- **Points d'entrée (`cmd_*.go`)** :
+  - `cmd_producer.go` : `main()` du producteur.
+  - `cmd_tracker.go` : `main()` du consommateur.
+  - `cmd_monitor.go` : `main()` du moniteur TUI.
+- **Logique Métier** :
+  - `producer.go` : Implémentation de l'envoi Kafka.
+  - `tracker.go` : Logique de traitement des messages.
+  - `log_monitor.go` : Logique d'affichage TUI.
+- **Données partagées** :
+  - `models.go` : Structures de données (Logs, Métriques).
+  - `order.go` : Définition de la structure `Order`.
+  - `constants.go` : Configuration globale (Topics, Fichiers, Timeouts).
+- **Scripts** :
+  - `start.sh` / `stop.sh` : Gestion du cycle de vie.
+  - `docker-compose.yaml` : Infrastructure.
 
 ---
 
