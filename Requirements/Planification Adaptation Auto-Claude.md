@@ -1,26 +1,29 @@
 # Planification Exhaustive d'Exécution
-## Scénario 2: Adaptation d'Auto-Claude → Auto Gemini CLI
+
+## Adaptation d'Auto-Claude → Auto Gemini CLI
 
 **Version**: 1.0  
 **Date**: 2 janvier 2026  
 **Horizon**: 14 semaines (3.5 mois)  
 **Timeline**: 9 janvier 2026 → 28 avril 2026  
 **Équipe**: 1.5 FTE (1 Lead Architect + 1 Full-Stack Dev)  
-**Budget**: $13-34K  
+**Budget**: $13-34K
 
 ---
 
 ## I. PHASE 0: PRÉ-LANCEMENT (Semaine 0 | 2-8 janvier 2026)
 
 ### Objectif
+
 Valider la faisabilité, assembler l'équipe, préparer l'infrastructure.
 
 ### 0.1 Tâche: Approbation Budgétaire & Stakeholder Alignment
 
 **Responsable**: Lead Architect (vous)  
-**Durée**: 2 jours (2-3 janvier)  
+**Durée**: 2 jours (2-3 janvier)
 
 **Livrables**:
+
 - [ ] Deck présentation (3 scénarios + recommandation)
 - [ ] Budget approval document ($13-34K)
 - [ ] Timeline commitment (14 weeks)
@@ -28,6 +31,7 @@ Valider la faisabilité, assembler l'équipe, préparer l'infrastructure.
 - [ ] Signoff de Finance, IT, Security
 
 **Actions**:
+
 ```
 Jour 1 (2 jan):
 ├─ Préparer slides executives
@@ -43,6 +47,7 @@ Jour 2 (3 jan):
 ```
 
 **Critères de Succès**:
+
 - ✅ Budget approuvé par Finance
 - ✅ IT commit sur ressources
 - ✅ Security cleared architecture
@@ -53,9 +58,10 @@ Jour 2 (3 jan):
 ### 0.2 Tâche: Constitution de l'Équipe & Skillset Validation
 
 **Responsable**: Lead Architect  
-**Durée**: 1 jour (4 janvier)  
+**Durée**: 1 jour (4 janvier)
 
 **Livrables**:
+
 - [ ] RACI matrix (responsabilités claires)
 - [ ] Skill inventory checklist
 - [ ] Training plan (si gaps identifiés)
@@ -93,6 +99,7 @@ OPTIONAL: QA/DevOps (0.2 FTE starting Week 4)
 ```
 
 **Actions**:
+
 ```
 - [ ] Post job description (if hiring) or reassign internally
 - [ ] Interview + skill assessment (if new person)
@@ -102,6 +109,7 @@ OPTIONAL: QA/DevOps (0.2 FTE starting Week 4)
 ```
 
 **Critères de Succès**:
+
 - ✅ Team fully assigned (no gaps)
 - ✅ All critical skills covered
 - ✅ RACI matrix signed
@@ -112,9 +120,10 @@ OPTIONAL: QA/DevOps (0.2 FTE starting Week 4)
 ### 0.3 Tâche: Infrastructure & Repository Setup
 
 **Responsable**: Full-Stack Dev (with Lead guidance)  
-**Durée**: 2 jours (5-6 janvier)  
+**Durée**: 2 jours (5-6 janvier)
 
 **Livrables**:
+
 - [ ] GitHub fork: `agbruneau/Auto-Gemini-CLI`
 - [ ] CI/CD pipeline (.github/workflows)
 - [ ] Development environment (local + Docker)
@@ -180,6 +189,7 @@ CI/CD PIPELINE
 ```
 
 **Actions**:
+
 ```
 Day 1 (5 jan):
 ├─ Fork Auto-Claude repository
@@ -197,6 +207,7 @@ Day 2 (6 jan):
 ```
 
 **Dependencies to Install**:
+
 ```json
 {
   "dependencies": {
@@ -227,6 +238,7 @@ Day 2 (6 jan):
 ```
 
 **Critères de Succès**:
+
 - ✅ Repository fork functional
 - ✅ CI/CD pipeline green (all checks pass)
 - ✅ Environment variables configured
@@ -238,9 +250,10 @@ Day 2 (6 jan):
 ### 0.4 Tâche: Codebase Analysis & Architecture Audit
 
 **Responsable**: Lead Architect  
-**Durée**: 2 jours (7-8 janvier)  
+**Durée**: 2 jours (7-8 janvier)
 
 **Livrables**:
+
 - [ ] Code audit report (Auto-Claude analysis)
 - [ ] Dependency map (what's coupled, what's independent)
 - [ ] API difference matrix (Claude vs Gemini)
@@ -341,6 +354,7 @@ CODEBASE ANALYSIS REPORT
 ```
 
 **Critères de Succès**:
+
 - ✅ Full codebase understood
 - ✅ API differences documented
 - ✅ No blockers identified (or mitigation planned)
@@ -352,9 +366,10 @@ CODEBASE ANALYSIS REPORT
 ### 0.5 Tâche: Gemini API Learning Sprint
 
 **Responsable**: Lead Architect + Full-Stack Dev  
-**Durée**: 2 jours (7-8 janvier, parallel to audit)  
+**Durée**: 2 jours (7-8 janvier, parallel to audit)
 
 **Livrables**:
+
 - [ ] Gemini API playground scripts (working examples)
 - [ ] Token counting validation
 - [ ] Streaming behavior tests
@@ -394,11 +409,11 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 async function basicPrompt() {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
-  
+
   const prompt = "Hello, Gemini! What is 2+2?";
   const result = await model.generateContent(prompt);
   const text = result.response.text();
-  
+
   console.log("Response:", text);
 }
 
@@ -412,10 +427,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 async function tokenCounter() {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
-  
+
   const prompt = "This is a test prompt to count tokens.";
   const tokenCount = await model.countTokens(prompt);
-  
+
   console.log("Tokens:", tokenCount);
   // Expected: { totalTokens: X }
 }
@@ -424,6 +439,7 @@ tokenCounter().catch(console.error);
 ```
 
 **Critères de Succès**:
+
 - ✅ Basic prompt works
 - ✅ Token counting understood
 - ✅ Streaming tested
@@ -481,9 +497,11 @@ GO/NO-GO DECISION: Phase 0 Exit Gate
 ## II. PHASE 1: API SWAP (Semaines 1-3 | 9-27 janvier 2026)
 
 ### Objectif
+
 Remplacer Claude SDK par Gemini SDK. 80% du code devrait fonctionner avec minimal changes.
 
 ### Timeline
+
 ```
 Week 1 (9-13 jan):  Fork analysis + initial SDK swap
 Week 2 (16-20 jan): Fix compilation + basic functionality
@@ -495,9 +513,10 @@ Week 3 (23-27 jan): Testing + validation
 ### 1.1 Tâche: SDK Integration Layer Design
 
 **Responsable**: Lead Architect  
-**Durée**: 1 jour (9 janvier)  
+**Durée**: 1 jour (9 janvier)
 
 **Livrables**:
+
 - [ ] `src/core/gemini-client.ts` (abstraction layer)
 - [ ] `src/types/gemini.ts` (TypeScript interfaces)
 - [ ] `src/adapters/response-mapper.ts` (format conversion)
@@ -560,7 +579,7 @@ export class GeminiClient {
     try {
       // Build contents array (handle history)
       const contents = [];
-      
+
       if (request.history && request.history.length > 0) {
         for (const msg of request.history) {
           contents.push({
@@ -596,7 +615,7 @@ export class GeminiClient {
   ): AsyncGenerator<string> {
     try {
       const contents = [];
-      
+
       if (request.history && request.history.length > 0) {
         for (const msg of request.history) {
           contents.push({
@@ -638,7 +657,7 @@ export class GeminiClient {
   ): Promise<number> {
     try {
       const contents = [];
-      
+
       if (request.history) {
         for (const msg of request.history) {
           contents.push({
@@ -731,6 +750,7 @@ export interface ExecutionResult {
 ```
 
 **Critères de Succès**:
+
 - ✅ GeminiClient class compiles
 - ✅ All methods have proper error handling
 - ✅ TypeScript types complete
@@ -742,9 +762,10 @@ export interface ExecutionResult {
 ### 1.2 Tâche: Replace Claude SDK → Gemini SDK in Agent
 
 **Responsable**: Full-Stack Dev (with Lead review)  
-**Durée**: 2 jours (10-11 janvier)  
+**Durée**: 2 jours (10-11 janvier)
 
 **Livrables**:
+
 - [ ] Agent class updated (use GeminiClient)
 - [ ] All Claude-specific code replaced
 - [ ] Compilation passes
@@ -816,6 +837,7 @@ class Agent {
 ```
 
 **Critères de Succès**:
+
 - ✅ All Claude SDK imports removed
 - ✅ Code compiles without errors
 - ✅ Agent.generatePlan() works
@@ -827,9 +849,10 @@ class Agent {
 ### 1.3 Tâche: Token Counter Migration
 
 **Responsable**: Full-Stack Dev  
-**Durée**: 1 jour (12 janvier)  
+**Durée**: 1 jour (12 janvier)
 
 **Livrables**:
+
 - [ ] `src/utils/token-counter.ts` (Gemini-based)
 - [ ] Token estimation tests
 - [ ] Validation vs countTokens() API
@@ -855,7 +878,7 @@ export class TokenCounter {
    * Estimate tokens for a multi-turn conversation
    */
   async estimateConversation(messages: Message[]): Promise<number> {
-    const prompt = messages.map(m => `${m.role}: ${m.content}`).join("\n");
+    const prompt = messages.map((m) => `${m.role}: ${m.content}`).join("\n");
     return await this.gemini.countTokens(prompt);
   }
 
@@ -885,17 +908,17 @@ export class TokenCounter {
     maxTokens: number
   ): Promise<{ text: string; tokens: number }> {
     let currentText = text;
-    
+
     while (true) {
       const tokens = await this.estimate(currentText);
-      
+
       if (tokens <= maxTokens) {
         return { text: currentText, tokens };
       }
 
       // Remove last 10% of content and retry
       currentText = currentText.slice(0, Math.floor(currentText.length * 0.9));
-      
+
       if (currentText.length === 0) break;
     }
 
@@ -946,6 +969,7 @@ describe("TokenCounter", () => {
 ```
 
 **Critères de Succès**:
+
 - ✅ Token counter uses Gemini API
 - ✅ Tests validate accuracy
 - ✅ Context window logic correct (1M)
@@ -956,9 +980,10 @@ describe("TokenCounter", () => {
 ### 1.4 Tâche: Session Manager Persistence Setup
 
 **Responsable**: Full-Stack Dev  
-**Durée**: 1.5 jours (13-14 janvier)  
+**Durée**: 1.5 jours (13-14 janvier)
 
 **Livrables**:
+
 - [ ] `src/storage/session-store.ts` (SQLite)
 - [ ] Schema migrations
 - [ ] Session CRUD operations
@@ -1039,14 +1064,7 @@ export class SessionStore {
       VALUES (?, ?, ?, ?, ?, ?)
     `);
 
-    stmt.run(
-      id,
-      taskDescription,
-      "pending",
-      JSON.stringify(context),
-      now,
-      now
-    );
+    stmt.run(id, taskDescription, "pending", JSON.stringify(context), now, now);
 
     return {
       id,
@@ -1138,7 +1156,7 @@ export class SessionStore {
     const stmt = this.db.prepare(query);
     const rows = stmt.all(...values) as any[];
 
-    return rows.map(row => ({
+    return rows.map((row) => ({
       ...row,
       context: JSON.parse(row.context),
       plan: row.plan ? JSON.parse(row.plan) : undefined,
@@ -1161,6 +1179,7 @@ export class SessionStore {
 ```
 
 **Critères de Succès**:
+
 - ✅ SQLite schema created
 - ✅ CRUD operations work
 - ✅ Transactions safe
@@ -1172,9 +1191,10 @@ export class SessionStore {
 ### 1.5 Tâche: Basic CLI Commands
 
 **Responsable**: Full-Stack Dev  
-**Durée**: 2 jours (16-17 janvier)  
+**Durée**: 2 jours (16-17 janvier)
 
 **Livrables**:
+
 - [ ] `src/commands/task.ts` (main command)
 - [ ] `src/commands/status.ts` (check progress)
 - [ ] `src/commands/history.ts` (view sessions)
@@ -1230,7 +1250,7 @@ export default class TaskCommand extends Command {
 
     try {
       const session = await agent.executeTask(taskDescription, flags.project);
-      
+
       this.log(`✅ Task completed: ${session.id}`);
       this.log(`📝 Commit: ${session.gitCommit}`);
     } catch (error) {
@@ -1243,6 +1263,7 @@ export default class TaskCommand extends Command {
 ```
 
 **Critères de Succès**:
+
 - ✅ CLI runs without errors
 - ✅ At least 3 commands work
 - ✅ Help text displays
@@ -1253,9 +1274,10 @@ export default class TaskCommand extends Command {
 ### 1.6 Tâche: Compilation & Test Suite Baseline
 
 **Responsable**: Full-Stack Dev  
-**Durée**: 1 jour (18 janvier)  
+**Durée**: 1 jour (18 janvier)
 
 **Livrables**:
+
 - [ ] Full compilation succeeds
 - [ ] 80%+ of original tests pass
 - [ ] No blocking errors
@@ -1274,6 +1296,7 @@ export default class TaskCommand extends Command {
 ```
 
 **Critères de Succès**:
+
 - ✅ `npm run build` succeeds
 - ✅ `npm test` passes (80%+ tests)
 - ✅ `npm run lint` succeeds
@@ -1285,9 +1308,10 @@ export default class TaskCommand extends Command {
 ### 1.7 Tâche: Validate Basic Functionality
 
 **Responsable**: Lead Architect + Full-Stack Dev  
-**Durée**: 2 jours (19-20 janvier)  
+**Durée**: 2 jours (19-20 janvier)
 
 **Livrables**:
+
 - [ ] E2E test: Single task execution
 - [ ] Validation: Session persists
 - [ ] Validation: Output matches expected
@@ -1313,9 +1337,10 @@ Day 2 (20 jan):
 ```
 
 **Expected Results**:
+
 ```
 Input:  "Write a Hello World function in Python"
-Output: 
+Output:
   ├─ Generated Python code (hello_world.py)
   ├─ Test code (test_hello.py)
   ├─ Session record in DB
@@ -1330,6 +1355,7 @@ Validate:
 ```
 
 **Critères de Succès**:
+
 - ✅ Simple task executes start-to-finish
 - ✅ Output correct
 - ✅ Session saved
@@ -1341,9 +1367,10 @@ Validate:
 ### 1.8 Tâche: Code Review & Milestone Gate
 
 **Responsable**: Lead Architect  
-**Durée**: 1 jour (21 janvier)  
+**Durée**: 1 jour (21 janvier)
 
 **Livrables**:
+
 - [ ] Pull request review (Phase 1 code)
 - [ ] Architecture sign-off
 - [ ] ADR #5: Phase 1 Learnings
@@ -1364,6 +1391,7 @@ Validate:
 ```
 
 **Phase 1 Exit Criteria**:
+
 ```
 ✅ API Swap Complete
 ├─ Claude SDK fully replaced with Gemini
@@ -1385,6 +1413,7 @@ Validate:
 ```
 
 **GO/NO-GO for Phase 2**:
+
 - ✅ If all criteria met → PROCEED to Phase 2 (Week 4)
 - ❌ If any blocker → ESCALATE before continuing
 
@@ -1427,34 +1456,38 @@ EXIT GATE (28 Jan):
 ## III. PHASE 2: UI MIGRATION (Semaines 4-6 | 30 jan - 10 février 2026)
 
 ### Objectif
+
 Migrer de Electron (Desktop) vers Oclif (CLI). Adapter Terminal UI avec Ink.
 
 ### Timeline
+
 ```
 Week 4 (30 jan - 3 feb):  Remove Electron, setup Oclif
 Week 5 (6-10 feb):        Build Terminal UI components
 Week 6 (13-17 feb):       Polish + validation
 ```
 
-*(Phase 2 details would continue with similar exhaustive breakdown)*
+_(Phase 2 details would continue with similar exhaustive breakdown)_
 
 ---
 
 ## IV. PHASE 3: OPTIMIZATION (Semaines 7-10 | 20 feb - 16 mars 2026)
 
 ### Objectif
+
 Rate limiting, context window optimization, performance tuning.
 
-*(Phase 3 details would continue)*
+_(Phase 3 details would continue)_
 
 ---
 
 ## V. PHASE 4: POLISH & RELEASE (Semaines 11-14 | 19 mars - 28 avril 2026)
 
 ### Objectif
+
 Testing, documentation, v1.0 release.
 
-*(Phase 4 details would continue)*
+_(Phase 4 details would continue)_
 
 ---
 
@@ -1464,28 +1497,34 @@ Testing, documentation, v1.0 release.
 
 ```markdown
 ## Weekly Stand-up Report
+
 **Week**: X (Date Range)
 **Attendees**: [names]
 **Status**: On Track / At Risk / Off Track
 
 ### Completed This Week
+
 - [ ] Item 1
 - [ ] Item 2
 - [ ] Item 3
 
 ### In Progress
+
 - [ ] Item (% complete)
 - [ ] Item (% complete)
 
 ### Blockers
+
 - [ ] Blocker 1 (Impact, Mitigation)
 - [ ] Blocker 2 (Impact, Mitigation)
 
 ### Next Week Goals
+
 - [ ] Goal 1
 - [ ] Goal 2
 
 ### Metrics
+
 - Lines of code added: XXX
 - Test coverage: XX%
 - Performance (latency): Xms
@@ -1495,13 +1534,13 @@ Testing, documentation, v1.0 release.
 
 ### B. Milestones & Gate Criteria
 
-| Milestone | Date | Criteria | Owner |
-|-----------|------|----------|-------|
-| **Phase 0 Complete** | 8 Jan | All pre-launch checklist done | Lead |
-| **Phase 1 Complete** | 28 Jan | API swap validated, basic task works | Lead + Dev |
-| **Phase 2 Complete** | 17 Feb | CLI UI working, MVP ready | Dev |
-| **Phase 3 Complete** | 16 Mar | Optimized, rate limiting works | Dev + Lead |
-| **v1.0 Released** | 28 Apr | Tests pass, docs complete, npm published | Lead |
+| Milestone            | Date   | Criteria                                 | Owner      |
+| -------------------- | ------ | ---------------------------------------- | ---------- |
+| **Phase 0 Complete** | 8 Jan  | All pre-launch checklist done            | Lead       |
+| **Phase 1 Complete** | 28 Jan | API swap validated, basic task works     | Lead + Dev |
+| **Phase 2 Complete** | 17 Feb | CLI UI working, MVP ready                | Dev        |
+| **Phase 3 Complete** | 16 Mar | Optimized, rate limiting works           | Dev + Lead |
+| **v1.0 Released**    | 28 Apr | Tests pass, docs complete, npm published | Lead       |
 
 ### C. Risk Register & Escalation
 
