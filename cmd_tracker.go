@@ -2,8 +2,10 @@
 // +build tracker
 
 /*
-Point d'entrée pour le programme tracker (consommateur).
-Compiler avec: go build -tags tracker -o tracker.exe
+Package main provides the entry point for the Tracker (Consumer) service.
+
+The Tracker subscribes to Kafka topics, processes events, and maintains logs.
+To compile: go build -tags tracker -o tracker.exe
 */
 
 package main
@@ -50,4 +52,3 @@ func main() {
 
 	fmt.Println("🔴 Le consommateur est arrêté.")
 }
-

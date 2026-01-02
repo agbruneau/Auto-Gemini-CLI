@@ -2,8 +2,10 @@
 // +build monitor
 
 /*
-Point d'entrée pour le programme de monitoring de logs.
-Compiler avec: go build -tags monitor -o log_monitor.exe
+Package main provides the entry point for the Log Monitor TUI service.
+
+The Monitor provides real-time visualization of system metrics and logs.
+To compile: go build -tags monitor -o log_monitor.exe
 */
 
 package main
@@ -82,4 +84,3 @@ func main() {
 		}
 	}
 }
-

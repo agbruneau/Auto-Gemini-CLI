@@ -2,8 +2,10 @@
 // +build producer
 
 /*
-Point d'entrée pour le programme producteur.
-Compiler avec: go build -tags producer -o producer.exe
+Package main provides the entry point for the Producer service.
+
+The Producer simulates order generation and streams events to Apache Kafka.
+To compile: go build -tags producer -o producer.exe
 */
 
 package main
@@ -37,4 +39,3 @@ func main() {
 	// Lancer la boucle de production
 	producer.Run(sigchan)
 }
-

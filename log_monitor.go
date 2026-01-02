@@ -26,16 +26,13 @@ import (
 	"github.com/gizak/termui/v3/widgets"
 )
 
-// MonitorLogEntry est un alias pour LogEntry (défini dans models.go).
-// Utilisé pour la surveillance des logs système.
+// MonitorLogEntry provides an alias for the core LogEntry model for TUI context.
 type MonitorLogEntry = LogEntry
 
-// MonitorEventEntry est un alias pour EventEntry (défini dans models.go).
-// Utilisé pour la surveillance des événements d'audit.
+// MonitorEventEntry provides an alias for the core EventEntry model for TUI context.
 type MonitorEventEntry = EventEntry
 
-// HealthStatus définit les niveaux de santé pour les indicateurs du tableau de bord.
-// Il est utilisé pour déterminer la couleur et le texte à afficher pour chaque métrique.
+// HealthStatus defines the health tiers for dashboard indicators.
 type HealthStatus int
 
 const (
@@ -79,9 +76,8 @@ const (
 	TruncateSuffix    = MonitorTruncateSuffix
 )
 
-// Metrics agrège et gère l'état de toutes les métriques collectées par le moniteur.
-// L'accès à cette structure est protégé par un RWMutex pour garantir la sécurité
-// lors des lectures et écritures concurrentes.
+// Metrics encapsulates the real-time state of the monitoring dashboard.
+// Access is synchronized via RWMutex to handle asynchronous file tailing.
 type Metrics struct {
 	mu                    sync.RWMutex        // Mutex pour un accès concurrent sécurisé.
 	StartTime             time.Time           // Heure de démarrage du moniteur.

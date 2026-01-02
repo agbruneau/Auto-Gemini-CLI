@@ -10,7 +10,7 @@ package main
 
 import "encoding/json"
 
-// LogLevel définit les niveaux de sévérité pour les logs structurés.
+// LogLevel defines the severity levels for structured logging.
 type LogLevel string
 
 const (
@@ -18,11 +18,10 @@ const (
 	LogLevelERROR LogLevel = "ERROR"
 )
 
-// LogEntry est la structure d'un log écrit dans `tracker.log`.
-// Elle est conçue pour le patron "Application Health Monitoring".
-// Chaque entrée est un log structuré (JSON) contenant des informations sur l'état
-// de l'application (démarrage, arrêt, erreurs, métriques). Ce format est optimisé
-// pour être ingéré, parsé et visualisé par des outils de monitoring et d'alerte.
+// LogEntry defines the structure of a system health log record.
+// It implements the "Application Health Monitoring" pattern, following
+// a structured JSON format optimized for ingestion and visualization
+// by modern monitoring and alerting stacks.
 type LogEntry struct {
 	Timestamp string                 `json:"timestamp"`          // Horodatage du log au format RFC3339.
 	Level     LogLevel               `json:"level"`              // Niveau de sévérité (INFO, ERROR).
@@ -32,13 +31,10 @@ type LogEntry struct {
 	Metadata  map[string]interface{} `json:"metadata,omitempty"` // Données contextuelles supplémentaires.
 }
 
-// EventEntry est la structure d'un événement écrit dans `tracker.events`.
-// Elle implémente le patron "Audit Trail" en capturant une copie fidèle et immuable
-// de chaque message reçu de Kafka, avec ses métadonnées.
-//
-// Chaque entrée contient le message brut, le résultat de la tentative de désérialisation,
-// et des informations contextuelles comme le topic, la partition et l'offset.
-// Ce journal est la source de vérité pour l'audit, le rejeu d'événements et le débogage.
+// EventEntry defines the record structure for the business event journal.
+// It implements the "Audit Trail" pattern by capturing an immutable,
+// high-fidelity copy of every Kafka message received, along with its metadata.
+// This journal serves as the source of truth for compliance and debugging.
 type EventEntry struct {
 	Timestamp      string          `json:"timestamp"`            // Horodatage de la réception au format RFC3339.
 	EventType      string          `json:"event_type"`           // Type d'événement (ex: "message.received").

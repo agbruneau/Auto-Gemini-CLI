@@ -28,11 +28,11 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-// Note: LogLevel, LogEntry et EventEntry sont définis dans models.go
-// Note: Les constantes sont définies dans constants.go pour éviter les duplications.
+// Note: Diagnostic and Audit models are defined in models.go.
+// Note: Configuration constants are defined in constants.go for project-wide consistency.
 
-// TrackerConfig contient la configuration du service tracker.
-// Elle peut être chargée depuis des variables d'environnement.
+// TrackerConfig encapsulates the tracker service's operating parameters.
+// This structure supports overrides via environment variables for cloud-native compatibility.
 type TrackerConfig struct {
 	KafkaBroker     string        // Adresse du broker Kafka
 	ConsumerGroup   string        // Groupe de consommateurs Kafka
@@ -44,8 +44,8 @@ type TrackerConfig struct {
 	MaxErrors       int           // Nombre maximum d'erreurs consécutives
 }
 
-// NewTrackerConfig crée une configuration avec les valeurs par défaut,
-// surchargées par les variables d'environnement si elles sont définies.
+// NewTrackerConfig initializes a configuration object with default values,
+// subsequently applying any environment variable overrides if present.
 func NewTrackerConfig() *TrackerConfig {
 	config := &TrackerConfig{
 		KafkaBroker:     DefaultKafkaBroker,
@@ -72,15 +72,15 @@ func NewTrackerConfig() *TrackerConfig {
 	return config
 }
 
-// Logger gère l'écriture concurrente et sécurisée dans un fichier de log.
+// Logger provides synchronized, high-performance encoding for structured logs.
 type Logger struct {
 	file    *os.File
 	encoder *json.Encoder
 	mu      sync.Mutex
 }
 
-// SystemMetrics collecte les métriques de performance du consommateur.
-// L'accès à cette structure est protégé par un mutex pour garantir la sécurité en concurrence.
+// SystemMetrics aggregates performance counters for the consumer service.
+// Access is protected by a RWMutex to ensure thread-safety during concurrent processing.
 type SystemMetrics struct {
 	mu                sync.RWMutex
 	StartTime         time.Time
@@ -90,9 +90,8 @@ type SystemMetrics struct {
 	LastMessageTime   time.Time
 }
 
-// Tracker est le service principal qui gère la consommation de messages Kafka.
-// Il encapsule les loggers, les métriques et la configuration pour permettre
-// l'injection de dépendances et une meilleure testabilité.
+// Tracker is the primary service managing Kafka message consumption and observability.
+// It orchestrates dual-stream logging, metrics collection, and graceful shutdown.
 type Tracker struct {
 	config      *TrackerConfig
 	logLogger   *Logger
@@ -104,7 +103,7 @@ type Tracker struct {
 	mu          sync.Mutex
 }
 
-// NewTracker crée une nouvelle instance du service Tracker.
+// NewTracker creates a new instance of the Tracker service.
 func NewTracker(config *TrackerConfig) *Tracker {
 	return &Tracker{
 		config:   config,
@@ -113,7 +112,7 @@ func NewTracker(config *TrackerConfig) *Tracker {
 	}
 }
 
-// Initialize initialise les loggers et le consommateur Kafka.
+// Initialize sets up the dual-stream loggers and initializes the Kafka consumer.
 func (t *Tracker) Initialize() error {
 	var err error
 
@@ -158,7 +157,7 @@ func (t *Tracker) Initialize() error {
 	return nil
 }
 
-// Run démarre la boucle de consommation des messages.
+// Run enters the main consumption loop, processing messages until a cessation is signaled.
 func (t *Tracker) Run() {
 	t.mu.Lock()
 	t.running = true
@@ -184,15 +183,15 @@ func (t *Tracker) Run() {
 	}
 }
 
-// isRunning retourne true si le tracker est en cours d'exécution.
+// isRunning returns true if the tracker service is currently active.
 func (t *Tracker) isRunning() bool {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	return t.running
 }
 
-// handleKafkaError gère les erreurs de lecture Kafka.
-// Retourne true si le tracker doit s'arrêter.
+// handleKafkaError manages connectivity and protocol errors from the Kafka broker.
+// Returns true if the error is terminal and the service should halt.
 func (t *Tracker) handleKafkaError(err error, consecutiveErrors *int) bool {
 	kafkaErr, ok := err.(kafka.Error)
 	if !ok {
@@ -236,7 +235,7 @@ func (t *Tracker) handleKafkaError(err error, consecutiveErrors *int) bool {
 	return false
 }
 
-// processMessage traite un message Kafka individuel.
+// processMessage handles the deserialization, logging, and metrics for a single message.
 func (t *Tracker) processMessage(msg *kafka.Message) {
 	var order Order
 	deserializationErr := json.Unmarshal(msg.Value, &order)
@@ -261,7 +260,7 @@ func (t *Tracker) processMessage(msg *kafka.Message) {
 	}
 }
 
-// logPeriodicMetrics écrit les métriques périodiques.
+// logPeriodicMetrics periodically exports system performance to the diagnostics log.
 func (t *Tracker) logPeriodicMetrics() {
 	ticker := time.NewTicker(t.config.MetricsInterval)
 	defer ticker.Stop()
@@ -295,7 +294,7 @@ func (t *Tracker) logPeriodicMetrics() {
 	}
 }
 
-// Stop arrête proprement le tracker.
+// Stop triggers a graceful cessation of the consumption loop.
 func (t *Tracker) Stop() {
 	t.mu.Lock()
 	t.running = false
@@ -313,7 +312,7 @@ func (t *Tracker) Stop() {
 	})
 }
 
-// Close libère toutes les ressources.
+// Close releases all underlying resources, including the Kafka consumer and loggers.
 func (t *Tracker) Close() {
 	if t.consumer != nil {
 		t.consumer.Close()
@@ -326,14 +325,14 @@ func (t *Tracker) Close() {
 	}
 }
 
-// Variables globales pour la compatibilité avec les tests existants
+// Global variables for legacy and test compatibility.
 var (
 	logLogger     *Logger
 	eventLogger   *Logger
 	systemMetrics = &SystemMetrics{StartTime: time.Now()}
 )
 
-// newLogger initialise un nouveau Logger pour un fichier donné.
+// newLogger initializes a new Logger specialized for structured JSON output.
 func newLogger(filename string) (*Logger, error) {
 	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
@@ -345,7 +344,7 @@ func newLogger(filename string) (*Logger, error) {
 	}, nil
 }
 
-// Log écrit une entrée structurée dans `tracker.log`.
+// Log writes a structured entry to the diagnostic record (tracker.log).
 func (l *Logger) Log(level LogLevel, message string, metadata map[string]interface{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -362,7 +361,7 @@ func (l *Logger) Log(level LogLevel, message string, metadata map[string]interfa
 	}
 }
 
-// LogError est un raccourci pour écrire un message d'erreur dans `tracker.log`.
+// LogError is a convenience wrapper for recording system anomalies in the diagnostic record.
 func (l *Logger) LogError(message string, err error, metadata map[string]interface{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -383,10 +382,9 @@ func (l *Logger) LogError(message string, err error, metadata map[string]interfa
 	}
 }
 
-// LogEvent écrit un enregistrement complet de message dans `tracker.events`.
-// Cette fonction est le cœur de l'implémentation du patron "Audit Trail".
-// Elle est appelée pour CHAQUE message reçu, qu'il soit valide ou non, garantissant ainsi
-// qu'aucune donnée entrante n'est perdue.
+// LogEvent records a high-fidelity audit entry for every incoming message.
+// This function is the core of the "Audit Trail" implementation, capturing
+// messages regardless of validity to ensure full traceability.
 func (l *Logger) LogEvent(msg *kafka.Message, order *Order, deserializationError error) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -427,7 +425,7 @@ func (l *Logger) LogEvent(msg *kafka.Message, order *Order, deserializationError
 	}
 }
 
-// Close ferme proprement les fichiers de log.
+// Close ensures all file handles are properly released.
 func (l *Logger) Close() {
 	if l != nil && l.file != nil {
 		if err := l.file.Close(); err != nil {
@@ -436,7 +434,7 @@ func (l *Logger) Close() {
 	}
 }
 
-// recordMetrics met à jour les compteurs de performance.
+// recordMetrics atomiquement updates the performance counters.
 func (sm *SystemMetrics) recordMetrics(processed, failed bool) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
@@ -454,7 +452,7 @@ func (sm *SystemMetrics) recordMetrics(processed, failed bool) {
 // Note: La fonction main() est définie dans cmd_tracker.go avec le build tag "tracker"
 // Pour compiler: go build -tags tracker -o tracker.exe
 
-// displayOrder affiche les détails d'une commande formatée dans la console.
+// displayOrder prints a formatted summary of an order to the console for real-time monitoring.
 func displayOrder(order *Order) {
 	fmt.Println("\n" + strings.Repeat("=", 80))
 	fmt.Printf("📦 COMMANDE REÇUE #%d (ID: %s)\n", order.Sequence, order.OrderID)

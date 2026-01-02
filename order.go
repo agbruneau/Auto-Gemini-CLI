@@ -18,7 +18,7 @@ import (
 	"strings"
 )
 
-// Erreurs de validation
+// Validation errors
 var (
 	ErrEmptyOrderID      = errors.New("order_id est requis")
 	ErrInvalidSequence   = errors.New("sequence doit être positif")
@@ -35,7 +35,7 @@ var (
 	ErrInvalidItemTotal  = errors.New("le total de l'article ne correspond pas au calcul")
 )
 
-// emailRegex est une expression régulière simple pour valider les emails
+// emailRegex provides basic email validation using standard patterns.
 var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 
 // CustomerInfo contient les informations détaillées et complètes du client.
@@ -141,8 +141,8 @@ func (i *OrderItem) Validate() error {
 	return nil
 }
 
-// Validate vérifie qu'une commande est valide.
-// Elle valide tous les champs requis et la cohérence des montants.
+// Validate ensures the order is logically correct and semantically valid.
+// It verifies all required fields and performs financial consensus checks.
 func (o *Order) Validate() error {
 	// Valider les identifiants
 	if strings.TrimSpace(o.OrderID) == "" {
@@ -186,7 +186,7 @@ func (o *Order) Validate() error {
 	return nil
 }
 
-// IsValid retourne true si la commande est valide.
+// IsValid returns true if the order passes all validation checks.
 func (o *Order) IsValid() bool {
 	return o.Validate() == nil
 }

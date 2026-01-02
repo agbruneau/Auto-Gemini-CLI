@@ -26,10 +26,10 @@ import (
 	"github.com/google/uuid"
 )
 
-// Note: Les constantes sont définies dans constants.go pour éviter les duplications.
+// Note: Configuration constants are defined in constants.go for project-wide consistency.
 
-// ProducerConfig contient la configuration du service producteur.
-// Elle peut être chargée depuis des variables d'environnement.
+// ProducerConfig encapsulates the producer service's operating parameters.
+// This structure supports overrides via environment variables for cloud-native compatibility.
 type ProducerConfig struct {
 	KafkaBroker     string        // Adresse du broker Kafka
 	Topic           string        // Topic Kafka pour la publication
@@ -42,8 +42,8 @@ type ProducerConfig struct {
 	Warehouse       string        // Entrepôt par défaut
 }
 
-// NewProducerConfig crée une configuration avec les valeurs par défaut,
-// surchargées par les variables d'environnement si elles sont définies.
+// NewProducerConfig initializes a configuration object with default values,
+// subsequently applying any environment variable overrides if present.
 func NewProducerConfig() *ProducerConfig {
 	config := &ProducerConfig{
 		KafkaBroker:     DefaultKafkaBroker,
@@ -68,7 +68,7 @@ func NewProducerConfig() *ProducerConfig {
 	return config
 }
 
-// OrderTemplate définit un modèle pour générer des commandes de test.
+// OrderTemplate defines a blueprint for generating realistic test order data.
 type OrderTemplate struct {
 	User     string  // Identifiant du client
 	Item     string  // Nom de l'article
@@ -76,7 +76,7 @@ type OrderTemplate struct {
 	Price    float64 // Prix unitaire
 }
 
-// DefaultOrderTemplates contient les templates de commandes par défaut.
+// DefaultOrderTemplates provides a diverse set of order scenarios for the producer.
 var DefaultOrderTemplates = []OrderTemplate{
 	{User: "client01", Item: "espresso", Quantity: 2, Price: 2.50},
 	{User: "client02", Item: "cappuccino", Quantity: 3, Price: 3.20},
@@ -90,8 +90,8 @@ var DefaultOrderTemplates = []OrderTemplate{
 	{User: "client10", Item: "smoothie fraise", Quantity: 11, Price: 5.50},
 }
 
-// OrderProducer est le service principal qui gère la production de messages Kafka.
-// Il encapsule le producteur Kafka, la configuration et les templates de commandes.
+// OrderProducer is the primary service managing Kafka message generation and publishing.
+// It orchestrates the lifecycle of the internal Kafka producer and delivery reports.
 type OrderProducer struct {
 	config       *ProducerConfig
 	producer     *kafka.Producer
@@ -101,7 +101,7 @@ type OrderProducer struct {
 	running      bool
 }
 
-// NewOrderProducer crée une nouvelle instance du service OrderProducer.
+// NewOrderProducer creates a new instance of the OrderProducer service.
 func NewOrderProducer(config *ProducerConfig) *OrderProducer {
 	return &OrderProducer{
 		config:    config,
@@ -110,7 +110,7 @@ func NewOrderProducer(config *ProducerConfig) *OrderProducer {
 	}
 }
 
-// Initialize initialise le producteur Kafka.
+// Initialize sets up the internal Kafka producer and starts the delivery report handler.
 func (p *OrderProducer) Initialize() error {
 	var err error
 	p.producer, err = kafka.NewProducer(&kafka.ConfigMap{
@@ -126,7 +126,7 @@ func (p *OrderProducer) Initialize() error {
 	return nil
 }
 
-// handleDeliveryReports traite les rapports de livraison dans une goroutine dédiée.
+// handleDeliveryReports processes Kafka delivery ACKs in a dedicated goroutine.
 func (p *OrderProducer) handleDeliveryReports() {
 	for e := range p.deliveryChan {
 		m := e.(*kafka.Message)
@@ -141,7 +141,7 @@ func (p *OrderProducer) handleDeliveryReports() {
 	}
 }
 
-// GenerateOrder crée une commande enrichie à partir d'un template et d'un numéro de séquence.
+// GenerateOrder constructs an enriched Order event from a template and sequence index.
 func (p *OrderProducer) GenerateOrder(template OrderTemplate, sequence int) Order {
 	// Calculs financiers
 	itemTotal := float64(template.Quantity) * template.Price
@@ -197,7 +197,7 @@ func (p *OrderProducer) GenerateOrder(template OrderTemplate, sequence int) Orde
 	}
 }
 
-// ProduceOrder génère et envoie une commande au topic Kafka.
+// ProduceOrder generates and transmits a single order event to the configured Kafka topic.
 func (p *OrderProducer) ProduceOrder() error {
 	template := p.templates[p.sequence%len(p.templates)]
 	order := p.GenerateOrder(template, p.sequence)
@@ -221,7 +221,7 @@ func (p *OrderProducer) ProduceOrder() error {
 	return nil
 }
 
-// Run démarre la boucle de production de messages.
+// Run enters the main production loop, continuously streaming events until a stop signal is received.
 func (p *OrderProducer) Run(stopChan <-chan os.Signal) {
 	p.running = true
 	for p.running {
@@ -238,7 +238,7 @@ func (p *OrderProducer) Run(stopChan <-chan os.Signal) {
 	}
 }
 
-// Close ferme proprement le producteur et envoie les messages en attente.
+// Close gracefully shuts down the producer, ensuring all buffered messages are flushed.
 func (p *OrderProducer) Close() {
 	fmt.Println("⏳ Envoi des messages restants en file d'attente...")
 	remainingMessages := p.producer.Flush(p.config.FlushTimeout)

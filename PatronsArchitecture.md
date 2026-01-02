@@ -1,38 +1,38 @@
-# 🏗️ Architecture et Design Patterns
+# 🏗️ Architecture & Design Patterns
 
-Ce document détaille les modèles d'architecture et les choix de conception implémentés dans ce projet.
+This document details the architectural models and design choices implemented in this project.
 
-## 🧩 Patrons d'Architecture
+## 🧩 Architecture Patterns
 
 ### 1. Event-Driven Architecture (EDA)
 
-Induit un découplage total entre les composants via l'asynchronisme.
+Induces total decoupling between components via asynchronous messaging.
 
-- **Implémentation** : Kafka sert de bus de messages.
-- **Impact** : Haute disponibilité et extensibilité simplifiée.
+- **Implementation**: Apache Kafka serves as the central event bus.
+- **Benefit**: High availability, horizontal scalability, and simplified extensibility.
 
 ### 2. Event Carried State Transfer (ECST)
 
-Chaque message est "autonome" et contient l'intégralité des données nécessaires.
+Each message is "self-contained," carrying the full state required for downstream processing.
 
-- **Bénéfice** : Pas d'appels API Synchrones vers d'autres services ou bases de données.
-- **Fichiers** : [order.go](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/order.go) définit la structure enrichie.
+- **Benefit**: Eliminates synchronous API calls to upstream services or databases, enhancing consumer autonomy.
+- **Resource**: [order.go](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/order.go) defines the enriched data structure.
 
-### 3. Audit Trail & Technical Logging
+### 3. Dual-Stream Logging (Audit vs. Health)
 
-Séparation des préoccupations en matière de journalisation.
+Clear separation of concerns regarding system journaling.
 
-- **Service Monitoring** (`tracker.log`) : Métriques et santé technique.
-- **Business Audit** (`tracker.events`) : Journal immuable des flux métier.
+- **Service Health Monitoring** (`tracker.log`): Technical metrics and system lifecycle events.
+- **Business Audit Trail** (`tracker.events`): An immutable, high-fidelity journal of all business event flows.
 
 ### 4. Graceful Shutdown
 
-Les services interceptent les signaux `SIGINT` / `SIGTERM`.
+Services intercept system interrupt signals (`SIGINT` / `SIGTERM`).
 
-- **Mécanique** : Flush des buffers Kafka et fermeture sécurisée des descripteurs de fichiers.
+- **Mechanics**: Ensures Kafka buffers are flushed and file descriptors are safely closed before termination, preventing data loss.
 
 ## 🛠️ Infrastructure & DevOps
 
-- **Kafka mode KRaft** : Suppression de la dépendance à Zookeeper pour plus de simplicité.
-- **Go Build Tags** : Gestion des points d'entrée multiples via des tags de compilation (`producer`, `tracker`, `monitor`).
-- **Scripts d'orchestration** : [start.sh](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/start.sh) et [stop.sh](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/stop.sh) pour une gestion automatisée du cycle de vie.
+- **Kafka KRaft Mode**: Utilizes the modern KRaft protocol, removing the dependency on Zookeeper for a leaner infrastructure.
+- **Go Build Tags**: Orchestrates multiple entry points and conditional logic via compilation tags (`producer`, `tracker`, `monitor`).
+- **Automated Lifecycle**: [start.sh](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/start.sh) and [stop.sh](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/stop.sh) provide reliable, environment-aware orchestration.

@@ -1,6 +1,6 @@
 /*
-Ce fichier centralise toutes les constantes de configuration partagées
-entre les différents programmes du projet (producer, tracker, log_monitor).
+Package main centralizes all configuration constants shared across the
+project components (producer, tracker, log_monitor).
 */
 
 package main
@@ -38,8 +38,8 @@ const (
 
 // Constantes pour le tracker
 const (
-	TrackerMetricsInterval     = 30 * time.Second
-	TrackerConsumerReadTimeout = 1 * time.Second
+	TrackerMetricsInterval      = 30 * time.Second
+	TrackerConsumerReadTimeout  = 1 * time.Second
 	TrackerMaxConsecutiveErrors = 3
 	TrackerServiceName          = "order-tracker"
 )
@@ -84,4 +84,3 @@ const (
 	MonitorMaxEventRowLength = 75
 	MonitorTruncateSuffix    = "..."
 )
-

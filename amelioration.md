@@ -1,161 +1,124 @@
-# 📋 Plan d'Améliorations Priorisé - PubSub Kafka Demo
+# 📋 Prioritized Improvement Plan - PubSub Kafka Demo
 
-Ce document recense et priorise les améliorations techniques pour faire évoluer le projet d'une démonstration vers une application robuste prête pour la production.
+This document identifies and prioritizes technical improvements to evolve the project from a demonstration to a robust, production-ready application.
 
-## 🏆 Priorisation & Roadmap
+## 🏆 Roadmap & Prioritization
 
-La priorisation est basée sur l'impact (stabilité, maintenabilité) par rapport à l'effort.
+Prioritization is based on impact (stability, maintainability) vs. effort.
 
-| Priorité        | Domaine            | Amélioration Clé                       | Impact                                                                      |
-| --------------- | ------------------ | -------------------------------------- | --------------------------------------------------------------------------- |
-| **🔴 Critique** | **Architecture**   | **1.1 Structure de packages Standard** | Fondamental pour la maintenabilité et les tests.                            |
-| **🔴 Critique** | **Config**         | **2.1 Configuration Externe**          | Indispensable pour déployer dans différents environnements sans recompiler. |
-| **🔴 Critique** | **Fiabilité**      | **6.1 Retry Pattern**                  | Nécessaire pour gérer les pannes réseaux transitoires.                      |
-| **🟠 Élevée**   | **Tests**          | **4.2 Couverture de tests**            | Sécurise les refactorings futurs.                                           |
-| **🟠 Élevée**   | **DevOps**         | **7.1 Docker Multi-stage**             | Optimise la taille des images et la sécurité pour la prod.                  |
-| **🟠 Élevée**   | **CI/CD**          | **11.1 GitHub Actions**                | Automatise la qualité du code.                                              |
-| **🟡 Moyenne**  | **Observabilité**  | **5.2 Métriques Prometheus**           | Standard de l'industrie (remplace le `log_monitor` custom à terme).         |
-| **🟡 Moyenne**  | **Sécurité**       | **3.1 Auth Kafka**                     | Critique en prod, mais optionnel en local/demo.                             |
-| **🟢 Basse**    | **Fonctionnalité** | **8.1 Multi-topics / 9.2 Web UI**      | Extensions fonctionnelles non bloquantes.                                   |
+| Priority        | Domain            | Key Improvement                    | Impact                                                            |
+| :-------------- | :---------------- | :--------------------------------- | :---------------------------------------------------------------- |
+| **🔴 Critical** | **Architecture**  | **1.1 Standard Package Structure** | Fundamental for maintainability and unit testing.                 |
+| **🔴 Critical** | **Configuration** | **2.1 External Configuration**     | Essential for multi-environment deployment without recompilation. |
+| **🔴 Critical** | **Reliability**   | **6.1 Retry Pattern**              | Required for handling transient network failures.                 |
+| **🟠 High**     | **Testing**       | **4.2 Test Coverage**              | Secures future refactoring and feature additions.                 |
+| **🟠 High**     | **DevOps**        | **7.1 Multi-stage Docker**         | Optimizes image size and production security.                     |
+| **🟠 High**     | **CI/CD**         | **11.1 GitHub Actions**            | Automates code quality and builds.                                |
+| **🟡 Medium**   | **Observability** | **5.2 Prometheus Metrics**         | Industry standard (replaces custom `log_monitor` over time).      |
+| **🟡 Medium**   | **Security**      | **3.1 Kafka Auth**                 | Critical for production, optional for local/demo.                 |
+| **🟢 Low**      | **Feature**       | **8.1 Multi-topic Support**        | Functional extensions for broader use cases.                      |
 
 ---
 
-## 1. 🏗️ Architecture et Organisation du Code (Critique)
+## 1. 🏗️ Architecture & Code Organization (Critical)
 
-### 1.1 Migration vers une structure de packages Go standard
+### 1.1 Migration to Standard Go Package Structure
 
-**Priorité : Critique**
-Actuellement, tout est dans le package `main`. Cela empêche les tests unitaires isolés et la réutilisation de code.
+**Priority: Critical**
+Current implementation resides largely in the `main` package. This limits isolated unit testing and code reuse.
 
-**Cible** :
+**Target Structure**:
 
 ```
 kafka-demo/
-├── cmd/ (Points d'entrée)
+├── cmd/ (Entry Points)
 │   ├── producer/main.go
 │   ├── tracker/main.go
 │   └── monitor/main.go
-├── internal/ (Logique métier privée)
-│   ├── kafka/ (Clients wrapper)
-│   ├── processing/ (Logique de traitement)
-│   └── monitor/ (Logique TUI)
-├── pkg/ (Code réutilisable public)
+├── internal/ (Private Business Logic)
+│   ├── kafka/ (Client Wrapper)
+│   ├── processing/ (Event Logic)
+│   └── monitor/ (TUI Logic)
+├── pkg/ (Public Reusable Code)
 │   └── models/
 └── config/
 ```
 
-### 1.2 Élimination des variables globales
+### 1.2 Elimination of Global Variables
 
-**Priorité : Élevée**
-Injecter les dépendances (Loggers, Config) via les constructeurs pour faciliter les tests et éviter les effets de bord.
-
----
-
-## 2. ⚙️ Configuration et Environnement (Critique)
-
-### 2.1 Fichier de configuration externe
-
-**Priorité : Critique**
-Remplacer les constantes hardcodées par un fichier `config.yaml` chargé au démarrage.
-
-```yaml
-app:
-  env: "production"
-kafka:
-  broker: "kafka:9092"
-  topic: "orders"
-```
+**Priority: High**
+Inject dependencies (Loggers, Config) via constructors to facilitate testing and avoid side effects.
 
 ---
 
-## 3. 🔄 Résilience et Fiabilité (Critique / Élevée)
+## 2. ⚙️ Configuration & Environment (Critical)
 
-### 6.1 Retry avec backoff exponentiel
+### 2.1 External Configuration File
 
-**Priorité : Critique**
-Le tracker doit pouvoir réessayer le traitement d'un message en cas d'erreur temporaire (ex: base de données inaccessible) avant d'abandonner.
+**Priority: Critical**
+Replace hardcoded constants with a `config.yaml` or structured environment variables.
+
+---
+
+## 3. 🔄 Resilience & Reliability (Critical/High)
+
+### 6.1 Retry with Exponential Backoff
+
+**Priority: Critical**
+The tracker should retry message processing during transient failures (e.g., database timeout) before aborting.
 
 ### 6.3 Dead Letter Queue (DLQ)
 
-**Priorité : Élevée**
-Si un message échoue après X tentatives, il doit être envoyé vers un topic `orders-dlq` pour analyse manuelle, au lieu d'être perdu ou de bloquer la file.
-
-### 6.2 Circuit Breaker
-
-**Priorité : Moyenne**
-Empêcher de surcharger un service en aval s'il est déjà en panne.
+**Priority: High**
+Messages failing after X attempts should be routed to a `orders-dlq` topic for manual analysis.
 
 ---
 
-## 4. 🧪 Tests et Qualité (Élevée)
+## 4. 🧪 Testing & Quality (High)
 
-### 4.2 Amélioration de la couverture
+### 4.2 Coverage Improvement
 
-**Priorité : Élevée**
-Extraire la logique métier des fonctions `main()` vers des fonctions pures testables unitairement.
+**Priority: High**
+Extract core logic into pure, unit-testable functions.
 
-### 4.1 Tests d'intégration (Testcontainers)
+### 4.1 Integration Testing (Testcontainers)
 
-**Priorité : Moyenne**
-Utiliser Testcontainers pour lancer un vrai Kafka lors des tests `go test`, au lieu de mocker.
-
----
-
-## 5. 🐳 Conteneurisation et Déploiement (Élevée)
-
-### 7.1 Dockerfile multi-stage
-
-**Priorité : Élevée**
-Produire des images Docker légères (Alpine/Scratch) contenant uniquement le binaire compilé.
-
-### 7.2 Docker Compose amélioré
-
-**Priorité : Moyenne**
-Ajouter Kafka-UI pour visualiser les messages facilement durant le développement.
+**Priority: Medium**
+Use Testcontainers to spin up real Kafka instances during `go test`.
 
 ---
 
-## 6. 📊 Observabilité (Moyenne)
+## 5. 🐳 Containerization & Deployment (High)
 
-### 5.2 / 5.1 Prometheus & OpenTelemetry
+### 7.1 Multi-stage Dockerfile
 
-**Priorité : Moyenne**
-Le `log_monitor` TUI est excellent pour la démo, mais en production, l'export de métriques (endpoint `/metrics`) vers Prometheus/Grafana est le standard.
-
----
-
-## 7. 🔒 Sécurité (Moyenne / Basse)
-
-### 3.1 Authentification Kafka (SASL/SSL)
-
-**Priorité : Moyenne**
-Nécessaire si le cluster Kafka est partagé ou public.
+**Priority: High**
+Produce lightweight (Alpine/Scratch) images containing only the compiled binary.
 
 ---
 
-## 8. 📝 Fonctionnalités Métier (Basse)
+## 6. 📊 Observability (Medium)
 
-### 8.1 Support multi-topics
+### 5.2 Prometheus & OpenTelemetry
 
-Extension pour gérer différents types d'événements.
-
-### 8.2 Partitionnement intelligent
-
-Utiliser le `customer_id` comme clé de partition pour garantir l'ordre des messages par client.
+**Priority: Medium**
+Export metrics via `/metrics` endpoint for Prometheus/Grafana visualization.
 
 ---
 
-## 9. 🖥️ Interface & Divers (Basse)
+## 7. 📝 Documentation & Cleanup (COMPLETED ✅)
 
-### 9.2 Documentation & Cleanup (Completed)
+**Status: COMPLETED**
 
-**Status: Done**
+- [x] **Standardized Docstrings**: All `.go` files updated with professional, bilingual documentation.
+- [x] **Professional Documentation**: `README.md` and `PatronsArchitecture.md` overhauled for clarity and international tone.
+- [x] **Repository Purge**: Unnecessary environment/path files removed.
+- [x] **Infrastructure Cleanup**: `.gitignore` updated to prevent binary and PID pollution.
 
-- All Go files now have professional, English/French refined docstrings.
-- `README.md` and `PatronsArchitecture.md` have been updated for better clarity and professional tone.
-- Repository has been purged of unnecessary files (`settings_list.txt`, `user_path.txt`).
-- `.gitignore` updated to prevent pollution by binaries and PID files.
+---
 
-### 12.1 Scripts PowerShell
+## 8. ⌨️ Development Experience
 
-Pour supporter les développeurs Windows nativement (actuellement WSL est recommandé).
+### 12.1 PowerShell Scripts
+
+Native support for Windows developers (currently WSL-centric).
