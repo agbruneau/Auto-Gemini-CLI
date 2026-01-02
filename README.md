@@ -1,6 +1,6 @@
 # 🚀 Kafka Order Tracking System
 
-[![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)](https://golang.org/)
+[![Go Version](https://img.shields.io/badge/Go-1.22.0-00ADD8?style=flat&logo=go)](https://golang.org/)
 [![Kafka](https://img.shields.io/badge/Apache_Kafka-3.7.0-white?style=flat&logo=apache-kafka)](https://kafka.apache.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -16,136 +16,125 @@ The ecosystem consists of three decoupled core services:
 2.  **⚙️ Tracker (`tracker`)**: Consumes order events in real-time, performing validation and maintaining a comprehensive audit trail.
 3.  **📊 Monitor (`log_monitor`)**: A sophisticated TUI dashboard providing live visualization of system performance, throughput, and success rates.
 
+For a deep dive into the design patterns used, see [PatronsArchitecture.md](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/PatronsArchitecture.md).
+
 ---
 
 ## 🌟 Key Features & Design Patterns
 
-This implementation adheres to modern distributed systems standards:
-
 - **Event-Driven Architecture (EDA)**: Complete decoupling of services through asynchronous messaging.
-- **Event Carried State Transfer (ECST)**: Self-contained messages that include all necessary context (product, customer, pricing), minimizing downstream lookups.
+- **Event Carried State Transfer (ECST)**: Self-contained messages that include all necessary context.
 - **Guaranteed Delivery**: Implements Kafka delivery reports (ACKs) to ensure data integrity.
-- **Dual-Stream Observability**:
-  - **Technical Health**: Structured JSON logging (`tracker.log`) for system monitoring.
-  - **Business Audit**: An immutable event journal (`tracker.events`) for compliance and debugging.
-- **Graceful Shutdown**: Strict handling of `SIGTERM`/`SIGINT` signals for zero-data-loss termination.
-- **Operational Idempotence**: Automated infrastructure setup via robust shell orchestration.
+- **Dual-Stream Observability**: Technical health (`tracker.log`) vs Business Audit (`tracker.events`).
+- **Graceful Shutdown**: Strict handling of `SIGTERM`/`SIGINT` for zero-data-loss termination.
 
 ---
 
 ## 🛠 Prerequisites
 
-Ensure the following are installed on your system:
+Ensure the following are installed:
 
 1.  **Docker** and **Docker Compose** (V2).
-2.  **Go** (version 1.22 or higher).
-3.  An **ANSI-compatible terminal** (for the TUI monitor).
-4.  **Sudo privileges** (required for Docker commands in scripts).
+2.  **Go** (version 1.22.0 or higher).
+3.  **Make** (optional, but highly recommended for CLI efficiency).
+4.  An **ANSI-compatible terminal** (for the TUI monitor).
+
+---
+
+## ⌨️ Command Line Interface (Makefile)
+
+The project includes a comprehensive `Makefile` to simplify common operations.
+
+| Command           | Description                                                          |
+| :---------------- | :------------------------------------------------------------------- |
+| `make build`      | Compile all service binaries (`producer`, `tracker`, `log_monitor`). |
+| `make run`        | Deploy Kafka and start all background services (Linux/macOS).        |
+| `make stop`       | Gracefully shut down all services and infrastructure.                |
+| `make test`       | Run the complete test suite.                                         |
+| `make test-cover` | Run tests and generate an HTML coverage report.                      |
+| `make docker-up`  | Start only the Kafka infrastructure.                                 |
+| `make clean`      | Remove all binaries and log files.                                   |
+| `make help`       | Display all available commands.                                      |
 
 ---
 
 ## 🚀 Getting Started
 
-Deploy the complete environment with a single command:
+### 1. Automated Deployment (Linux/macOS)
 
 ```bash
-./start.sh
+make run
 ```
 
-**Automated actions performed:**
+This script handles Kafka health checks, topic creation, and background service initialization.
 
-- Deploys a Kafka cluster (KRaft mode) via Docker.
-- Polls the broker until health checks pass.
-- Idempotently creates the `orders` topic.
-- Launches the **Producer** and **Tracker** services in the background.
+### 2. Manual Execution (All Platforms)
 
----
-
-## 📊 Monitoring & Observation
-
-### 1. Interactive Dashboard (Recommended)
-
-Launch the TUI monitor in a **new terminal window** for real-time visualization:
+If you prefer manual control or are on Windows:
 
 ```bash
-go run -tags monitor cmd_monitor.go log_monitor.go models.go constants.go
-```
+# 1. Start Kafka
+make docker-up
 
-- **Controls**: Press `q` or `Ctrl+C` to exit.
-- **Insights**: Monitor msg/sec throughput, success rates, and live log streams.
-
-### 2. Manual Log Inspection
-
-Follow the generated logs directly:
-
-```bash
-# Business Audit Trail
-tail -f tracker.events
-
-# Technical System Logs (Formatted with jq)
-tail -f tracker.log | jq
+# 2. Launch Services in separate terminals
+go run -tags kafka cmd_producer.go producer.go order.go models.go constants.go
+go run -tags kafka cmd_tracker.go tracker.go order.go models.go constants.go
 ```
 
 ---
 
-## 🛑 Stopping the System
+## 📊 Monitoring
 
-To gracefully terminate all services and the Kafka infrastructure:
+Launch the TUI monitor for real-time visualization:
 
 ```bash
-./stop.sh
+make run-monitor
 ```
 
-_This script uses PID tracking to send `SIGTERM` signals, allowing Go services to flush buffers and close connections properly before the Docker environment is torn down._
+- **Controls**: Press `q` to exit.
+- **Insights**: Monitor msg/sec, success rates, and live logs.
+
+---
+
+## 🧪 Build Tags & Testing
+
+This project uses Go **Build Tags** for modular compilation:
+
+| Tag        | Purpose                                      |
+| :--------- | :------------------------------------------- |
+| `producer` | Includes producer-specific logic.            |
+| `tracker`  | Includes consumer/tracker-specific logic.    |
+| `monitor`  | Includes terminal UI dependencies and logic. |
+| `kafka`    | Includes Kafka client initialization.        |
+
+### Running Tests
+
+```bash
+# All tests
+make test
+
+# Coverage report
+make test-cover
+```
+
+---
+
+## 🗺 Future Roadmap
+
+We are evolving this demo into a production-ready template. Detailed improvements can be found in [amelioration.md](file:///c:/Users/agbru/OneDrive/Documents/GitHub/PubSubKafka/amelioration.md).
+
+- [ ] **1. Architecture**: Migrate to Standard Go Package Structure (`/cmd`, `/internal`, `/pkg`).
+- [ ] **2. Configuration**: Implementation of external configuration (`config.yaml`).
+- [ ] **3. Resilience**: Add Retry Patterns with Exponential Backoff and Dead Letter Queues (DLQ).
+- [ ] **4. CI/CD**: Integrate GitHub Actions for automated testing and linting.
+- [ ] **5. Observability**: Export Prometheus metrics and OpenTelemetry traces.
 
 ---
 
 ## 📂 Project Structure
 
-- **Entry Points (`cmd_*.go`)**:
-  - `cmd_producer.go`: Producer initialization.
-  - `cmd_tracker.go`: Tracker initialization.
-  - `cmd_monitor.go`: TUI Monitor initialization.
-- **Core Logic**:
-  - `producer.go`: Kafka publishing and order generation.
-  - `tracker.go`: Message consumption and processing.
-  - `log_monitor.go`: TUI widgets and metrics logic.
-- **Shared Resources**:
-  - `models.go`: Structured log and event definitions.
-  - `order.go`: The `Order` domain model (ECST).
-  - `constants.go`: Global configuration (Topics, Timeouts).
-- **Orchestration**:
-  - `start.sh` / `stop.sh`: Lifecycle management scripts.
-  - `docker-compose.yaml`: Infrastructure definition.
-
----
-
-## 💻 Development & Testing
-
-The project uses Go **Build Tags** (`producer`, `tracker`, `monitor`, `kafka`) for modular compilation.
-
-### Manual Compilation
-
-```bash
-# Build Producer
-go build -tags producer -o producer cmd_producer.go producer.go order.go models.go constants.go
-
-# Build Tracker
-go build -tags tracker -o tracker cmd_tracker.go tracker.go order.go models.go constants.go
-
-# Build Monitor
-go build -tags monitor -o monitor cmd_monitor.go log_monitor.go models.go constants.go
-```
-
-### Running Tests
-
-```bash
-# Producer Tests
-go test -tags kafka,producer producer.go producer_test.go order.go constants.go
-
-# Tracker Tests
-go test -tags kafka,tracker tracker.go tracker_test.go order.go constants.go models.go
-
-# Monitor Tests
-go test -tags monitor log_monitor.go log_monitor_test.go models.go constants.go
-```
+- **`cmd/`**: Entry points (`cmd_*.go`).
+- **`*.go`**: Core implementations (moving to `internal/` soon).
+- **`Makefile`**: Operational orchestration.
+- **`docker-compose.yaml`**: Infrastructure as code.
+- **`*.md`**: Documentation and Roadmap.
