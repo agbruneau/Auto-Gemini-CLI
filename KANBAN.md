@@ -1,6 +1,6 @@
 # 📋 Kanban Board - Fibonacci Benchmark Suite
 
-> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 92%
+> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 96%
 
 ---
 
@@ -8,7 +8,7 @@
 
 | ✅ Terminé | 🔄 En Cours | ⬜ À Faire | 🔮 Futur |
 | :--------: | :---------: | :--------: | :------: |
-|     69     |      2      |     40     |    15    |
+|     74     |      1      |     36     |    15    |
 
 ---
 
@@ -105,7 +105,7 @@
   - Intégration pprof
   - `#[cfg(unix)]`
 
-- [ ] Cleanup & polish
+- [x] Cleanup & polish
   - Formatage code
   - Cohérence docs
 
@@ -114,7 +114,7 @@
 
 ### Phase 4: Docs (reste)
 
-- [ ] memory_analysis.md
+- [x] memory_analysis.md
 - [x] Résultats bench réels
 - [x] Graphiques comparaison
 - [ ] Relecture complète
@@ -201,13 +201,13 @@
 
 | Priorité | Tâche                     | Statut | Assigné |
 | :------: | ------------------------- | :----: | :-----: |
-|  🔴 P0   | Relecture documentation   |   ⬜   |    -    |
-|  🔴 P0   | Tests finaux intégration  |   ⬜   |    -    |
+|  🔴 P0   | Relecture documentation   |   ✅   |    -    |
+|  🔴 P0   | Tests finaux intégration  |   ✅   |    -    |
 |  🔴 P0   | Tag v0.1.0                |   ⬜   |    -    |
 |  🟠 P1   | Scripts automatisation    |   ✅   |    -    |
 |  🟠 P1   | Génération rapports HTML  |   ✅   |    -    |
 |  🟠 P1   | Résultats benchmark réels |   ✅   |    -    |
-|  🟡 P2   | memory_analysis.md        |   ⬜   |    -    |
+|  🟡 P2   | memory_analysis.md        |   ✅   |    -    |
 |  🟡 P2   | Graphiques comparaison    |   ✅   |    -    |
 
 ---
@@ -241,7 +241,7 @@ Temps restant: ~2 semaines
 P1 Fondation   ████████████████████ 100%
 P2 Algorithmes ████████████████████ 100%
 P3 CLI/Outils  ████████████████████ 100%
-P4 Docs/CI     ████████████████░░░░  80%
+P4 Docs/CI     ███████████████████░  95%
 P5 Profiling   ░░░░░░░░░░░░░░░░░░░░   0%
 P6 Viz         ░░░░░░░░░░░░░░░░░░░░   0%
 P7 Go          ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)

@@ -12,9 +12,9 @@ pub fn run(filter: Option<String>) {
     println!();
     println!("  cargo bench");
     println!();
-    
-    if filter.is_some() {
-        println!("  cargo bench -- {}", filter.unwrap());
+
+    if let Some(f) = &filter {
+        println!("  cargo bench -- {}", f);
     }
 
     println!();
