@@ -1,14 +1,14 @@
 # 📋 Kanban Board - Fibonacci Benchmark Suite
 
-> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 76%
+> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 85%
 
 ---
 
 ## 🎯 Vue Rapide
 
 | ✅ Terminé | 🔄 En Cours | ⬜ À Faire | 🔮 Futur |
-|:----------:|:-----------:|:----------:|:--------:|
-| 67 | 4 | 42 | 15 |
+| :--------: | :---------: | :--------: | :------: |
+|     69     |      2      |     40     |    15    |
 
 ---
 
@@ -25,6 +25,7 @@
 <td>
 
 ### Phase 1: Fondation
+
 - [x] Workspace Cargo
 - [x] Cargo.toml config
 - [x] Structure crates
@@ -40,6 +41,7 @@
 - [x] README initial
 
 ### Phase 2: Algorithmes
+
 - [x] Matrix2x2 struct
 - [x] Fast exponentiation
 - [x] fib_matrix
@@ -58,6 +60,7 @@
 - [x] Benchmarks matriciels
 
 ### Phase 3: CLI & Outils
+
 - [x] Structure clap
 - [x] Cmd `calc`
 - [x] Cmd `compare`
@@ -70,6 +73,7 @@
 - [x] Génération CSV
 
 ### Phase 4: Docs (partiel)
+
 - [x] MATHEMATICS.md
 - [x] BENCHMARKS.md
 - [x] fibonacci_theory.md
@@ -87,16 +91,17 @@
 
 ### Phase 4: Docs (suite)
 
-- [ ] Scripts automatisation
+- [x] Scripts automatisation
   - `run_all_benchmarks.sh`
   - `generate_report.sh`
-  
-- [ ] Rapports HTML
+- [x] Rapports HTML
+
   - Template HTML
   - CSS styling
   - Export automatique
 
 - [ ] Flamegraph Unix
+
   - Intégration pprof
   - `#[cfg(unix)]`
 
@@ -108,6 +113,7 @@
 <td>
 
 ### Phase 4: Docs (reste)
+
 - [ ] memory_analysis.md
 - [ ] Résultats bench réels
 - [ ] Graphiques comparaison
@@ -117,6 +123,7 @@
 - [ ] **Tag v0.1.0** 🎯
 
 ### Phase 5: Profiling
+
 - [ ] Intégration pprof
 - [ ] flamegraph.rs
 - [ ] Cmd `profile`
@@ -130,6 +137,7 @@
 - [ ] Exemples profiler
 
 ### Phase 6: Visualisations
+
 - [ ] chart_generator.rs
 - [ ] Intégration Plotly
 - [ ] Templates graphiques
@@ -145,6 +153,7 @@
 - [ ] GitHub Pages
 
 ### Phase 9: Release
+
 - [ ] cargo-audit
 - [ ] Vérif licence
 - [ ] README polish
@@ -160,6 +169,7 @@
 <td>
 
 ### Phase 7: Bridge Go
+
 - [ ] fib.go implémentation
 - [ ] FFI bridge cgo
 - [ ] build.rs
@@ -170,6 +180,7 @@
 - [ ] Scripts setup Go
 
 ### Phase 8: SIMD
+
 - [ ] simd.rs (nightly)
 - [ ] Batch SIMD
 - [ ] Benchmarks SIMD
@@ -188,16 +199,16 @@
 
 ### Objectif: Documentation & Polish
 
-| Priorité | Tâche | Statut | Assigné |
-|:--------:|-------|:------:|:-------:|
-| 🔴 P0 | Relecture documentation | ⬜ | - |
-| 🔴 P0 | Tests finaux intégration | ⬜ | - |
-| 🔴 P0 | Tag v0.1.0 | ⬜ | - |
-| 🟠 P1 | Scripts automatisation | 🔄 | - |
-| 🟠 P1 | Génération rapports HTML | 🔄 | - |
-| 🟠 P1 | Résultats benchmark réels | ⬜ | - |
-| 🟡 P2 | memory_analysis.md | ⬜ | - |
-| 🟡 P2 | Graphiques comparaison | ⬜ | - |
+| Priorité | Tâche                     | Statut | Assigné |
+| :------: | ------------------------- | :----: | :-----: |
+|  🔴 P0   | Relecture documentation   |   ⬜   |    -    |
+|  🔴 P0   | Tests finaux intégration  |   ⬜   |    -    |
+|  🔴 P0   | Tag v0.1.0                |   ⬜   |    -    |
+|  🟠 P1   | Scripts automatisation    |   🔄   |    -    |
+|  🟠 P1   | Génération rapports HTML  |   🔄   |    -    |
+|  🟠 P1   | Résultats benchmark réels |   ⬜   |    -    |
+|  🟡 P2   | memory_analysis.md        |   ⬜   |    -    |
+|  🟡 P2   | Graphiques comparaison    |   ⬜   |    -    |
 
 ---
 
@@ -206,19 +217,19 @@
 ```
 Phase 1 ────► Phase 2 ────► Phase 3 ────► Phase 4 ────► Phase 9
   ✅            ✅            ✅           🔄            ⬜
-  
+
 Temps restant: ~2 semaines
 ```
 
 ### Tâches Bloquantes
 
-| # | Tâche | Bloque | Deadline |
-|:-:|-------|--------|:--------:|
-| 1 | Relecture docs | Tag v0.1.0 | S4 J5 |
-| 2 | Tests finaux | Tag v0.1.0 | S4 J5 |
-| 3 | Tag v0.1.0 | Phase 9 | S4 J5 |
-| 4 | cargo-audit | Publish | S9 J1 |
-| 5 | CHANGELOG.md | Release | S9 J2 |
+|  #  | Tâche          | Bloque     | Deadline |
+| :-: | -------------- | ---------- | :------: |
+|  1  | Relecture docs | Tag v0.1.0 |  S4 J5   |
+|  2  | Tests finaux   | Tag v0.1.0 |  S4 J5   |
+|  3  | Tag v0.1.0     | Phase 9    |  S4 J5   |
+|  4  | cargo-audit    | Publish    |  S9 J1   |
+|  5  | CHANGELOG.md   | Release    |  S9 J2   |
 
 ---
 
@@ -240,14 +251,14 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 
 ### KPIs
 
-| Métrique | Cible | Actuel | Status |
-|----------|:-----:|:------:|:------:|
-| Tests | 100% | 43/43 | ✅ |
-| Clippy warnings | 0 | 0 | ✅ |
-| Doc coverage | 100% | 100% | ✅ |
-| Benchmarks | 6 | 6 | ✅ |
-| CI time | <5min | ~2min | ✅ |
-| Code coverage | >80% | TBD | 🔄 |
+| Métrique        | Cible | Actuel | Status |
+| --------------- | :---: | :----: | :----: |
+| Tests           | 100%  | 43/43  |   ✅   |
+| Clippy warnings |   0   |   0    |   ✅   |
+| Doc coverage    | 100%  |  100%  |   ✅   |
+| Benchmarks      |   6   |   6    |   ✅   |
+| CI time         | <5min | ~2min  |   ✅   |
+| Code coverage   | >80%  |  TBD   |   🔄   |
 
 ---
 
@@ -255,35 +266,37 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 
 ### Risques Actifs
 
-| Risque | Impact | Mitigation |
-|--------|:------:|------------|
-| pprof Windows ❌ | 🟡 | Compilation conditionnelle Unix |
-| Binet précision | 🟢 | Doc limite n≤78 |
-| CGO complexité | 🟡 | Phase optionnelle |
-| SIMD nightly | 🟢 | Feature flag |
+| Risque           | Impact | Mitigation                      |
+| ---------------- | :----: | ------------------------------- |
+| pprof Windows ❌ |   🟡   | Compilation conditionnelle Unix |
+| Binet précision  |   🟢   | Doc limite n≤78                 |
+| CGO complexité   |   🟡   | Phase optionnelle               |
+| SIMD nightly     |   🟢   | Feature flag                    |
 
 ### Bloqueurs
 
-| Bloqueur | Affecte | Solution |
-|----------|---------|----------|
-| Env Unix requis | Phase 5 | WSL/VM |
-| Go non installé | Phase 7 | Scripts setup |
-| Nightly Rust | Phase 8 | Feature optionnel |
+| Bloqueur        | Affecte | Solution          |
+| --------------- | ------- | ----------------- |
+| Env Unix requis | Phase 5 | WSL/VM            |
+| Go non installé | Phase 7 | Scripts setup     |
+| Nightly Rust    | Phase 8 | Feature optionnel |
 
 ---
 
 ## 📋 Checklists
 
 ### ✅ Pré-Commit
+
 ```
 [ ] cargo fmt --check
-[ ] cargo clippy -- -D warnings  
+[ ] cargo clippy -- -D warnings
 [ ] cargo test
 [ ] cargo doc --no-deps
 [ ] Pas de TODO/FIXME oubliés
 ```
 
 ### ✅ Release v1.0
+
 ```
 [ ] Tests passent (toutes plateformes)
 [ ] Documentation complète
@@ -296,6 +309,7 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 ```
 
 ### ✅ Mise en Service GitHub
+
 ```
 [ ] README.md attractif + badges
 [ ] Description repo configurée
@@ -309,29 +323,31 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 
 ## 🗓️ Planning Sprints
 
-| Sprint | Semaine | Focus | Status |
-|:------:|:-------:|-------|:------:|
-| 1 | S1 | Fondation | ✅ |
-| 2 | S2 | Algorithmes avancés | ✅ |
-| 3 | S3 | CLI & Outils | ✅ |
-| **4** | **S4** | **Docs & Polish** | **🔄** |
-| 5 | S5 | Profiling avancé | ⬜ |
-| 6 | S6 | Visualisations | ⬜ |
-| 7 | S7 | Bridge Go | 🔮 |
-| 8 | S8 | SIMD | 🔮 |
-| 9 | S9 | Publication | ⬜ |
+| Sprint | Semaine | Focus               | Status |
+| :----: | :-----: | ------------------- | :----: |
+|   1    |   S1    | Fondation           |   ✅   |
+|   2    |   S2    | Algorithmes avancés |   ✅   |
+|   3    |   S3    | CLI & Outils        |   ✅   |
+| **4**  | **S4**  | **Docs & Polish**   | **🔄** |
+|   5    |   S5    | Profiling avancé    |   ⬜   |
+|   6    |   S6    | Visualisations      |   ⬜   |
+|   7    |   S7    | Bridge Go           |   🔮   |
+|   8    |   S8    | SIMD                |   🔮   |
+|   9    |   S9    | Publication         |   ⬜   |
 
 ---
 
 ## 📝 Notes
 
 ### Décisions Clés
+
 - **Workspace multi-crates**: Séparation responsabilités
 - **Criterion**: Standard benchmarking Rust
 - **Phase Go optionnelle**: Focus Rust prioritaire
 - **SIMD optionnel**: Requiert nightly
 
 ### Limites Techniques
+
 - **Overflow u128**: F(186) maximum
 - **Binet précision**: n ≤ 78 strict
 - **Flamegraph**: Unix uniquement

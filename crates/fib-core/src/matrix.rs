@@ -50,15 +50,23 @@ impl Mul for Matrix2x2 {
     fn mul(self, other: Self) -> Self {
         let a = self.data;
         let b = other.data;
-        
+
         Matrix2x2::new([
             [
-                a[0][0].wrapping_mul(b[0][0]).wrapping_add(a[0][1].wrapping_mul(b[1][0])),
-                a[0][0].wrapping_mul(b[0][1]).wrapping_add(a[0][1].wrapping_mul(b[1][1])),
+                a[0][0]
+                    .wrapping_mul(b[0][0])
+                    .wrapping_add(a[0][1].wrapping_mul(b[1][0])),
+                a[0][0]
+                    .wrapping_mul(b[0][1])
+                    .wrapping_add(a[0][1].wrapping_mul(b[1][1])),
             ],
             [
-                a[1][0].wrapping_mul(b[0][0]).wrapping_add(a[1][1].wrapping_mul(b[1][0])),
-                a[1][0].wrapping_mul(b[0][1]).wrapping_add(a[1][1].wrapping_mul(b[1][1])),
+                a[1][0]
+                    .wrapping_mul(b[0][0])
+                    .wrapping_add(a[1][1].wrapping_mul(b[1][0])),
+                a[1][0]
+                    .wrapping_mul(b[0][1])
+                    .wrapping_add(a[1][1].wrapping_mul(b[1][1])),
             ],
         ])
     }
@@ -92,7 +100,7 @@ pub fn fib_matrix_fast(n: u64) -> u128 {
 
     // Fast exponentiation using repeated squaring
     while exp > 0 {
-        if exp % 2 == 1 {
+        if exp & 1 == 1 {
             result = result * base;
         }
         base = base * base;
@@ -141,7 +149,7 @@ pub fn fib_matrix_modulo(n: u64, modulo: u128) -> u128 {
     let mut base = [[1, 1], [1, 0]];
 
     while exp > 0 {
-        if exp % 2 == 1 {
+        if exp & 1 == 1 {
             result = mul_mod(result, base, modulo);
         }
         base = mul_mod(base, base, modulo);
@@ -176,7 +184,7 @@ pub fn fib_doubling(n: u64) -> u128 {
         let f_2k = f_k * (2 * f_k1 - f_k);
         let f_2k1 = f_k * f_k + f_k1 * f_k1;
 
-        if n % 2 == 0 {
+        if n & 1 == 0 {
             (f_2k, f_2k1)
         } else {
             (f_2k1, f_2k + f_2k1)
@@ -223,19 +231,14 @@ mod tests {
     #[test]
     fn test_fib_doubling() {
         for n in 0..50 {
-            assert_eq!(
-                fib_doubling(n),
-                fib_matrix_fast(n),
-                "Mismatch at n={}",
-                n
-            );
+            assert_eq!(fib_doubling(n), fib_matrix_fast(n), "Mismatch at n={}", n);
         }
     }
 
     #[test]
     fn test_matrix_matches_iterative() {
         use crate::iterative::fib_iterative;
-        
+
         for n in 0..100 {
             assert_eq!(
                 fib_matrix_fast(n),
