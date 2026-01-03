@@ -1,6 +1,6 @@
 # 📋 Kanban Board - Fibonacci Benchmark Suite
 
-> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 79%
+> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 5 | **Progression MVP**: 82%
 
 ---
 
@@ -8,7 +8,7 @@
 
 | ✅ Terminé | 🔄 En Cours | ⬜ À Faire | 🔮 Futur |
 | :--------: | :---------: | :--------: | :------: |
-|     85     |      1      |     21     |    15    |
+|     89     |      0      |     17     |    15    |
 
 ---
 
@@ -132,9 +132,9 @@
 - [x] Custom tracking
 - [x] Cmd `memory`
 - [x] Rapport mémoire
-- [ ] advanced_profiling.md
-- [ ] Tests Unix
-- [ ] Exemples profiler
+- [x] advanced_profiling.md
+- [x] Tests Unix
+- [x] Exemples profiler
 
 ### Phase 6: Visualisations
 
@@ -242,7 +242,7 @@ P1 Fondation   ████████████████████ 100%
 P2 Algorithmes ████████████████████ 100%
 P3 CLI/Outils  ████████████████████ 100%
 P4 Docs/CI     ████████████████████ 100%
-P5 Profiling   ██████████░░░░░░░░░░  50%
+P5 Profiling   ████████████████████ 100%
 P6 Viz         ░░░░░░░░░░░░░░░░░░░░   0%
 P7 Go          ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
 P8 SIMD        ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
@@ -330,7 +330,7 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 |   3    |   S3    | CLI & Outils        |   ✅   |
 | **4**  | **S4**  | **Docs & Polish**   | **✅** |
 |   5    |   S5    | Profiling avancé    |   ✅   |
-|   6    |   S6    | Visualisations      |   ⬜   |
+|   6    |   S6    | Visualisations      |   🔄   |
 |   7    |   S7    | Bridge Go           |   🔮   |
 |   8    |   S8    | SIMD                |   🔮   |
 |   9    |   S9    | Publication         |   ⬜   |

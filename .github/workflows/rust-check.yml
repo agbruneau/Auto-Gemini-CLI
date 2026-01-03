@@ -2,9 +2,9 @@ name: Rust CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -24,6 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies (Unix)
+        run: sudo apt-get update && sudo apt-get install -y libunwind-dev
       - run: cargo test --all
 
   fmt:

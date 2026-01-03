@@ -188,7 +188,11 @@ fn profile_flamegraph() {
         if let Ok(report) = guard.report().build() {
             let file = File::create("flamegraph.svg").unwrap();
             report.flamegraph(file).unwrap();
-            println!("  ✅ flamegraph.svg generated successfully");
+            let file_path = "flamegraph.svg";
+            let file = File::create(file_path).unwrap();
+            report.flamegraph(file).unwrap();
+            println!("  ✅ Generated: {}", file_path);
+            println!("  ℹ️  Open this SVG file in a browser to view the flamegraph.");
         } else {
             println!("  ❌ Failed to generate flamegraph");
         }
