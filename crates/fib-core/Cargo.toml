@@ -1,0 +1,23 @@
+[package]
+name = "fib-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Core Fibonacci algorithm implementations with multiple complexity levels"
+keywords = ["fibonacci", "algorithms", "benchmark", "performance"]
+categories = ["algorithms", "mathematics"]
+
+[dependencies]
+num-bigint = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+proptest = { workspace = true }
+
+[target.'cfg(unix)'.dev-dependencies]
+pprof = { version = "0.13", features = ["flamegraph", "criterion"] }
+
+[[bench]]
+name = "fib_benchmarks"
+harness = false

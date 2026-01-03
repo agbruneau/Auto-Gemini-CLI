@@ -1,0 +1,21 @@
+[package]
+name = "fib-profiler"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Profiling and memory analysis tools for Fibonacci benchmarks"
+keywords = ["fibonacci", "profiling", "flamegraph", "memory"]
+categories = ["development-tools::profiling"]
+
+[[bin]]
+name = "fib-profiler"
+path = "src/main.rs"
+
+[dependencies]
+fib-core = { path = "../fib-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+pprof = { version = "0.13", features = ["flamegraph"] }

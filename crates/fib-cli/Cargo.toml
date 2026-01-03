@@ -1,0 +1,20 @@
+[package]
+name = "fib-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Command-line interface for the Fibonacci Benchmark Suite"
+keywords = ["fibonacci", "cli", "benchmark"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "fib-bench"
+path = "src/main.rs"
+
+[dependencies]
+fib-core = { path = "../fib-core" }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+criterion = { workspace = true }
