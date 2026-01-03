@@ -78,4 +78,49 @@ pub fn generate_charts(data: &BenchmarkData, output_dir: &str) {
 
     plot.set_layout(layout);
     plot.write_html(dir.join("golden_ratio_chart.html"));
+
+    generate_index_html(output_dir);
+}
+
+fn generate_index_html(output_dir: &str) {
+    let html = r#"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fibonacci Benchmark Report</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f4f4f9; }
+        h1 { color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 20px; margin-top: 20px; }
+        .chart-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #555; font-size: 1.2rem; }
+        iframe { width: 100%; height: 500px; border: none; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Fibonacci Benchmark Suite Report</h1>
+    <p>Generated automated report for Fibonacci algorithm performance and analysis.</p>
+    
+    <div class="dashboard">
+        <div class="chart-card">
+            <h2>Algorithm Complexity</h2>
+            <iframe src="complexity_chart.html"></iframe>
+        </div>
+        <div class="chart-card">
+            <h2>Binet Formula Accuracy</h2>
+            <iframe src="binet_accuracy_chart.html"></iframe>
+        </div>
+        <div class="chart-card">
+            <h2>Golden Ratio Convergence</h2>
+            <iframe src="golden_ratio_chart.html"></iframe>
+        </div>
+    </div>
+</body>
+</html>
+"#;
+
+    let dir = Path::new(output_dir);
+    std::fs::write(dir.join("index.html"), html).ok();
 }
