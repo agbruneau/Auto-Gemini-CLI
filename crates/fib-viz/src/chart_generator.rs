@@ -4,9 +4,14 @@ use plotly::layout::{Axis, AxisType, Layout};
 use plotly::{Plot, Scatter};
 use std::path::Path;
 
+use plotly::ImageFormat;
+
 pub fn generate_charts(data: &BenchmarkData, output_dir: &str) {
     let dir = Path::new(output_dir);
-    std::fs::create_dir_all(dir).ok();
+    if let Err(e) = std::fs::create_dir_all(dir) {
+        eprintln!("Failed to create output directory: {}", e);
+        return;
+    }
 
     // 1. Complexity Chart
     let mut plot = Plot::new();
@@ -32,7 +37,7 @@ pub fn generate_charts(data: &BenchmarkData, output_dir: &str) {
         .y_axis(Axis::new().title(Title::new("Time (ns)")));
 
     plot.set_layout(layout);
-    plot.write_html(dir.join("complexity_chart.html"));
+    save_plot(&mut plot, dir, "complexity_chart");
 
     // 2. Binet Accuracy Chart
     let mut plot = Plot::new();
@@ -53,7 +58,7 @@ pub fn generate_charts(data: &BenchmarkData, output_dir: &str) {
         .y_axis(Axis::new().title(Title::new("Absolute Error")));
 
     plot.set_layout(layout);
-    plot.write_html(dir.join("binet_accuracy_chart.html"));
+    save_plot(&mut plot, dir, "binet_accuracy_chart");
 
     // 3. Golden Ratio Convergence
     let mut plot = Plot::new();
@@ -77,9 +82,20 @@ pub fn generate_charts(data: &BenchmarkData, output_dir: &str) {
         ); // Log scale is useful here
 
     plot.set_layout(layout);
-    plot.write_html(dir.join("golden_ratio_chart.html"));
+    save_plot(&mut plot, dir, "golden_ratio_chart");
 
     generate_index_html(output_dir);
+}
+
+fn save_plot(plot: &mut Plot, dir: &Path, base_name: &str) {
+    let html_path = dir.join(format!("{}.html", base_name));
+    plot.write_html(&html_path);
+
+    let png_path = dir.join(format!("{}.png", base_name));
+    plot.write_image(&png_path, ImageFormat::PNG, 1024, 768, 1.0);
+
+    let svg_path = dir.join(format!("{}.svg", base_name));
+    plot.write_image(&svg_path, ImageFormat::SVG, 1024, 768, 1.0);
 }
 
 fn generate_index_html(output_dir: &str) {

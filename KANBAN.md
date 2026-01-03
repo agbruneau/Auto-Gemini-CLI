@@ -141,8 +141,8 @@
 - [x] chart_generator.rs
 - [x] Intégration Plotly
 - [x] Templates graphiques
-- [ ] Export SVG
-- [ ] Export PNG
+- [x] Export SVG
+- [x] Export PNG
 - [x] data_parser.rs
 - [x] Lecture CSV (JSON)
 - [x] Agrégation données
