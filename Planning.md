@@ -6,6 +6,12 @@
 
 Un écosystème complet de benchmarking Fibonacci en Rust, avec comparaisons Go, visualisations avancées et documentation mathématique rigoureuse. Portfolio impressionnant pour architectes de performance.
 
+### 📦 Nom du repository GitHub
+
+**`fibonacci-benchmark`**
+
+Nom choisi pour le repository GitHub, reflétant la nature complète du projet de benchmarking des algorithmes Fibonacci.
+
 ***
 
 ## 🏗️ Architecture du projet
