@@ -1,6 +1,6 @@
 # 📋 Kanban Board - Fibonacci Benchmark Suite
 
-> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 5 | **Progression MVP**: 82%
+> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 6 | **Progression MVP**: 85%
 
 ---
 
@@ -138,17 +138,17 @@
 
 ### Phase 6: Visualisations
 
-- [ ] chart_generator.rs
-- [ ] Intégration Plotly
-- [ ] Templates graphiques
+- [x] chart_generator.rs
+- [x] Intégration Plotly
+- [x] Templates graphiques
 - [ ] Export SVG
 - [ ] Export PNG
-- [ ] data_parser.rs
-- [ ] Lecture CSV
-- [ ] Agrégation données
-- [ ] Rapport HTML auto
-- [ ] Comparaison visuelle
-- [ ] Cmd `report`
+- [x] data_parser.rs
+- [x] Lecture CSV (JSON)
+- [x] Agrégation données
+- [x] Rapport HTML auto
+- [x] Comparaison visuelle
+- [x] Cmd `report`
 - [ ] CI artifacts
 - [ ] GitHub Pages
 
@@ -195,28 +195,25 @@
 
 ---
 
-## 🏃 Sprint 4 - En Cours
+## 🏃 Sprint 6 - En Cours
 
-### Objectif: Documentation & Polish
+### Objectif: Visualisations & Reporting
 
-| Priorité | Tâche                     | Statut | Assigné |
-| :------: | ------------------------- | :----: | :-----: |
-|  🔴 P0   | Relecture documentation   |   ✅   |    -    |
-|  🔴 P0   | Tests finaux intégration  |   ✅   |    -    |
-|  🔴 P0   | Tag v0.1.0                |   ✅   |    -    |
-|  🟠 P1   | Scripts automatisation    |   ✅   |    -    |
-|  🟠 P1   | Génération rapports HTML  |   ✅   |    -    |
-|  🟠 P1   | Résultats benchmark réels |   ✅   |    -    |
-|  🟡 P2   | memory_analysis.md        |   ✅   |    -    |
-|  🟡 P2   | Graphiques comparaison    |   ✅   |    -    |
+| Priorité | Tâche                  | Statut | Assigné |
+| :------: | ---------------------- | :----: | :-----: |
+|  🔴 P0   | Refactor fib-viz (Lib) |   ✅   |   Me    |
+|  🔴 P0   | Intégration Plotly     |   ✅   |   Me    |
+|  🟠 P1   | Cmd `report` CLI       |   ✅   |   Me    |
+|  🟡 P2   | Support JSON data      |   ✅   |   Me    |
+|  🟡 P2   | CI Artifacts           |   🔄   |    -    |
 
 ---
 
 ## 🎯 Chemin Critique MVP
 
 ```
-Phase 1 ────► Phase 2 ────► Phase 3 ────► Phase 4 ────► Phase 9
-  ✅            ✅            ✅           🔄            ⬜
+Phase 1 ────► Phase 2 ────► Phase 3 ────► Phase 4 ────► Phase 5 ────► Phase 6 ────► Phase 9
+  ✅            ✅            ✅            ✅             ✅             🔄            ⬜
 
 Temps restant: ~2 semaines
 ```
@@ -243,7 +240,7 @@ P2 Algorithmes ████████████████████ 100%
 P3 CLI/Outils  ████████████████████ 100%
 P4 Docs/CI     ████████████████████ 100%
 P5 Profiling   ████████████████████ 100%
-P6 Viz         ░░░░░░░░░░░░░░░░░░░░   0%
+P6 Viz         ████████████░░░░░░░░   60%
 P7 Go          ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
 P8 SIMD        ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
 P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
@@ -328,9 +325,9 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 |   1    |   S1    | Fondation           |   ✅   |
 |   2    |   S2    | Algorithmes avancés |   ✅   |
 |   3    |   S3    | CLI & Outils        |   ✅   |
-| **4**  | **S4**  | **Docs & Polish**   | **✅** |
+|   4    |   S4    | Docs & Polish       |   ✅   |
 |   5    |   S5    | Profiling avancé    |   ✅   |
-|   6    |   S6    | Visualisations      |   🔄   |
+| **6**  | **S6**  | **Visualisations**  | **🔄** |
 |   7    |   S7    | Bridge Go           |   🔮   |
 |   8    |   S8    | SIMD                |   🔮   |
 |   9    |   S9    | Publication         |   ⬜   |

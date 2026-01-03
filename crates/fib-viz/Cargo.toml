@@ -8,6 +8,10 @@ description = "Visualization and chart generation for Fibonacci benchmark result
 keywords = ["fibonacci", "visualization", "charts", "plotly"]
 categories = ["visualization"]
 
+[lib]
+name = "fib_viz"
+path = "src/lib.rs"
+
 [[bin]]
 name = "fib-viz"
 path = "src/main.rs"

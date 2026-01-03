@@ -92,6 +92,17 @@ enum Commands {
         #[arg(short, long, default_value = "iterative")]
         method: String,
     },
+
+    /// Generate HTML visualization report
+    Report {
+        /// Input directory containing JSON results
+        #[arg(short, long, default_value = "results")]
+        input: String,
+
+        /// Output directory for HTML charts
+        #[arg(short, long, default_value = "results")]
+        output: String,
+    },
 }
 
 fn main() {
@@ -118,6 +129,9 @@ fn main() {
         }
         Commands::Memory { n, method } => {
             commands::memory::run(n, &method);
+        }
+        Commands::Report { input, output } => {
+            commands::report::run(&input, &output);
         }
     }
 }

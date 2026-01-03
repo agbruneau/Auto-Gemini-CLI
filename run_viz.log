@@ -1,0 +1,11 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running `target\debug\fib-viz.exe`
+­ƒôè Fibonacci Visualization Generator
+=====================================
+
+­ƒôê Generating complexity comparison data...
+
+thread 'main' (32628) panicked at crates\fib-core\src\iterative.rs:32:28:
+attempt to add with overflow
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: process didn't exit successfully: `target\debug\fib-viz.exe` (exit code: 101)

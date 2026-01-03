@@ -6,4 +6,5 @@ pub mod calc;
 pub mod compare;
 pub mod info;
 pub mod memory;
+pub mod report;
 pub mod sequence;
