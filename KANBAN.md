@@ -1,6 +1,6 @@
 # 📋 Kanban Board - Fibonacci Benchmark Suite
 
-> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 85%
+> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 92%
 
 ---
 
@@ -115,8 +115,8 @@
 ### Phase 4: Docs (reste)
 
 - [ ] memory_analysis.md
-- [ ] Résultats bench réels
-- [ ] Graphiques comparaison
+- [x] Résultats bench réels
+- [x] Graphiques comparaison
 - [ ] Relecture complète
 - [ ] Correction typos
 - [ ] Tests finaux
@@ -204,11 +204,11 @@
 |  🔴 P0   | Relecture documentation   |   ⬜   |    -    |
 |  🔴 P0   | Tests finaux intégration  |   ⬜   |    -    |
 |  🔴 P0   | Tag v0.1.0                |   ⬜   |    -    |
-|  🟠 P1   | Scripts automatisation    |   🔄   |    -    |
-|  🟠 P1   | Génération rapports HTML  |   🔄   |    -    |
-|  🟠 P1   | Résultats benchmark réels |   ⬜   |    -    |
+|  🟠 P1   | Scripts automatisation    |   ✅   |    -    |
+|  🟠 P1   | Génération rapports HTML  |   ✅   |    -    |
+|  🟠 P1   | Résultats benchmark réels |   ✅   |    -    |
 |  🟡 P2   | memory_analysis.md        |   ⬜   |    -    |
-|  🟡 P2   | Graphiques comparaison    |   ⬜   |    -    |
+|  🟡 P2   | Graphiques comparaison    |   ✅   |    -    |
 
 ---
 
