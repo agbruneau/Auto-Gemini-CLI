@@ -8,7 +8,7 @@
 
 | ✅ Terminé | 🔄 En Cours | ⬜ À Faire | 🔮 Futur |
 | :--------: | :---------: | :--------: | :------: |
-|     74     |      1      |     36     |    15    |
+|     77     |      0      |     33     |    15    |
 
 ---
 
@@ -100,14 +100,14 @@
   - CSS styling
   - Export automatique
 
-- [ ] Flamegraph Unix
+- [x] Flamegraph Unix
 
-  - Intégration pprof
-  - `#[cfg(unix)]`
+  - [x] Intégration pprof
+  - [x] `#[cfg(unix)]`
 
 - [x] Cleanup & polish
-  - Formatage code
-  - Cohérence docs
+  - [x] Formatage code
+  - [x] Cohérence docs
 
 </td>
 <td>
@@ -117,10 +117,10 @@
 - [x] memory_analysis.md
 - [x] Résultats bench réels
 - [x] Graphiques comparaison
-- [ ] Relecture complète
-- [ ] Correction typos
-- [ ] Tests finaux
-- [ ] **Tag v0.1.0** 🎯
+- [x] Relecture complète
+- [x] Correction typos
+- [x] Tests finaux
+- [x] **Tag v0.1.0** 🎯
 
 ### Phase 5: Profiling
 
@@ -203,7 +203,7 @@
 | :------: | ------------------------- | :----: | :-----: |
 |  🔴 P0   | Relecture documentation   |   ✅   |    -    |
 |  🔴 P0   | Tests finaux intégration  |   ✅   |    -    |
-|  🔴 P0   | Tag v0.1.0                |   ⬜   |    -    |
+|  🔴 P0   | Tag v0.1.0                |   ✅   |    -    |
 |  🟠 P1   | Scripts automatisation    |   ✅   |    -    |
 |  🟠 P1   | Génération rapports HTML  |   ✅   |    -    |
 |  🟠 P1   | Résultats benchmark réels |   ✅   |    -    |
@@ -328,7 +328,7 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 |   1    |   S1    | Fondation           |   ✅   |
 |   2    |   S2    | Algorithmes avancés |   ✅   |
 |   3    |   S3    | CLI & Outils        |   ✅   |
-| **4**  | **S4**  | **Docs & Polish**   | **🔄** |
+| **4**  | **S4**  | **Docs & Polish**   | **✅** |
 |   5    |   S5    | Profiling avancé    |   ⬜   |
 |   6    |   S6    | Visualisations      |   ⬜   |
 |   7    |   S7    | Bridge Go           |   🔮   |

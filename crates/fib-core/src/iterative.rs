@@ -104,18 +104,18 @@ impl FibonacciCache {
     pub fn new(max_n: u64) -> Self {
         let size = (max_n + 1) as usize;
         let mut values = vec![0u128; size];
-        
+
         if size > 0 {
             values[0] = 0;
         }
         if size > 1 {
             values[1] = 1;
         }
-        
+
         for i in 2..size {
             values[i] = values[i - 1] + values[i - 2];
         }
-        
+
         Self { values }
     }
 

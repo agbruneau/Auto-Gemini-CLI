@@ -2,8 +2,8 @@
 //!
 //! Profiling and memory analysis tools for Fibonacci benchmarks
 
-use std::time::{Duration, Instant};
 use fib_core::{iterative, matrix};
+use std::time::{Duration, Instant};
 
 fn main() {
     println!("🔬 Fibonacci Performance Profiler");
@@ -15,6 +15,7 @@ fn main() {
     profile_matrix();
     profile_memory_usage();
     profile_scaling();
+    profile_flamegraph();
 }
 
 fn profile_iterative() {
@@ -85,7 +86,10 @@ fn profile_scaling() {
     let test_values = [100, 1000, 10000, 100000];
     let iterations = 100;
 
-    println!("  {:>10} │ {:>15} │ {:>15} │ {:>10}", "n", "Iterative", "Matrix", "Speedup");
+    println!(
+        "  {:>10} │ {:>15} │ {:>15} │ {:>10}",
+        "n", "Iterative", "Matrix", "Speedup"
+    );
     println!("  ───────────┼─────────────────┼─────────────────┼───────────");
 
     for n in test_values {
@@ -116,4 +120,37 @@ fn profile_scaling() {
     }
     println!();
     println!("💡 Matrix method shows O(log n) advantage for large n");
+}
+
+fn profile_flamegraph() {
+    println!("🔥 Flamegraph Generation");
+    println!("──────────────────────");
+
+    #[cfg(unix)]
+    {
+        use std::fs::File;
+
+        println!("  Capturing profile for flamegraph...");
+        let guard = pprof::ProfilerGuard::new(100).unwrap();
+
+        // Run a heavy computation to profile
+        for _ in 0..10_000 {
+            let _ = matrix::fib_matrix_fast(10_000);
+        }
+
+        if let Ok(report) = guard.report().build() {
+            let file = File::create("flamegraph.svg").unwrap();
+            report.flamegraph(file).unwrap();
+            println!("  ✅ flamegraph.svg generated successfully");
+        } else {
+            println!("  ❌ Failed to generate flamegraph");
+        }
+    }
+
+    #[cfg(not(unix))]
+    {
+        println!("  ⚠️  Flamegraph generation only supported on Unix systems (requires pprof)");
+        println!("  (This is expected behavior on Windows)");
+    }
+    println!();
 }

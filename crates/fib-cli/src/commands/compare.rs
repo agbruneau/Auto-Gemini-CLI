@@ -1,11 +1,14 @@
 //! Compare command - compare all algorithms
 
-use fib_core::{iterative, matrix, recursive, closed_form};
+use fib_core::{closed_form, iterative, matrix, recursive};
 use std::time::Instant;
 
 pub fn run(n: u64, max_recursive: u64) {
     println!("╔═══════════════════════════════════════════════════════════════════╗");
-    println!("║            🏁 Fibonacci Algorithm Comparison for n = {:6}       ║", n);
+    println!(
+        "║            🏁 Fibonacci Algorithm Comparison for n = {:6}       ║",
+        n
+    );
     println!("╠═══════════════════════════════════════════════════════════════════╣");
     println!("║ Algorithm           │ Result                        │ Time       ║");
     println!("╠═════════════════════╪═══════════════════════════════╪════════════╣");
@@ -17,7 +20,10 @@ pub fn run(n: u64, max_recursive: u64) {
         let elapsed = start.elapsed();
         println!("║ Recursive           │ {:29} │ {:10?} ║", result, elapsed);
     } else {
-        println!("║ Recursive           │ (skipped - n > {})           │ N/A        ║", max_recursive);
+        println!(
+            "║ Recursive           │ (skipped - n > {})           │ N/A        ║",
+            max_recursive
+        );
     }
 
     // Recursive with memo
@@ -55,14 +61,23 @@ pub fn run(n: u64, max_recursive: u64) {
     let binet_result = closed_form::fib_binet_f64(n);
     let elapsed = start.elapsed();
     if n <= closed_form::MAX_ACCURATE_N {
-        println!("║ Binet (f64)         │ {:29.0} │ {:10?} ║", binet_result, elapsed);
+        println!(
+            "║ Binet (f64)         │ {:29.0} │ {:10?} ║",
+            binet_result, elapsed
+        );
     } else {
-        println!("║ Binet (f64) ⚠️       │ {:29.0} │ {:10?} ║", binet_result, elapsed);
+        println!(
+            "║ Binet (f64) ⚠️       │ {:29.0} │ {:10?} ║",
+            binet_result, elapsed
+        );
     }
 
     println!("╚═════════════════════╧═══════════════════════════════╧════════════╝");
 
     if n > closed_form::MAX_ACCURATE_N {
-        println!("\n⚠️  Note: Binet formula loses precision for n > {}", closed_form::MAX_ACCURATE_N);
+        println!(
+            "\n⚠️  Note: Binet formula loses precision for n > {}",
+            closed_form::MAX_ACCURATE_N
+        );
     }
 }

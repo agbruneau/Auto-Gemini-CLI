@@ -3,7 +3,11 @@
 use fib_core::iterative::fib_iterative;
 
 pub fn run(count: u64, start: u64) {
-    println!("📐 Fibonacci Sequence (F({}) to F({}))", start, start + count - 1);
+    println!(
+        "📐 Fibonacci Sequence (F({}) to F({}))",
+        start,
+        start + count - 1
+    );
     println!();
 
     let max_digits = format!("{}", fib_iterative(start + count - 1)).len();
@@ -11,7 +15,7 @@ pub fn run(count: u64, start: u64) {
     for i in 0..count {
         let n = start + i;
         let fib = fib_iterative(n);
-        
+
         // Show the golden ratio approximation for n > 0
         let ratio_str = if n > 0 && i > 0 {
             let prev = fib_iterative(n - 1);

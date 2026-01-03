@@ -18,10 +18,16 @@ pub fn run(method: &str) {
             FibMethod::Binet,
         ];
 
-        println!("┌───────────────────────┬────────────┬────────────┬───────────────────────────────┐");
-        println!("│ Algorithm             │ Time       │ Space      │ Notes                         │");
-        println!("├───────────────────────┼────────────┼────────────┼───────────────────────────────┤");
-        
+        println!(
+            "┌───────────────────────┬────────────┬────────────┬───────────────────────────────┐"
+        );
+        println!(
+            "│ Algorithm             │ Time       │ Space      │ Notes                         │"
+        );
+        println!(
+            "├───────────────────────┼────────────┼────────────┼───────────────────────────────┤"
+        );
+
         for m in methods {
             let notes = match m {
                 FibMethod::Recursive => "Demonstration only",
@@ -31,7 +37,7 @@ pub fn run(method: &str) {
                 FibMethod::Matrix => "Best for large n",
                 FibMethod::Binet => "n ≤ 78 only",
             };
-            
+
             println!(
                 "│ {:21} │ {:10} │ {:10} │ {:29} │",
                 m.name(),
@@ -40,15 +46,17 @@ pub fn run(method: &str) {
                 notes
             );
         }
-        
-        println!("└───────────────────────┴────────────┴────────────┴───────────────────────────────┘");
+
+        println!(
+            "└───────────────────────┴────────────┴────────────┴───────────────────────────────┘"
+        );
     } else {
         match method.parse::<FibMethod>() {
             Ok(m) => {
                 println!("Algorithm: {}", m.name());
                 println!("Time Complexity: {}", m.time_complexity());
                 println!("Space Complexity: {}", m.space_complexity());
-                
+
                 println!();
                 println!("Description:");
                 match m {

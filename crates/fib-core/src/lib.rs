@@ -24,16 +24,16 @@
 //! assert_eq!(fib_100, 354224848179261915075);
 //! ```
 
-pub mod recursive;
+pub mod closed_form;
 pub mod iterative;
 pub mod matrix;
-pub mod closed_form;
+pub mod recursive;
 
 // Re-export main functions for convenience
-pub use recursive::{fib_recursive, fib_recursive_memo};
-pub use iterative::{fib_iterative, fib_iterative_branchless, fib_iterative_batch};
+pub use closed_form::{binet_error_analysis, fib_binet_f64};
+pub use iterative::{fib_iterative, fib_iterative_batch, fib_iterative_branchless};
 pub use matrix::{fib_matrix_fast, fib_matrix_modulo};
-pub use closed_form::{fib_binet_f64, binet_error_analysis};
+pub use recursive::{fib_recursive, fib_recursive_memo};
 
 /// Enum representing available Fibonacci algorithms
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -141,12 +141,17 @@ mod tests {
             let n = n as u64;
             assert_eq!(fib_iterative(n), *expected, "iterative failed at n={}", n);
             assert_eq!(fib_matrix_fast(n), *expected, "matrix failed at n={}", n);
-            
+
             if n <= 15 {
                 assert_eq!(fib_recursive(n), *expected, "recursive failed at n={}", n);
             }
-            
-            assert_eq!(fib_recursive_memo(n), *expected, "recursive_memo failed at n={}", n);
+
+            assert_eq!(
+                fib_recursive_memo(n),
+                *expected,
+                "recursive_memo failed at n={}",
+                n
+            );
         }
     }
 

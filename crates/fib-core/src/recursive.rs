@@ -62,11 +62,11 @@ fn fib_recursive_memo_impl(n: u64, memo: &mut [u128]) -> u128 {
     if n <= 1 {
         return n as u128;
     }
-    
+
     if memo[n as usize] != 0 {
         return memo[n as usize];
     }
-    
+
     memo[n as usize] = fib_recursive_memo_impl(n - 1, memo) + fib_recursive_memo_impl(n - 2, memo);
     memo[n as usize]
 }
@@ -81,7 +81,7 @@ fn fib_recursive_memo_impl(n: u64, memo: &mut [u128]) -> u128 {
 ///
 /// let calls_n10 = count_recursive_calls(10);
 /// let calls_n20 = count_recursive_calls(20);
-/// 
+///
 /// // Shows exponential growth
 /// assert!(calls_n20 > calls_n10 * 100);
 /// ```
@@ -122,7 +122,7 @@ mod tests {
     fn test_count_calls_grows_exponentially() {
         let calls_10 = count_recursive_calls(10);
         let calls_15 = count_recursive_calls(15);
-        
+
         // Approximately 3x growth per 5 increments in n
         assert!(calls_15 > calls_10 * 2);
     }

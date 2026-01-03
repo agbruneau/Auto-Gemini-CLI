@@ -2,8 +2,8 @@
 //!
 //! Generates charts and visualizations for benchmark results
 
+use fib_core::{closed_form, iterative, matrix};
 use std::fs;
-use fib_core::{iterative, matrix, closed_form};
 
 fn main() {
     println!("📊 Fibonacci Visualization Generator");

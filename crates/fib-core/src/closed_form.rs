@@ -117,7 +117,7 @@ pub fn fib_binet_simplified(n: u64) -> f64 {
 pub fn binet_error_analysis(n: u64) -> (f64, f64) {
     let fib_approx = fib_binet_f64(n);
     let fib_exact = crate::iterative::fib_iterative(n) as f64;
-    
+
     let absolute_error = (fib_approx - fib_exact).abs();
     let relative_error = if fib_exact != 0.0 {
         absolute_error / fib_exact
@@ -141,7 +141,7 @@ pub fn find_binet_accuracy_limit() -> u64 {
     for n in 0..200 {
         let binet_result = fib_binet_rounded(n);
         let exact_result = crate::iterative::fib_iterative(n);
-        
+
         if binet_result != exact_result {
             return n - 1;
         }
@@ -162,10 +162,10 @@ pub fn fibonacci_ratio(n: u64) -> f64 {
     if n == 0 {
         return f64::INFINITY;
     }
-    
+
     let fn_val = crate::iterative::fib_iterative(n) as f64;
     let fn_plus_1 = crate::iterative::fib_iterative(n + 1) as f64;
-    
+
     fn_plus_1 / fn_val
 }
 

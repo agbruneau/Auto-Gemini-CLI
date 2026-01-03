@@ -28,12 +28,12 @@ pub fn run(n: u64, method: &str, show_time: bool) {
     println!("├─────────────────────────────────────────────────┤");
     println!("│ Method:     {:20}              │", method.name());
     println!("│ n:          {:20}              │", n);
-    println!("│ F(n):       {}",  result);
-    
+    println!("│ F(n):       {}", result);
+
     if show_time {
         println!("├─────────────────────────────────────────────────┤");
         println!("│ ⏱️  Time: {:?}", elapsed);
     }
-    
+
     println!("└─────────────────────────────────────────────────┘");
 }
