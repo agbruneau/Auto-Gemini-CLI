@@ -3,7 +3,7 @@ Package main centralizes all configuration constants shared across the
 project components (producer, tracker, log_monitor).
 */
 
-package main
+package models
 
 import "time"
 

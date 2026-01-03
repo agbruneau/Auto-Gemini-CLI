@@ -6,7 +6,7 @@ These models are used for:
 - **Real-time Monitoring**: Decoupled metrics processing for the TUI.
 */
 
-package main
+package models
 
 import "encoding/json"
 

@@ -110,22 +110,22 @@ if [ -f "$script_dir/producer.pid" ] || [ -f "$script_dir/tracker.pid" ]; then
     rm -f "$script_dir/producer.pid" "$script_dir/tracker.pid"
 else
     echo "   ⚠️ Fichiers PID non trouvés. Tentative d'arrêt par pkill (moins fiable)..."
-    pkill -TERM -f "go run.*kafka,producer.*producer.go" 2>/dev/null || true
+    pkill -TERM -f "go run.*kafka,producer.*cmd/producer/main.go" 2>/dev/null || true
     sleep 5 # Laisse un peu de temps au producer
-    pkill -TERM -f "go run.*kafka,tracker.*tracker.go" 2>/dev/null || true
+    pkill -TERM -f "go run.*kafka,tracker.*cmd/tracker/main.go" 2>/dev/null || true
     sleep 2
     # Arrêt forcé si nécessaire
-    pkill -KILL -f "go run.*kafka,producer.*producer.go" 2>/dev/null || true
-    pkill -KILL -f "go run.*kafka,tracker.*tracker.go" 2>/dev/null || true
+    pkill -KILL -f "go run.*kafka,producer.*cmd/producer/main.go" 2>/dev/null || true
+    pkill -KILL -f "go run.*kafka,tracker.*cmd/tracker/main.go" 2>/dev/null || true
 fi
 
 # Vérification finale supplémentaire
 echo "   🔍 Vérification finale supplémentaire..."
 sleep 1
-if pgrep -f "go run.*producer.go" >/dev/null 2>&1 || pgrep -f "go run.*tracker.go" >/dev/null 2>&1; then
+if pgrep -f "go run.*cmd/producer/main.go" >/dev/null 2>&1 || pgrep -f "go run.*cmd/tracker/main.go" >/dev/null 2>&1; then
     echo "   ⚠️  Certains processus Go sont encore actifs, arrêt forcé..."
-    pkill -KILL -f "go run.*producer.go" 2>/dev/null || true
-    pkill -KILL -f "go run.*tracker.go" 2>/dev/null || true
+    pkill -KILL -f "go run.*cmd/producer/main.go" 2>/dev/null || true
+    pkill -KILL -f "go run.*cmd/tracker/main.go" 2>/dev/null || true
     sleep 1
 fi
 

@@ -85,13 +85,13 @@ go mod download
 # Le `&` à la fin de la commande le fait tourner en tâche de fond.
 # Les logs du tracker seront visibles dans les fichiers tracker.log et tracker.events.
 echo "🟢 Lancement du consommateur (tracker) en arrière-plan..."
-go run -tags kafka,tracker tracker.go order.go models.go constants.go cmd_tracker.go &
+go run -tags kafka,tracker cmd/tracker/main.go &
 echo $! > "$script_dir/tracker.pid"
 
 # Étape 6: Lancement du producteur (producer) au premier plan
 # Le script attendra ici jusqu'à ce que le producteur soit manuellement arrêté.
 echo "🟢 Lancement du producteur (producer) au premier plan..."
-go run -tags kafka,producer producer.go order.go models.go constants.go cmd_producer.go &
+go run -tags kafka,producer cmd/producer/main.go &
 producer_pid=$!
 echo $producer_pid > "$script_dir/producer.pid"
 
