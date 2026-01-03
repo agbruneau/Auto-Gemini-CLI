@@ -4,6 +4,10 @@
 //! Fibonacci numbers using various algorithms.
 
 use clap::{Parser, Subcommand};
+use fib_core::allocator::TrackingAllocator;
+
+#[global_allocator]
+static ALLOCATOR: TrackingAllocator = TrackingAllocator::new();
 
 mod commands;
 
@@ -77,6 +81,17 @@ enum Commands {
         #[arg(short, long, default_value = "100")]
         max_n: u64,
     },
+
+    /// Analyze memory usage
+    Memory {
+        /// The Fibonacci index to calculate
+        #[arg(short, long)]
+        n: u64,
+
+        /// Algorithm to use: recursive, recursive_memo, iterative, matrix
+        #[arg(short, long, default_value = "iterative")]
+        method: String,
+    },
 }
 
 fn main() {
@@ -100,6 +115,9 @@ fn main() {
         }
         Commands::BinetAnalysis { max_n } => {
             commands::binet_analysis::run(max_n);
+        }
+        Commands::Memory { n, method } => {
+            commands::memory::run(n, &method);
         }
     }
 }

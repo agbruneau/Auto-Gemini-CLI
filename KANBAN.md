@@ -1,6 +1,6 @@
 # 📋 Kanban Board - Fibonacci Benchmark Suite
 
-> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 73%
+> **Mise à jour**: Janvier 2026 | **Sprint actuel**: 4 | **Progression MVP**: 79%
 
 ---
 
@@ -8,7 +8,7 @@
 
 | ✅ Terminé | 🔄 En Cours | ⬜ À Faire | 🔮 Futur |
 | :--------: | :---------: | :--------: | :------: |
-|     80     |      3      |     27     |    15    |
+|     85     |      1      |     21     |    15    |
 
 ---
 
@@ -124,14 +124,14 @@
 
 ### Phase 5: Profiling
 
-- [ ] Intégration pprof
-- [ ] flamegraph.rs
-- [ ] Cmd `profile`
+- [x] Intégration pprof
+- [x] flamegraph.rs
+- [x] Cmd `profile`
 - [x] memory.rs
 - [x] allocator.rs
 - [x] Custom tracking
-- [ ] Cmd `memory`
-- [ ] Rapport mémoire
+- [x] Cmd `memory`
+- [x] Rapport mémoire
 - [ ] advanced_profiling.md
 - [ ] Tests Unix
 - [ ] Exemples profiler
@@ -242,7 +242,7 @@ P1 Fondation   ████████████████████ 100%
 P2 Algorithmes ████████████████████ 100%
 P3 CLI/Outils  ████████████████████ 100%
 P4 Docs/CI     ████████████████████ 100%
-P5 Profiling   ████░░░░░░░░░░░░░░░░  20%
+P5 Profiling   ██████████░░░░░░░░░░  50%
 P6 Viz         ░░░░░░░░░░░░░░░░░░░░   0%
 P7 Go          ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
 P8 SIMD        ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
@@ -329,7 +329,7 @@ P9 Release     ░░░░░░░░░░░░░░░░░░░░   0%
 |   2    |   S2    | Algorithmes avancés |   ✅   |
 |   3    |   S3    | CLI & Outils        |   ✅   |
 | **4**  | **S4**  | **Docs & Polish**   | **✅** |
-|   5    |   S5    | Profiling avancé    |   🔄   |
+|   5    |   S5    | Profiling avancé    |   ✅   |
 |   6    |   S6    | Visualisations      |   ⬜   |
 |   7    |   S7    | Bridge Go           |   🔮   |
 |   8    |   S8    | SIMD                |   🔮   |
