@@ -1,0 +1,33 @@
+    Checking fib-core v0.1.0 (C:\Users\agbru\OneDrive\Documents\GitHub\FibBenchmark\crates\fib-core)
+error[E0428]: the name `closed_form` is defined multiple times
+  --> crates\fib-core\src\lib.rs:29:1
+   |
+28 | pub mod closed_form;
+   | -------------------- previous definition of the module `closed_form` here
+29 | pub mod closed_form;
+   | ^^^^^^^^^^^^^^^^^^^^ `closed_form` redefined here
+   |
+   = note: `closed_form` must be defined only once in the type namespace of this module
+
+error[E0428]: the name `iterative` is defined multiple times
+  --> crates\fib-core\src\lib.rs:31:1
+   |
+30 | pub mod iterative;
+   | ------------------ previous definition of the module `iterative` here
+31 | pub mod iterative;
+   | ^^^^^^^^^^^^^^^^^^ `iterative` redefined here
+   |
+   = note: `iterative` must be defined only once in the type namespace of this module
+
+error[E0428]: the name `matrix` is defined multiple times
+  --> crates\fib-core\src\lib.rs:33:1
+   |
+32 | pub mod matrix;
+   | --------------- previous definition of the module `matrix` here
+33 | pub mod matrix;
+   | ^^^^^^^^^^^^^^^ `matrix` redefined here
+   |
+   = note: `matrix` must be defined only once in the type namespace of this module
+
+For more information about this error, try `rustc --explain E0428`.
+error: could not compile `fib-core` (lib) due to 3 previous errors

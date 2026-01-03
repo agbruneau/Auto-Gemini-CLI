@@ -2,8 +2,12 @@
 //!
 //! Profiling and memory analysis tools for Fibonacci benchmarks
 
+use fib_core::allocator::TrackingAllocator;
 use fib_core::{iterative, matrix};
 use std::time::{Duration, Instant};
+
+#[global_allocator]
+static ALLOCATOR: TrackingAllocator = TrackingAllocator::new();
 
 fn main() {
     println!("🔬 Fibonacci Performance Profiler");
@@ -71,11 +75,54 @@ fn profile_memory_usage() {
     println!("  Recursive Memo: O(n) - allocates Vec<u128>");
     println!();
 
+    // Reset stats before measurement
+    ALLOCATOR.reset();
+    let initial_usage = ALLOCATOR.get_current_usage();
+
     // Demonstrate recursive memo memory
     for n in [100, 1000, 10000] {
-        let mem_bytes = (n + 1) * 16; // u128 = 16 bytes
-        println!("  Recursive Memo (n={}): ~{} bytes allocated", n, mem_bytes);
+        let before_alloc = ALLOCATOR.get_allocation_count();
+
+        let _result = fib_core::recursive::fib_recursive_memo(n);
+
+        // Note: Vec is deallocated when _result is dropped? No, fib_recursive_memo returns basic type u128.
+        // The implementation of fib_recursive_memo creates a cache internally and drops it.
+        // So we might need to query the maximum usage *during* the call if we could,
+        // but here we are checking the net effect or traffic.
+        // Let's rely on theoretical calculation for now but printed alongside real tracking if possible.
+        // Actually, since the Vec is dropped inside the function, the 'current usage' will return to initial.
+        // To track peak usage, our simple allocator needs peak tracking.
+        // But the plan was just to "show real stats".
+        // Let's show TOTAL allocations made.
+
+        let after_alloc = ALLOCATOR.get_allocation_count();
+        let alloc_count = after_alloc - before_alloc;
+
+        let theoretical_bytes = (n + 1) * 16; // u128 = 16 bytes
+        println!(
+            "  Recursive Memo (n={:<5}): ~{:>6} bytes theoretical. Allocations made: {}",
+            n, theoretical_bytes, alloc_count
+        );
     }
+
+    // Demonstrate explicit allocation for benchmark
+    println!();
+    println!("  Tracking test (vector allocation):");
+    let prev = ALLOCATOR.get_current_usage();
+    let mut vec = Vec::new();
+    for i in 0..100 {
+        vec.push(i as u128);
+    }
+    let current = ALLOCATOR.get_current_usage();
+    println!(
+        "    Allocated vector of 100 u128: {} bytes (System tracked)",
+        current - prev
+    );
+    println!("    (Expected: ~1600 bytes + capacity overhead)");
+
+    // Keep vec alive to measure
+    std::mem::forget(vec);
+
     println!();
 }
 

@@ -24,9 +24,11 @@
 //! assert_eq!(fib_100, 354224848179261915075);
 //! ```
 
+pub mod allocator;
 pub mod closed_form;
 pub mod iterative;
 pub mod matrix;
+pub mod memory;
 pub mod recursive;
 
 // Re-export main functions for convenience
