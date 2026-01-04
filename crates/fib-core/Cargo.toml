@@ -4,7 +4,11 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+repository.workspace = true
 description = "Core Fibonacci algorithm implementations with multiple complexity levels"
+documentation = "https://docs.rs/fib-core"
+homepage = "https://github.com/agbru/FibBenchmark"
+readme = "../../README.md"
 keywords = ["fibonacci", "algorithms", "benchmark", "performance"]
 categories = ["algorithms", "mathematics"]
 

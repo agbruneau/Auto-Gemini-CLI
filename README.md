@@ -266,23 +266,22 @@ cargo test -p fib-core
 
 ## 🎯 État du Projet
 
-**Version actuelle :** 0.1.0
+**Version actuelle :** 1.0.0 🎉
 
 ### Phases complétées ✅
 
 - ✅ **Phase 1** - Fondation : Structure workspace, algorithmes de base
 - ✅ **Phase 2** - Algorithmes avancés : Matrice, Binet, utilitaires
 - ✅ **Phase 3** - CLI & Outils : Interface complète avec 6 commandes
-- 🔄 **Phase 4** - Documentation : En cours (80% complété)
+- ✅ **Phase 4** - Documentation : Documentation complète
+- ✅ **Phase 5** - Profiling avancé : Flamegraph (Unix), mémoire
+- ✅ **Phase 6** - Visualisations : Graphiques Plotly, rapports HTML
+- ✅ **Phase 9** - Release : Publication v1.0.0
 
-### Prochaines étapes
+### Phases optionnelles (futures)
 
-Voir [**PLANNING.md**](docs/PLANNING.md) pour la roadmap complète :
-- Phase 5 : Profiling avancé (flamegraph, mémoire)
-- Phase 6 : Visualisations (graphiques, rapports HTML)
-- Phase 7 : Comparaison Go (FFI bridge) - Optionnel
-- Phase 8 : Optimisations SIMD - Optionnel
-- Phase 9 : Publication crates.io
+- 🔮 **Phase 7** - Bridge Go : FFI avec Go (optionnel)
+- 🔮 **Phase 8** - SIMD : Optimisations nightly (optionnel)
 
 ## 🤝 Contribution
 

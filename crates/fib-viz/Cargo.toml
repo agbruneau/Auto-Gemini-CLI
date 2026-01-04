@@ -4,7 +4,11 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+repository.workspace = true
 description = "Visualization and chart generation for Fibonacci benchmark results"
+documentation = "https://docs.rs/fib-viz"
+homepage = "https://github.com/agbru/FibBenchmark"
+readme = "../../README.md"
 keywords = ["fibonacci", "visualization", "charts", "plotly"]
 categories = ["visualization"]
 

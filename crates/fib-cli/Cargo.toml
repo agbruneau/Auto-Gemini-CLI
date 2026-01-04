@@ -4,7 +4,11 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+repository.workspace = true
 description = "Command-line interface for the Fibonacci Benchmark Suite"
+documentation = "https://docs.rs/fib-cli"
+homepage = "https://github.com/agbru/FibBenchmark"
+readme = "../../README.md"
 keywords = ["fibonacci", "cli", "benchmark"]
 categories = ["command-line-utilities"]
 

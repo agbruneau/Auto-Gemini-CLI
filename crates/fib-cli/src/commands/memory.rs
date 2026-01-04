@@ -31,11 +31,7 @@ pub fn run(n: u64, method_str: &str) {
     // Since we don't have peak tracking yet, we rely on "total allocations made".
 
     let allocs_made = final_allocs - initial_allocs;
-    let net_bytes = if final_bytes >= initial_bytes {
-        final_bytes - initial_bytes
-    } else {
-        0
-    };
+    let net_bytes = final_bytes.saturating_sub(initial_bytes);
 
     println!("Result: {}", result);
     println!();

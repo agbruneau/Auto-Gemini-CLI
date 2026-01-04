@@ -77,7 +77,7 @@ fn profile_memory_usage() {
 
     // Reset stats before measurement
     ALLOCATOR.reset();
-    let initial_usage = ALLOCATOR.get_current_usage();
+    let _initial_usage = ALLOCATOR.get_current_usage();
 
     // Demonstrate recursive memo memory
     for n in [100, 1000, 10000] {
