@@ -248,4 +248,29 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn test_matrix_get() {
+        let m = Matrix2x2::identity();
+        assert_eq!(m.get(0, 0), 1);
+        assert_eq!(m.get(0, 1), 0);
+        assert_eq!(m.get(1, 0), 0);
+        assert_eq!(m.get(1, 1), 1);
+    }
+
+    #[test]
+    fn test_matrix_identity() {
+        let id = Matrix2x2::identity();
+        let base = Matrix2x2::fibonacci_base();
+        assert_eq!(base * id, base);
+        assert_eq!(id * base, base);
+    }
+
+    #[test]
+    fn test_fib_doubling_edge_cases() {
+        assert_eq!(fib_doubling(0), 0);
+        assert_eq!(fib_doubling(1), 1);
+        assert_eq!(fib_doubling(2), 1);
+        assert_eq!(fib_doubling(3), 2);
+    }
 }
