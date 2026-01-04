@@ -5,7 +5,7 @@
 //!
 //! # Example
 //!
-//! ```ignore
+//! ```
 //! use fib_go::{go_fib_iterative, go_fib_matrix, is_go_available};
 //!
 //! if is_go_available() {
