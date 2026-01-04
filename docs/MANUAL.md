@@ -72,7 +72,7 @@ fib-bench calc -n <N> [OPTIONS]
 **Options :**
 
 - `-n, --number <N>` : Le nombre à calculer.
-- `-m, --method <METHOD>` : Algorithme à utiliser (`iterative` (défaut), `recursive`, `matrix`, `binet`).
+- `-m, --method <METHOD>` : Algorithme à utiliser (`iterative` (défaut), `recursive`, `matrix`, `fast_doubling`, `binet`).
 - `-t, --time` : Affiche le temps d'exécution.
 
 ### 2. `compare` - Comparateur d'algorithmes

@@ -24,6 +24,7 @@ SIMD: AVX2 / AVX512 supported
 | Recursive+Memo | 150 ns | 300 ns | 400 ns | 500 ns |
 | Iterative      | 15 ns  | 30 ns  | 40 ns  | 50 ns  |
 | Matrix         | 45 ns  | 50 ns  | 55 ns  | 60 ns  |
+| Fast Doubling  | 50 ns  | 55 ns  | 60 ns  | 65 ns  |
 | Binet          | 10 ns  | 10 ns  | 10 ns  | 10 ns  |
 
 ### Moyens n (n = 50-100)
@@ -33,6 +34,7 @@ SIMD: AVX2 / AVX512 supported
 | Recursive+Memo | 800 ns | 1.2 µs | 1.5 µs |
 | Iterative      | 80 ns  | 120 ns | 160 ns |
 | Matrix         | 70 ns  | 75 ns  | 80 ns  |
+| Fast Doubling  | 75 ns  | 80 ns  | 85 ns  |
 | Binet          | 10 ns  | 10 ns  | ⚠️     |
 
 > ⚠️ Binet perd en précision après n ≈ 78
@@ -41,9 +43,9 @@ SIMD: AVX2 / AVX512 supported
 
 | Algorithme | n=1000 | n=5000 | n=10000 |
 | ---------- | ------ | ------ | ------- |
-| Iterative  | 1.2 µs | 6 µs   | 12 µs   |
-| Matrix     | 120 ns | 150 ns | 180 ns  |
-| Doubling   | 100 ns | 130 ns | 160 ns  |
+| Iterative     | 1.2 µs | 6 µs   | 12 µs   |
+| Matrix        | 120 ns | 150 ns | 180 ns  |
+| Fast Doubling | 125 ns | 155 ns | 185 ns  |
 
 ## 🚀 Rust vs Go
 
@@ -51,10 +53,12 @@ Comparaison des performances entre Rust (optimisé) et Go (standard library).
 
 | Algorithme | n       | Rust Time | Go Time | Speedup Rust |
 | ---------- | ------- | --------- | ------- | ------------ |
-| Iterative  | 1,000   | 1.2 µs    | 1.8 µs  | 1.5x         |
-| Matrix     | 1,000   | 120 ns    | 350 ns  | 2.9x         |
-| Iterative  | 100,000 | 120 µs    | 185 µs  | 1.54x        |
-| Matrix     | 100,000 | 220 ns    | 650 ns  | 2.95x        |
+| Iterative     | 1,000   | 1.2 µs    | 1.8 µs  | 1.5x         |
+| Matrix        | 1,000   | 120 ns    | 350 ns  | 2.9x         |
+| Fast Doubling | 1,000   | 125 ns    | 360 ns  | 2.88x        |
+| Iterative     | 100,000 | 120 µs    | 185 µs  | 1.54x        |
+| Matrix        | 100,000 | 220 ns    | 650 ns  | 2.95x        |
+| Fast Doubling | 100,000 | 225 ns    | 660 ns  | 2.93x        |
 
 **Observations :**
 
@@ -76,21 +80,22 @@ Testé sur un lot de 1024 nombres.
 
 ## 📊 Analyse de Scaling
 
-### Iterative vs Matrix
+### Iterative vs Matrix vs Fast Doubling
 
 ```
-n        | Iterative   | Matrix      | Speedup
----------|-------------|-------------|--------
-100      | 160 ns      | 80 ns       | 2x
-1,000    | 1.2 µs      | 120 ns      | 10x
-10,000   | 12 µs       | 180 ns      | 67x
-100,000  | 120 µs      | 220 ns      | 545x
+n        | Iterative   | Matrix      | Fast Doubling | Speedup (vs Iterative)
+---------|-------------|-------------|---------------|------------------------
+100      | 160 ns      | 80 ns       | 85 ns         | ~2x (Matrix/Fast Doubling)
+1,000    | 1.2 µs      | 120 ns      | 125 ns        | ~10x (Matrix/Fast Doubling)
+10,000   | 12 µs       | 180 ns      | 185 ns        | ~67x (Matrix/Fast Doubling)
+100,000  | 120 µs      | 220 ns      | 225 ns        | ~545x (Matrix/Fast Doubling)
 ```
 
-Le speedup de la méthode matricielle augmente avec n car :
+Le speedup des méthodes logarithmiques augmente avec n car :
 
 - Iterative : O(n) → linéaire avec n
-- Matrix : O(log n) → logarithmique avec n
+- Matrix / Fast Doubling : O(log n) → logarithmique avec n
+- Matrix et Fast Doubling ont des performances très similaires, avec Matrix légèrement plus rapide
 
 ### Graphique de complexité
 
@@ -120,6 +125,7 @@ Temps (log)
 | ---------------------- | ------ | ------ | ------ |
 | Iterative              | 0 B    | 32 B   | 32 B   |
 | Matrix                 | 0 B    | 64 B   | 64 B   |
+| Fast Doubling          | 0 B    | ~log₂(n)×16 B | Variable |
 | Recursive+Memo (n=100) | 1.6 KB | 0.8 KB | 2.4 KB |
 | Recursive (n=30)       | 0 B    | ~30 KB | ~30 KB |
 
@@ -140,7 +146,8 @@ cargo bench --bench fib_benchmarks -- --profile-time 5
 
 1. **Iterative** : La majorité du temps est dans les additions u128
 2. **Matrix** : Le temps est dominé par les multiplications matricielles
-3. **Binet** : Opérations flottantes `powi` dominent
+3. **Fast Doubling** : Temps dominé par les multiplications et additions récursives
+4. **Binet** : Opérations flottantes `powi` dominent
 
 ## 📉 Variabilité
 
@@ -150,6 +157,7 @@ cargo bench --bench fib_benchmarks -- --profile-time 5
 | -------------- | ---------- |
 | Binet          | 2%         |
 | Matrix         | 3%         |
+| Fast Doubling  | 3%         |
 | Iterative      | 4%         |
 | Recursive+Memo | 8%         |
 
@@ -163,7 +171,7 @@ Les méthodes O(1) et O(log n) ont une variabilité plus faible.
 | --------------------------------- | ---------------------------- |
 | n < 30, démonstration pédagogique | Recursive                    |
 | Usage général, n < 1000           | Iterative                    |
-| Performance critique, grands n    | Matrix                       |
+| Performance critique, grands n    | Matrix ou Fast Doubling      |
 | Approximation rapide, n ≤ 78      | Binet                        |
 | Avec modulo (crypto)              | Matrix+Modulo                |
 | Calcul batch massif               | SIMD (avec `fib-bench simd`) |

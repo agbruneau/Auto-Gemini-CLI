@@ -8,7 +8,7 @@ pub fn run(n: u64, method: &str, show_time: bool) {
         Ok(m) => m,
         Err(e) => {
             eprintln!("❌ Error: {}", e);
-            eprintln!("Available methods: recursive, recursive_memo, iterative, matrix, binet");
+            eprintln!("Available methods: recursive, recursive_memo, iterative, matrix, fast_doubling, binet");
             std::process::exit(1);
         }
     };

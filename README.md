@@ -27,6 +27,7 @@
 | Itératif            | O(n)     | O(1)   | Usage général            |
 | Itératif branchless | O(n)     | O(1)   | Optimisation micro       |
 | Matriciel           | O(log n) | O(1)   | Grands n                 |
+| Fast Doubling       | O(log n) | O(log n) | Grands n (alternative) |
 | Binet               | O(1)     | O(1)   | Approximation (n ≤ 78)   |
 | SIMD Batch          | O(n/k)   | O(k)   | Calculs massifs par lots |
 

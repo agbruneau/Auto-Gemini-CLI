@@ -10,6 +10,7 @@
 //! | Recursive Memo | O(n) | O(n) | Small n with caching |
 //! | Iterative | O(n) | O(1) | General use |
 //! | Matrix | O(log n) | O(1) | Large n values |
+//! | Fast Doubling | O(log n) | O(log n) | Large n values (alternative) |
 //! | Binet | O(1) | O(1) | Approximation (n ≤ 78) |
 //!
 //! ## Example
@@ -37,7 +38,7 @@ pub mod simd;
 // Re-export main functions for convenience
 pub use closed_form::{binet_error_analysis, fib_binet_f64};
 pub use iterative::{fib_iterative, fib_iterative_batch, fib_iterative_branchless};
-pub use matrix::{fib_matrix_fast, fib_matrix_modulo};
+pub use matrix::{fib_doubling, fib_matrix_fast, fib_matrix_modulo};
 pub use recursive::{fib_recursive, fib_recursive_memo};
 
 #[cfg(feature = "simd")]
@@ -56,6 +57,8 @@ pub enum FibMethod {
     IterativeBranchless,
     /// Matrix exponentiation - O(log n)
     Matrix,
+    /// Fast doubling - O(log n)
+    FastDoubling,
     /// Binet formula - O(1) with precision limits
     Binet,
 }
@@ -78,6 +81,7 @@ impl FibMethod {
             FibMethod::Iterative => fib_iterative(n),
             FibMethod::IterativeBranchless => fib_iterative_branchless(n),
             FibMethod::Matrix => fib_matrix_fast(n),
+            FibMethod::FastDoubling => fib_doubling(n),
             FibMethod::Binet => fib_binet_f64(n) as u128,
         }
     }
@@ -90,6 +94,7 @@ impl FibMethod {
             FibMethod::Iterative => "iterative",
             FibMethod::IterativeBranchless => "iterative_branchless",
             FibMethod::Matrix => "matrix",
+            FibMethod::FastDoubling => "fast_doubling",
             FibMethod::Binet => "binet",
         }
     }
@@ -102,6 +107,7 @@ impl FibMethod {
             FibMethod::Iterative => "O(n)",
             FibMethod::IterativeBranchless => "O(n)",
             FibMethod::Matrix => "O(log n)",
+            FibMethod::FastDoubling => "O(log n)",
             FibMethod::Binet => "O(1)",
         }
     }
@@ -114,6 +120,7 @@ impl FibMethod {
             FibMethod::Iterative => "O(1)",
             FibMethod::IterativeBranchless => "O(1)",
             FibMethod::Matrix => "O(1)",
+            FibMethod::FastDoubling => "O(log n)",
             FibMethod::Binet => "O(1)",
         }
     }
@@ -129,6 +136,7 @@ impl std::str::FromStr for FibMethod {
             "iterative" => Ok(FibMethod::Iterative),
             "iterative_branchless" | "branchless" => Ok(FibMethod::IterativeBranchless),
             "matrix" => Ok(FibMethod::Matrix),
+            "fast_doubling" | "doubling" => Ok(FibMethod::FastDoubling),
             "binet" => Ok(FibMethod::Binet),
             _ => Err(format!("Unknown method: {}", s)),
         }
@@ -149,6 +157,7 @@ mod tests {
             let n = n as u64;
             assert_eq!(fib_iterative(n), *expected, "iterative failed at n={}", n);
             assert_eq!(fib_matrix_fast(n), *expected, "matrix failed at n={}", n);
+            assert_eq!(fib_doubling(n), *expected, "fast_doubling failed at n={}", n);
 
             if n <= 15 {
                 assert_eq!(fib_recursive(n), *expected, "recursive failed at n={}", n);
@@ -169,6 +178,7 @@ mod tests {
         let expected = 354224848179261915075u128;
         assert_eq!(fib_iterative(100), expected);
         assert_eq!(fib_matrix_fast(100), expected);
+        assert_eq!(fib_doubling(100), expected);
     }
 
     #[test]

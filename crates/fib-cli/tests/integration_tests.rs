@@ -37,6 +37,19 @@ fn test_calc_command_iterative_method() {
 }
 
 #[test]
+fn test_calc_command_fast_doubling_method() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("calc")
+        .arg("--n")
+        .arg("10")
+        .arg("--method")
+        .arg("fast_doubling")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("55"));
+}
+
+#[test]
 fn test_info_command() {
     let mut cmd = Command::cargo_bin("fib-bench").unwrap();
     cmd.arg("info")

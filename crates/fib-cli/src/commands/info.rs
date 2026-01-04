@@ -15,6 +15,7 @@ pub fn run(method: &str) {
             FibMethod::Iterative,
             FibMethod::IterativeBranchless,
             FibMethod::Matrix,
+            FibMethod::FastDoubling,
             FibMethod::Binet,
         ];
 
@@ -35,6 +36,7 @@ pub fn run(method: &str) {
                 FibMethod::Iterative => "General purpose",
                 FibMethod::IterativeBranchless => "CPU pipeline optimized",
                 FibMethod::Matrix => "Best for large n",
+                FibMethod::FastDoubling => "Alternative O(log n)",
                 FibMethod::Binet => "n ≤ 78 only",
             };
 
@@ -88,6 +90,14 @@ pub fn run(method: &str) {
                         println!("  F(n) in O(log n) time using fast exponentiation.");
                         println!("  This is the fastest method for very large n.");
                     }
+                    FibMethod::FastDoubling => {
+                        println!("  Uses the fast doubling identities to compute F(n):");
+                        println!("  F(2k) = F(k) * (2*F(k+1) - F(k))");
+                        println!("  F(2k+1) = F(k)² + F(k+1)²");
+                        println!();
+                        println!("  Computes F(n) in O(log n) time using recursive doubling.");
+                        println!("  Alternative to matrix exponentiation with similar performance.");
+                    }
                     FibMethod::Binet => {
                         println!("  Uses Binet's closed-form formula:");
                         println!("  F(n) = (φ^n - ψ^n) / √5");
@@ -99,7 +109,7 @@ pub fn run(method: &str) {
             }
             Err(e) => {
                 eprintln!("❌ Error: {}", e);
-                eprintln!("Available methods: recursive, recursive_memo, iterative, matrix, binet");
+                eprintln!("Available methods: recursive, recursive_memo, iterative, matrix, fast_doubling, binet");
             }
         }
     }

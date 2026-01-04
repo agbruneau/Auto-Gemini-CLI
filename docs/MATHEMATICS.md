@@ -234,14 +234,75 @@ gcd(F(m), F(n)) = F(gcd(m, n))
 
 Exemple : gcd(F(12), F(8)) = gcd(144, 21) = 3 = F(4) = F(gcd(12, 8))
 
-### 6.2 Formule de doublement
+### 6.2 Algorithme Fast Doubling
+
+L'algorithme Fast Doubling utilise les identités de doublement pour calculer F(n) en O(log n).
+
+#### Identités de doublement
 
 ```
 F(2n) = F(n) × (2×F(n+1) - F(n))
 F(2n+1) = F(n)² + F(n+1)²
 ```
 
-Ces formules permettent une implémentation alternative en O(log n).
+#### Preuve
+
+Ces identités peuvent être dérivées des propriétés matricielles :
+
+Pour n pair (n = 2k) :
+```
+F(2k) = F(k) × (F(k+1) + F(k-1))
+      = F(k) × (F(k+1) + (F(k+1) - F(k)))
+      = F(k) × (2×F(k+1) - F(k))
+```
+
+Pour n impair (n = 2k+1) :
+```
+F(2k+1) = F(k+1)² + F(k)²
+```
+
+#### Algorithme récursif
+
+L'algorithme Fast Doubling calcule récursivement F(n) et F(n+1) en utilisant les identités de doublement :
+
+```rust
+fn fib_pair(n: u64) -> (u128, u128) {
+    if n == 0 {
+        return (0, 1);  // (F(0), F(1))
+    }
+    
+    let (f_k, f_k1) = fib_pair(n / 2);
+    let f_2k = f_k * (2 * f_k1 - f_k);
+    let f_2k1 = f_k * f_k + f_k1 * f_k1;
+    
+    if n % 2 == 0 {
+        (f_2k, f_2k1)      // (F(2k), F(2k+1))
+    } else {
+        (f_2k1, f_2k + f_2k1)  // (F(2k+1), F(2k+2))
+    }
+}
+
+fn fib_doubling(n: u64) -> u128 {
+    if n == 0 {
+        return 0;
+    }
+    fib_pair(n).0
+}
+```
+
+#### Complexité
+
+- **Temps** : O(log n) - la profondeur de récursion est O(log n)
+- **Espace** : O(log n) - due à la pile d'appels récursifs
+
+#### Comparaison avec la méthode matricielle
+
+Les deux méthodes ont une complexité temporelle O(log n), mais :
+
+- **Matrix** : O(1) espace, multiplication de matrices 2×2
+- **Fast Doubling** : O(log n) espace (récursion), opérations arithmétiques directes
+
+En pratique, les performances sont très similaires, avec Matrix légèrement plus rapide pour de très grands n.
 
 ### 6.3 Divisibilité
 

@@ -31,6 +31,10 @@ fn complexity_comparison(c: &mut Criterion) {
             b.iter(|| matrix::fib_matrix_fast(black_box(n)))
         });
 
+        group.bench_with_input(BenchmarkId::new("fast_doubling", n), n, |b, &n| {
+            b.iter(|| matrix::fib_doubling(black_box(n)))
+        });
+
         group.bench_with_input(BenchmarkId::new("binet", n), n, |b, &n| {
             b.iter(|| closed_form::fib_binet_f64(black_box(n)))
         });

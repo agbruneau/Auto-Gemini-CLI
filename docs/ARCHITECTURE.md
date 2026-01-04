@@ -172,7 +172,7 @@ crates/fib-core/
 
 **Responsabilités**:
 
-- Implémenter les 5 algorithmes Fibonacci de base
+- Implémenter les 6 algorithmes Fibonacci de base
 - Fournir les implémentations SIMD optimisées
 - Fournir une API unifiée via `FibMethod`
 - Exposer les benchmarks Criterion
@@ -339,7 +339,7 @@ crates/fib-go/
 │  ┌─────────────────────────────────────────────────────────────────┐│
 │  │                        FibMethod                                 ││
 │  │  ┌────────────┐ ┌────────────┐ ┌──────┐ ┌─────┐ ┌─────────────┐ ││
-│  │  │ Recursive  │ │ Iterative  │ │Matrix│ │Binet│ │IterBranchless│││
+│  │  │ Recursive  │ │ Iterative  │ │Matrix│FastDouble│Binet│IterBranchless│││
 │  │  └────────────┘ └────────────┘ └──────┘ └─────┘ └─────────────┘ ││
 │  └─────────────────────────────────────────────────────────────────┘│
 │                                                                      │
@@ -350,7 +350,7 @@ crates/fib-go/
 │  │  │             │ │             │ │          │ │               │ ││
 │  │  │fib_recursive│ │fib_iterative│ │fib_matrix│ │ fib_binet_f64 │ ││
 │  │  │fib_rec_memo │ │fib_branchless││fib_modulo│ │binet_error    │ ││
-│  │  │count_calls  │ │FibCache     │ │fib_double│ │find_limit     │ ││
+│  │  │count_calls  │ │FibCache     │ │fib_doubl │ │find_limit     │ ││
 │  │  │             │ │FibIterator  │ │Matrix2x2 │ │fib_ratio      │ ││
 │  │  └─────────────┘ └─────────────┘ └──────────┘ └───────────────┘ ││
 │  │  ┌─────────────┐                                                ││
@@ -405,6 +405,7 @@ Utilisateur          CLI              Commands::Calc        FibMethod         Al
 │ + Iterative                                                    │
 │ + IterativeBranchless                                          │
 │ + Matrix                                                       │
+│ + FastDoubling                                                 │
 │ + Binet                                                        │
 ├───────────────────────────────────────────────────────────────┤
 │ + calculate(&self, n: u64) -> u128                             │
@@ -523,6 +524,7 @@ impl FibMethod {
             FibMethod::Recursive => fib_recursive(n),
             FibMethod::Iterative => fib_iterative(n),
             FibMethod::Matrix => fib_matrix_fast(n),
+            FibMethod::FastDoubling => fib_doubling(n),
             // ...
         }
     }
@@ -644,6 +646,7 @@ pub enum FibMethod {
     Iterative,
     IterativeBranchless,
     Matrix,
+    FastDoubling,
     Binet,
 }
 
@@ -702,6 +705,7 @@ impl Matrix2x2 {
 
 pub fn fib_matrix_fast(n: u64) -> u128;
 pub fn fib_matrix_modulo(n: u64, modulo: u128) -> u128;
+pub fn fib_doubling(n: u64) -> u128;
 pub fn fib_doubling(n: u64) -> u128;
 ```
 
@@ -833,6 +837,7 @@ fib-bench compare-go -n 1000
 | Recursive  | Memoization         | O(2^n) → O(n)   |
 | Iterative  | Branchless loop     | 5-15% faster    |
 | Matrix     | Fast exponentiation | O(n) → O(log n) |
+| Fast Doubling | Doubling identities | O(n) → O(log n) |
 | Binet      | Direct formula      | O(n) → O(1)     |
 
 ### 8.2 Optimisations de compilation
