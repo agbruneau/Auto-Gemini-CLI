@@ -114,6 +114,22 @@ enum Commands {
         #[arg(short, long, default_value = "100")]
         iterations: u32,
     },
+
+    /// SIMD-accelerated batch Fibonacci calculation
+    #[cfg(feature = "simd")]
+    Simd {
+        /// Comma-separated list of Fibonacci indices to calculate
+        #[arg(short, long, value_delimiter = ',')]
+        batch: Vec<u64>,
+
+        /// Show SIMD feature information only
+        #[arg(long)]
+        info: bool,
+
+        /// Compare SIMD vs scalar performance
+        #[arg(short, long)]
+        compare: bool,
+    },
 }
 
 fn main() {
@@ -146,6 +162,14 @@ fn main() {
         }
         Commands::CompareGo { n, iterations } => {
             commands::compare_go::run(n, iterations);
+        }
+        #[cfg(feature = "simd")]
+        Commands::Simd {
+            batch,
+            info,
+            compare,
+        } => {
+            commands::simd::run(&batch, info, compare);
         }
     }
 }

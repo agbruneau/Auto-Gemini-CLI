@@ -8,7 +8,7 @@
 
 | ✅ Terminé | 🔄 En Cours | ⬜ À Faire | 🔮 Futur |
 | :--------: | :---------: | :--------: | :------: |
-|    107     |      0      |      0     |     7    |
+|    114     |      0      |     0      |    0     |
 
 ---
 
@@ -179,15 +179,15 @@
 - [x] rust_vs_go.md
 - [x] Scripts setup Go
 
-### Phase 8: SIMD
+### Phase 8: SIMD ✅
 
-- [ ] simd.rs (nightly)
-- [ ] Batch SIMD
-- [ ] Benchmarks SIMD
-- [ ] AVX2/AVX512
-- [ ] Documentation SIMD
-- [ ] Interface web
-- [ ] Annonce r/rust
+- [x] simd.rs (stable)
+- [x] Batch SIMD
+- [x] Benchmarks SIMD
+- [x] AVX2/AVX512
+- [x] Documentation SIMD
+- [x] Interface web
+- [x] Annonce r/rust
 
 </td>
 </tr>
@@ -199,16 +199,16 @@
 
 ### Objectif: Bridge Go FFI
 
-| Priorité | Tâche                  | Statut | Assigné |
-| :------: | ---------------------- | :----: | :-----: |
-|  🔴 P0   | fib.go implémentation  |   ✅   |   Me    |
-|  🔴 P0   | FFI bridge CGO         |   ✅   |   Me    |
-|  🟠 P1   | build.rs compilation   |   ✅   |   Me    |
-|  🟠 P1   | go_bridge.rs bindings  |   ✅   |   Me    |
-|  🟡 P2   | Benchmarks Rust/Go     |   ✅   |   Me    |
-|  🟡 P2   | Cmd `compare-go`       |   ✅   |   Me    |
-|  🟡 P2   | rust_vs_go.md          |   ✅   |   Me    |
-|  🟢 P3   | Scripts setup Go       |   ✅   |   Me    |
+| Priorité | Tâche                 | Statut | Assigné |
+| :------: | --------------------- | :----: | :-----: |
+|  🔴 P0   | fib.go implémentation |   ✅   |   Me    |
+|  🔴 P0   | FFI bridge CGO        |   ✅   |   Me    |
+|  🟠 P1   | build.rs compilation  |   ✅   |   Me    |
+|  🟠 P1   | go_bridge.rs bindings |   ✅   |   Me    |
+|  🟡 P2   | Benchmarks Rust/Go    |   ✅   |   Me    |
+|  🟡 P2   | Cmd `compare-go`      |   ✅   |   Me    |
+|  🟡 P2   | rust_vs_go.md         |   ✅   |   Me    |
+|  🟢 P3   | Scripts setup Go      |   ✅   |   Me    |
 
 ---
 
@@ -216,15 +216,15 @@
 
 ### Objectif: Publication v1.0.0
 
-| Priorité | Tâche                  | Statut | Assigné |
-| :------: | ---------------------- | :----: | :-----: |
-|  🔴 P0   | cargo-audit            |   ✅   |   Me    |
-|  🔴 P0   | Vérification licences  |   ✅   |   Me    |
-|  🟠 P1   | README polish          |   ✅   |   Me    |
-|  🟠 P1   | CHANGELOG.md update    |   ✅   |   Me    |
-|  🟡 P2   | Version bump           |   ✅   |   Me    |
-|  🟡 P2   | cargo publish dry-run  |   ✅   |   Me    |
-|  🔴 P0   | Tag v1.0.0             |   ✅   |   Me    |
+| Priorité | Tâche                 | Statut | Assigné |
+| :------: | --------------------- | :----: | :-----: |
+|  🔴 P0   | cargo-audit           |   ✅   |   Me    |
+|  🔴 P0   | Vérification licences |   ✅   |   Me    |
+|  🟠 P1   | README polish         |   ✅   |   Me    |
+|  🟠 P1   | CHANGELOG.md update   |   ✅   |   Me    |
+|  🟡 P2   | Version bump          |   ✅   |   Me    |
+|  🟡 P2   | cargo publish dry-run |   ✅   |   Me    |
+|  🔴 P0   | Tag v1.0.0            |   ✅   |   Me    |
 
 ---
 
@@ -263,7 +263,7 @@ P4 Docs/CI     ████████████████████ 100%
 P5 Profiling   ████████████████████ 100%
 P6 Viz         ████████████████████ 100%
 P7 Go          ████████████████████ 100% ✅
-P8 SIMD        ░░░░░░░░░░░░░░░░░░░░   0% (optionnel)
+P8 SIMD        ████████████████████ 100% ✅
 P9 Release     ████████████████████ 100% ✅
 ```
 
@@ -271,7 +271,7 @@ P9 Release     ████████████████████ 100%
 
 | Métrique        | Cible | Actuel | Status |
 | --------------- | :---: | :----: | :----: |
-| Tests           | 100%  | 50/50  |   ✅   |
+| Tests           | 100%  | 62/62  |   ✅   |
 | Clippy warnings |   0   |   0    |   ✅   |
 | Doc coverage    | 100%  |  100%  |   ✅   |
 | Benchmarks      |   6   |   6    |   ✅   |
@@ -350,7 +350,7 @@ P9 Release     ████████████████████ 100%
 |   5    |   S5    | Profiling avancé    |   ✅   |
 |   6    |   S6    | Visualisations      |   ✅   |
 | **7**  | **S7**  | **Bridge Go**       | **✅** |
-|   8    |   S8    | SIMD                |   🔮   |
+| **8**  | **S8**  | **SIMD**            | **✅** |
 |   9    |   S9    | Publication         |   ✅   |
 
 ---
@@ -373,5 +373,5 @@ P9 Release     ████████████████████ 100%
 ---
 
 <p align="center">
-<em>Dernière mise à jour: 2026-01-04 - Phase 7 Bridge Go terminée! 🐹🦀</em>
+<em>Dernière mise à jour: 2026-01-04 - Phase 8 SIMD terminée! �🦀</em>
 </p>

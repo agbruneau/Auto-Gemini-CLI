@@ -9,3 +9,6 @@ pub mod info;
 pub mod memory;
 pub mod report;
 pub mod sequence;
+
+#[cfg(feature = "simd")]
+pub mod simd;

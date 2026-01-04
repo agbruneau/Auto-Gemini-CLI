@@ -148,6 +148,63 @@ fn modular_arithmetic(c: &mut Criterion) {
     group.finish();
 }
 
+/// Benchmark SIMD batch operations (requires simd feature)
+#[cfg(feature = "simd")]
+fn simd_vs_scalar(c: &mut Criterion) {
+    use fib_core::simd::fib_simd_batch;
+
+    let mut group = c.benchmark_group("simd_vs_scalar");
+    group.sample_size(100);
+
+    // Test various batch sizes
+    let batch_4: Vec<u64> = vec![10, 20, 30, 40];
+    let batch_8: Vec<u64> = vec![10, 20, 30, 40, 50, 60, 70, 80];
+    let batch_16: Vec<u64> = (10..26).collect();
+    let batch_32: Vec<u64> = (10..42).collect();
+    let batch_64: Vec<u64> = (10..74).collect();
+
+    // SIMD benchmarks
+    group.bench_function("simd_4", |b| b.iter(|| fib_simd_batch(black_box(&batch_4))));
+
+    group.bench_function("simd_8", |b| b.iter(|| fib_simd_batch(black_box(&batch_8))));
+
+    group.bench_function("simd_16", |b| {
+        b.iter(|| fib_simd_batch(black_box(&batch_16)))
+    });
+
+    group.bench_function("simd_32", |b| {
+        b.iter(|| fib_simd_batch(black_box(&batch_32)))
+    });
+
+    group.bench_function("simd_64", |b| {
+        b.iter(|| fib_simd_batch(black_box(&batch_64)))
+    });
+
+    // Scalar benchmarks for comparison
+    group.bench_function("scalar_4", |b| {
+        b.iter(|| iterative::fib_iterative_batch(black_box(&batch_4)))
+    });
+
+    group.bench_function("scalar_8", |b| {
+        b.iter(|| iterative::fib_iterative_batch(black_box(&batch_8)))
+    });
+
+    group.bench_function("scalar_16", |b| {
+        b.iter(|| iterative::fib_iterative_batch(black_box(&batch_16)))
+    });
+
+    group.bench_function("scalar_32", |b| {
+        b.iter(|| iterative::fib_iterative_batch(black_box(&batch_32)))
+    });
+
+    group.bench_function("scalar_64", |b| {
+        b.iter(|| iterative::fib_iterative_batch(black_box(&batch_64)))
+    });
+
+    group.finish();
+}
+
+#[cfg(not(feature = "simd"))]
 criterion_group!(
     benches,
     complexity_comparison,
@@ -156,6 +213,18 @@ criterion_group!(
     batch_operations,
     cache_vs_direct,
     modular_arithmetic,
+);
+
+#[cfg(feature = "simd")]
+criterion_group!(
+    benches,
+    complexity_comparison,
+    large_n_scaling,
+    iterative_variants,
+    batch_operations,
+    cache_vs_direct,
+    modular_arithmetic,
+    simd_vs_scalar,
 );
 
 criterion_main!(benches);

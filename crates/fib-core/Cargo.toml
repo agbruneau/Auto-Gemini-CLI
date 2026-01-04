@@ -12,8 +12,13 @@ readme = "../../README.md"
 keywords = ["fibonacci", "algorithms", "benchmark", "performance"]
 categories = ["algorithms", "mathematics"]
 
+[features]
+default = []
+simd = ["wide"]
+
 [dependencies]
 num-bigint = { workspace = true }
+wide = { version = "0.7", optional = true }
 
 [dev-dependencies]
 criterion = { workspace = true }

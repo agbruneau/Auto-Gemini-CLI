@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIMD Fibonacci Demo | FibBenchmark</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🚀 SIMD Fibonacci Demo</h1>
+        <p class="subtitle">
+          Parallel batch Fibonacci calculation with SIMD optimization
+        </p>
+      </header>
+
+      <section class="cpu-info">
+        <h2>📊 CPU SIMD Features</h2>
+        <div id="cpu-features" class="features-grid">
+          <div class="feature" id="feat-sse2">
+            <span class="icon">❓</span>
+            <span class="name">SSE2</span>
+          </div>
+          <div class="feature" id="feat-avx">
+            <span class="icon">❓</span>
+            <span class="name">AVX</span>
+          </div>
+          <div class="feature" id="feat-avx2">
+            <span class="icon">❓</span>
+            <span class="name">AVX2</span>
+          </div>
+          <div class="feature" id="feat-avx512">
+            <span class="icon">❓</span>
+            <span class="name">AVX-512</span>
+          </div>
+        </div>
+        <p class="note">
+          Note: Browser JavaScript cannot detect native SIMD features. Use the
+          CLI for accurate detection.
+        </p>
+      </section>
+
+      <section class="calculator">
+        <h2>🧮 Batch Calculator</h2>
+        <div class="input-group">
+          <label for="batch-input">Fibonacci indices (comma-separated):</label>
+          <input
+            type="text"
+            id="batch-input"
+            value="10, 20, 30, 40, 50, 60, 70, 80"
+            placeholder="e.g., 10, 20, 30, 40"
+          />
+        </div>
+        <div class="button-group">
+          <button id="btn-calculate" class="btn btn-primary">
+            Calculate Batch
+          </button>
+          <button id="btn-benchmark" class="btn btn-secondary">
+            Run Benchmark
+          </button>
+          <button id="btn-clear" class="btn btn-outline">Clear</button>
+        </div>
+      </section>
+
+      <section class="results" id="results-section" style="display: none">
+        <h2>✅ Results</h2>
+        <div id="results-table"></div>
+      </section>
+
+      <section class="benchmark" id="benchmark-section" style="display: none">
+        <h2>📈 Performance Comparison</h2>
+        <div class="benchmark-results">
+          <div class="metric">
+            <span class="label">SIMD Time</span>
+            <span class="value" id="simd-time">-</span>
+          </div>
+          <div class="metric">
+            <span class="label">Scalar Time</span>
+            <span class="value" id="scalar-time">-</span>
+          </div>
+          <div class="metric highlight">
+            <span class="label">Speedup</span>
+            <span class="value" id="speedup">-</span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="benchmark-chart"></canvas>
+        </div>
+      </section>
+
+      <section class="info">
+        <h2>💡 How SIMD Works</h2>
+        <div class="info-content">
+          <p>
+            <strong>SIMD (Single Instruction, Multiple Data)</strong> is a
+            parallel processing technique that allows a CPU to perform the same
+            operation on multiple data points simultaneously.
+          </p>
+          <div class="diagram">
+            <pre>
+┌─────────────────────────────────────────────────┐
+│            Standard Scalar Processing           │
+├─────────────────────────────────────────────────┤
+│  F(10) → F(20) → F(30) → F(40)  (Sequential)   │
+└─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────┐
+│             SIMD Parallel Processing            │
+├─────────────────────────────────────────────────┤
+│  F(10) ──┐                                      │
+│  F(20) ──┼──→ All computed in parallel! 🚀     │
+│  F(30) ──┼                                      │
+│  F(40) ──┘                                      │
+└─────────────────────────────────────────────────┘
+                    </pre
+            >
+          </div>
+          <p class="note">
+            This web demo uses JavaScript for demonstration purposes. For true
+            SIMD performance, use the Rust CLI with
+            <code>--features simd</code>.
+          </p>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          Part of the
+          <a href="https://github.com/agbru/FibBenchmark">FibBenchmark</a>
+          project
+        </p>
+        <p class="version">v1.0.0 | SIMD Module</p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

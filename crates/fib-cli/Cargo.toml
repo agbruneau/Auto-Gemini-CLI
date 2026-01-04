@@ -16,6 +16,10 @@ categories = ["command-line-utilities"]
 name = "fib-bench"
 path = "src/main.rs"
 
+[features]
+default = []
+simd = ["fib-core/simd"]
+
 [dependencies]
 fib-core = { path = "../fib-core" }
 fib-viz = { path = "../fib-viz" }

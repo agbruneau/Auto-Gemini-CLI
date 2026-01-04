@@ -31,11 +31,17 @@ pub mod matrix;
 pub mod memory;
 pub mod recursive;
 
+#[cfg(feature = "simd")]
+pub mod simd;
+
 // Re-export main functions for convenience
 pub use closed_form::{binet_error_analysis, fib_binet_f64};
 pub use iterative::{fib_iterative, fib_iterative_batch, fib_iterative_branchless};
 pub use matrix::{fib_matrix_fast, fib_matrix_modulo};
 pub use recursive::{fib_recursive, fib_recursive_memo};
+
+#[cfg(feature = "simd")]
+pub use simd::{fib_simd_batch, SimdBatchCalculator, SimdFeatures};
 
 /// Enum representing available Fibonacci algorithms
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

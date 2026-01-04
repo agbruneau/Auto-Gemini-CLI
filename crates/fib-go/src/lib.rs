@@ -123,15 +123,32 @@ mod ffi {
 
         fn multiply(m1: Matrix, m2: Matrix) -> Matrix {
             Matrix {
-                a: m1.a.wrapping_mul(m2.a).wrapping_add(m1.b.wrapping_mul(m2.c)),
-                b: m1.a.wrapping_mul(m2.b).wrapping_add(m1.b.wrapping_mul(m2.d)),
-                c: m1.c.wrapping_mul(m2.a).wrapping_add(m1.d.wrapping_mul(m2.c)),
-                d: m1.c.wrapping_mul(m2.b).wrapping_add(m1.d.wrapping_mul(m2.d)),
+                a: m1
+                    .a
+                    .wrapping_mul(m2.a)
+                    .wrapping_add(m1.b.wrapping_mul(m2.c)),
+                b: m1
+                    .a
+                    .wrapping_mul(m2.b)
+                    .wrapping_add(m1.b.wrapping_mul(m2.d)),
+                c: m1
+                    .c
+                    .wrapping_mul(m2.a)
+                    .wrapping_add(m1.d.wrapping_mul(m2.c)),
+                d: m1
+                    .c
+                    .wrapping_mul(m2.b)
+                    .wrapping_add(m1.d.wrapping_mul(m2.d)),
             }
         }
 
         fn power(m: Matrix, mut n: u64) -> Matrix {
-            let mut result = Matrix { a: 1, b: 0, c: 0, d: 1 };
+            let mut result = Matrix {
+                a: 1,
+                b: 0,
+                c: 0,
+                d: 1,
+            };
             let mut base = m;
             while n > 0 {
                 if n % 2 == 1 {
@@ -143,7 +160,12 @@ mod ffi {
             result
         }
 
-        let fib_mat = Matrix { a: 1, b: 1, c: 1, d: 0 };
+        let fib_mat = Matrix {
+            a: 1,
+            b: 1,
+            c: 1,
+            d: 0,
+        };
         power(fib_mat, n).b
     }
 
@@ -414,10 +436,7 @@ pub fn compare_implementations(n: u64, iterations: u32) -> Vec<BenchmarkResult> 
 pub fn format_comparison_table(results: &[BenchmarkResult]) -> String {
     let mut output = String::new();
 
-    output.push_str(&format!(
-        "\n{:─^80}\n",
-        " Rust vs Go Fibonacci Comparison "
-    ));
+    output.push_str(&format!("\n{:─^80}\n", " Rust vs Go Fibonacci Comparison "));
     output.push_str(&format!(
         "| {:^12} | {:^8} | {:^15} | {:^15} | {:^12} |\n",
         "Method", "Language", "n", "Time (avg)", "Result"

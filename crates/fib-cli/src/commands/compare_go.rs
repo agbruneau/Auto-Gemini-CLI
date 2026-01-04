@@ -63,13 +63,14 @@ pub fn run(n: u64, iterations: u32) {
     }
 
     // Verify results match
-    let all_match = results
-        .windows(2)
-        .all(|w| w[0].result == w[1].result);
+    let all_match = results.windows(2).all(|w| w[0].result == w[1].result);
 
     println!();
     if all_match {
-        println!("✅ All implementations produce the same result: F({}) = {}", n, results[0].result);
+        println!(
+            "✅ All implementations produce the same result: F({}) = {}",
+            n, results[0].result
+        );
     } else {
         println!("⚠️  Warning: Results differ between implementations!");
         for r in &results {
