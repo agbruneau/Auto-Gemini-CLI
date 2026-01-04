@@ -2,7 +2,6 @@
 
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/agbru/FibBenchmark/actions/workflows/rust-check.yml/badge.svg)](https://github.com/agbru/FibBenchmark/actions)
 
 > Un écosystème complet de benchmarking des algorithmes Fibonacci en Rust, avec analyses de complexité, visualisations et documentation mathématique rigoureuse.
 
@@ -16,7 +15,6 @@
 - **Profiling avancé** (Flamegraphs) et analyse mémoire
 - **Visualisations** graphiques et rapports HTML
 - **Documentation exhaustive** et Manuel Utilisateur
-- **CI/CD automatisé** avec tests et benchmarks
 
 ## 📊 Algorithmes Implémentés
 
@@ -160,11 +158,6 @@ FibBenchmark/
 │   │   └── optimization_techniques.md
 │   └── usage/
 │       └── getting_started.md
-│
-├── .github/
-│   └── workflows/
-│       ├── rust-check.yml        # CI tests
-│       └── benchmark.yml         # CI benchmarks
 │
 └── target/                       # Artifacts de compilation (gitignored)
 ```
