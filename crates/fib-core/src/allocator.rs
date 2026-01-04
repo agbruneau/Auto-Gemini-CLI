@@ -70,3 +70,62 @@ unsafe impl GlobalAlloc for TrackingAllocator {
             .fetch_sub(layout.size(), Ordering::SeqCst);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // We can't easily test GlobalAlloc integration directly in unit tests
+    // because the global allocator is set at compile time for the binary.
+    // However, we can test the struct logic if we could call alloc/dealloc manually,
+    // but those are unsafe traits.
+    // Instead, we can verify the state management methods.
+
+    #[test]
+    fn test_allocator_initial_state() {
+        let allocator = TrackingAllocator::new();
+        assert_eq!(allocator.get_current_usage(), 0);
+        assert_eq!(allocator.get_allocation_count(), 0);
+    }
+
+    #[test]
+    fn test_manual_tracking_simulation() {
+        let allocator = TrackingAllocator::new();
+        let layout = Layout::from_size_align(1024, 8).unwrap();
+
+        // Manually simulating alloc
+        unsafe {
+            let ptr = allocator.alloc(layout);
+            assert!(!ptr.is_null());
+            assert_eq!(allocator.get_current_usage(), 1024);
+            assert_eq!(allocator.get_allocation_count(), 1);
+
+            // Simulating dealloc
+            allocator.dealloc(ptr, layout);
+            assert_eq!(allocator.get_current_usage(), 0);
+            assert_eq!(allocator.get_allocation_count(), 1); // count keeps increasing
+        }
+    }
+
+    #[test]
+    fn test_reset() {
+        let allocator = TrackingAllocator::new();
+        let layout = Layout::from_size_align(100, 4).unwrap();
+
+        unsafe {
+            let ptr = allocator.alloc(layout);
+            assert_eq!(allocator.get_current_usage(), 100);
+
+            allocator.reset();
+            assert_eq!(allocator.get_current_usage(), 0);
+            assert_eq!(allocator.get_allocation_count(), 0);
+
+            // Cleanup
+            allocator.dealloc(ptr, layout);
+            // Usage will underflow or go negative if we rely on usize simple subtraction,
+            // but since it's atomic usize wrapping, it will be large.
+            // This is just a test artifact; in real usage we wouldn't reset while memory is alive
+            // unless we wanted to start fresh counting from that point.
+        }
+    }
+}

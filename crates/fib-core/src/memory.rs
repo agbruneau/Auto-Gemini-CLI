@@ -25,3 +25,43 @@ impl MemoryStats {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_memory_stats_delta() {
+        let start = MemoryStats {
+            current_bytes: 100,
+            allocations: 5,
+        };
+
+        let end = MemoryStats {
+            current_bytes: 250,
+            allocations: 8,
+        };
+
+        let delta = end.delta(&start);
+        assert_eq!(delta.current_bytes, 150);
+        assert_eq!(delta.allocations, 3);
+    }
+
+    #[test]
+    fn test_memory_stats_delta_saturating() {
+        // Case where memory usage decreased (freed)
+        let start = MemoryStats {
+            current_bytes: 500,
+            allocations: 10,
+        };
+
+        let end = MemoryStats {
+            current_bytes: 200, // less usage
+            allocations: 12,    // more allocs count
+        };
+
+        let delta = end.delta(&start);
+        assert_eq!(delta.current_bytes, 0); // saturating_sub
+        assert_eq!(delta.allocations, 2);
+    }
+}

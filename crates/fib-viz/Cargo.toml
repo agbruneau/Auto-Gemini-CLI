@@ -25,3 +25,6 @@ fib-core = { path = "../fib-core" }
 plotly = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3.24.0"
