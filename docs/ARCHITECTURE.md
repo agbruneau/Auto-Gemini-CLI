@@ -35,13 +35,13 @@ L'architecture du projet Fibonacci Benchmark Suite suit les principes de **modul
 
 ### 1.2 Principes directeurs
 
-| Principe | Description | Application |
-|----------|-------------|-------------|
-| **Modularité** | Chaque crate a une responsabilité unique | 4 crates indépendantes |
-| **Zero-cost abstractions** | Pas de surcoût runtime pour les abstractions | Traits, generics |
-| **Performance first** | Optimisation sans sacrifier la lisibilité | Algorithmes O(log n) |
-| **Documentation as code** | Doc-tests exécutables | Exemples dans rustdoc |
-| **Fail fast** | Erreurs détectées à la compilation | Types stricts |
+| Principe                   | Description                                  | Application            |
+| -------------------------- | -------------------------------------------- | ---------------------- |
+| **Modularité**             | Chaque crate a une responsabilité unique     | 4 crates indépendantes |
+| **Zero-cost abstractions** | Pas de surcoût runtime pour les abstractions | Traits, generics       |
+| **Performance first**      | Optimisation sans sacrifier la lisibilité    | Algorithmes O(log n)   |
+| **Documentation as code**  | Doc-tests exécutables                        | Exemples dans rustdoc  |
+| **Fail fast**              | Erreurs détectées à la compilation           | Types stricts          |
 
 ### 1.3 Stack technologique
 
@@ -60,18 +60,23 @@ L'architecture du projet Fibonacci Benchmark Suite suit les principes de **modul
 │                    COUCHE MÉTIER                             │
 │                    ┌─────┴─────┐                             │
 │                    │ fib-core  │                             │
-│                    │           │                             │
-│  ┌─────────────────┼───────────┼─────────────────┐          │
-│  │    ┌────────────┴───────────┴────────────┐    │          │
+│                    │ (Rust+SIMD)                             │
+│  ┌─────────────────┼───┬───────┼─────────────────┐          │
+│  │    ┌────────────┴───│───────┴────────────┐    │          │
 │  │    │         Algorithmes Fibonacci        │    │          │
-│  │    │  ┌──────────┐ ┌──────────┐          │    │          │
-│  │    │  │recursive │ │iterative │          │    │          │
-│  │    │  └──────────┘ └──────────┘          │    │          │
+│  │    │  ┌──────────┐ ┌──────────┐ ┌──────┐ │    │          │
+│  │    │  │recursive │ │iterative │ │ SIMD │ │    │          │
+│  │    │  └──────────┘ └──────────┘ └──────┘ │    │          │
 │  │    │  ┌──────────┐ ┌───────────┐         │    │          │
 │  │    │  │  matrix  │ │closed_form│         │    │          │
 │  │    │  └──────────┘ └───────────┘         │    │          │
 │  │    └─────────────────────────────────────┘    │          │
 │  └───────────────────────────────────────────────┘          │
+│                            │                                │
+│                     ┌──────┴───────┐                        │
+│                     │  Go Bridge   │                        │
+│                     │    (FFI)     │                        │
+│                     └──────────────┘                        │
 └─────────────────────────────────────────────────────────────┘
                            │
 ┌──────────────────────────┼──────────────────────────────────┐
@@ -97,6 +102,7 @@ members = [
     "crates/fib-cli",       # Interface ligne de commande
     "crates/fib-profiler",  # Outils de profiling
     "crates/fib-viz",       # Visualisations
+    "crates/fib-go",        # Bridge Go Integration
 ]
 resolver = "2"
 ```
@@ -106,10 +112,12 @@ resolver = "2"
 ```
 fib-core (bibliothèque)
     └── num-bigint
+    └── wide (SIMD)
     └── [dev] criterion, proptest
 
 fib-cli (binaire)
     └── fib-core
+    └── fib-go (optional)
     └── clap
     └── serde, serde_json
     └── criterion
@@ -123,6 +131,9 @@ fib-viz (binaire)
     └── fib-core
     └── plotly
     └── serde, serde_json
+
+fib-go (bibliothèque)
+    └── [build] cc, bindgen
 ```
 
 ### 2.3 Profiles de compilation
@@ -153,13 +164,16 @@ crates/fib-core/
 │   ├── recursive.rs     # Algorithmes récursifs
 │   ├── iterative.rs     # Algorithmes itératifs
 │   ├── matrix.rs        # Exponentiation matricielle
-│   └── closed_form.rs   # Formule de Binet
+│   ├── closed_form.rs   # Formule de Binet
+│   └── simd.rs          # Optimisations SIMD (AVX2/AVX512)
 └── benches/
     └── fib_benchmarks.rs
 ```
 
 **Responsabilités**:
-- Implémenter les 5 algorithmes Fibonacci
+
+- Implémenter les 5 algorithmes Fibonacci de base
+- Fournir les implémentations SIMD optimisées
 - Fournir une API unifiée via `FibMethod`
 - Exposer les benchmarks Criterion
 - Documenter les complexités et limites
@@ -172,6 +186,7 @@ pub mod recursive;
 pub mod iterative;
 pub mod matrix;
 pub mod closed_form;
+pub mod simd;
 
 // Types
 pub enum FibMethod { ... }
@@ -181,6 +196,7 @@ pub use recursive::{fib_recursive, fib_recursive_memo};
 pub use iterative::{fib_iterative, fib_iterative_branchless, fib_iterative_batch};
 pub use matrix::{fib_matrix_fast, fib_matrix_modulo};
 pub use closed_form::{fib_binet_f64, binet_error_analysis};
+pub use simd::{fib_simd_u64, fib_simd_batch};
 ```
 
 ### 3.2 fib-cli
@@ -199,10 +215,14 @@ crates/fib-cli/
         ├── bench.rs          # Lancer benchmarks
         ├── info.rs           # Informations algorithmes
         ├── sequence.rs       # Générer séquences
-        └── binet_analysis.rs # Analyse précision Binet
+        ├── binet_analysis.rs # Analyse précision Binet
+        ├── report.rs         # Génération rapports
+        ├── simd.rs           # Démo SIMD
+        └── compare_go.rs     # Comparaison Rust vs Go
 ```
 
 **Responsabilités**:
+
 - Parser les arguments avec clap
 - Router vers les commandes appropriées
 - Formater les sorties utilisateur
@@ -225,6 +245,9 @@ enum Commands {
     Info { ... },
     Sequence { ... },
     BinetAnalysis { ... },
+    Report { ... },
+    Simd { ... },
+    CompareGo { ... },
 }
 ```
 
@@ -240,6 +263,7 @@ crates/fib-profiler/
 ```
 
 **Responsabilités**:
+
 - Profiler les différentes méthodes
 - Analyser la mémoire
 - Comparer les temps d'exécution
@@ -257,9 +281,29 @@ crates/fib-viz/
 ```
 
 **Responsabilités**:
+
 - Générer des données CSV
 - Créer des graphiques avec Plotly
 - Exporter en SVG/HTML
+
+### 3.5 fib-go
+
+**Rôle**: Intégration et comparaison avec Go (FFI).
+
+```
+crates/fib-go/
+├── Cargo.toml
+├── build.rs             # Compilation du code Go
+└── src/
+    ├── lib.rs           # Bindings Rust
+    └── fib.go           # Implémentation Go
+```
+
+**Responsabilités**:
+
+- Compiler le code Go en bibliothèque statique
+- Exposer les fonctions via C FFI
+- Fournir des bindings sûrs pour Rust
 
 ---
 
@@ -280,6 +324,10 @@ crates/fib-viz/
 │  │  ┌─────┐ ┌───────┐ ┌─────┐ ┌────┐ ┌────────┐ ┌─────────────┐  │  │
 │  │  │calc │ │compare│ │bench│ │info│ │sequence│ │binet_analysis│ │  │
 │  │  └──┬──┘ └───┬───┘ └──┬──┘ └──┬─┘ └────┬───┘ └──────┬──────┘  │  │
+│  │     │        │        │       │        │            │             │  │
+│  │  ┌──┴───┐ ┌──┴───┐ ┌──┴───────┴──┐     │            │             │  │
+│  │  │report│ │ simd │ │ compare-go  │     │            │             │  │
+│  │  └──────┘ └──────┘ └─────────────┘     │            │             │  │
 │  └─────┼────────┼────────┼───────┼────────┼────────────┼─────────┘  │
 └────────┼────────┼────────┼───────┼────────┼────────────┼────────────┘
          │        │        │       │        │            │
@@ -305,6 +353,12 @@ crates/fib-viz/
 │  │  │count_calls  │ │FibCache     │ │fib_double│ │find_limit     │ ││
 │  │  │             │ │FibIterator  │ │Matrix2x2 │ │fib_ratio      │ ││
 │  │  └─────────────┘ └─────────────┘ └──────────┘ └───────────────┘ ││
+│  │  ┌─────────────┐                                                ││
+│  │  │   simd.rs   │                                                ││
+│  │  │             │                                                ││
+│  │  │fib_simd_u64 │                                                ││
+│  │  │fib_simd_bat │                                                ││
+│  │  └─────────────┘                                                ││
 │  └─────────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -482,25 +536,25 @@ pub struct FibonacciIterator { ... }
 
 impl Iterator for FibonacciIterator {
     type Item = u128;
-    
+
     fn next(&mut self) -> Option<Self::Item> { ... }
 }
 ```
 
 ### 5.2 Conventions de nommage
 
-| Élément | Convention | Exemple |
-|---------|------------|---------|
-| Crates | kebab-case | `fib-core` |
-| Modules | snake_case | `closed_form` |
-| Types | PascalCase | `FibMethod` |
-| Fonctions | snake_case | `fib_iterative` |
+| Élément    | Convention      | Exemple          |
+| ---------- | --------------- | ---------------- |
+| Crates     | kebab-case      | `fib-core`       |
+| Modules    | snake_case      | `closed_form`    |
+| Types      | PascalCase      | `FibMethod`      |
+| Fonctions  | snake_case      | `fib_iterative`  |
 | Constantes | SCREAMING_SNAKE | `MAX_ACCURATE_N` |
-| Traits | PascalCase | `Iterator` |
+| Traits     | PascalCase      | `Iterator`       |
 
 ### 5.3 Conventions de documentation
 
-```rust
+````rust
 /// Description courte sur une ligne.
 ///
 /// # Description détaillée
@@ -531,7 +585,7 @@ impl Iterator for FibonacciIterator {
 /// - Time: O(n)
 /// - Space: O(1)
 pub fn fib_iterative(n: u64) -> u128 { ... }
-```
+````
 
 ### 5.4 Structure des modules
 
@@ -568,7 +622,7 @@ fn multiply_matrices(...) -> ... { ... }
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_example() { ... }
 }
@@ -682,6 +736,9 @@ Commands:
   info            Afficher les informations sur les algorithmes
   sequence        Générer une séquence de Fibonacci
   binet-analysis  Analyser la précision de Binet
+  report          Générer des rapports et visualisations
+  simd            Démonstration des capacités SIMD
+  compare-go      Comparer les performances Rust vs Go
 
 Options:
   -h, --help     Afficher l'aide
@@ -694,7 +751,7 @@ Options:
 # calc
 fib-bench calc -n <N> [--method <METHOD>] [--time]
 
-# compare  
+# compare
 fib-bench compare -n <N> [--max-recursive <MAX>]
 
 # bench
@@ -708,6 +765,15 @@ fib-bench sequence [--count <COUNT>] [--start <START>]
 
 # binet-analysis
 fib-bench binet-analysis [--max-n <MAX_N>]
+
+# report
+fib-bench report --open
+
+# simd
+fib-bench simd -n 1000 --batch-size 16
+
+# compare-go
+fib-bench compare-go -n 1000
 ```
 
 ---
@@ -762,12 +828,12 @@ fib-bench binet-analysis [--max-n <MAX_N>]
 
 ### 8.1 Optimisations par algorithme
 
-| Algorithme | Optimisation | Impact |
-|------------|--------------|--------|
-| Recursive | Memoization | O(2^n) → O(n) |
-| Iterative | Branchless loop | 5-15% faster |
-| Matrix | Fast exponentiation | O(n) → O(log n) |
-| Binet | Direct formula | O(n) → O(1) |
+| Algorithme | Optimisation        | Impact          |
+| ---------- | ------------------- | --------------- |
+| Recursive  | Memoization         | O(2^n) → O(n)   |
+| Iterative  | Branchless loop     | 5-15% faster    |
+| Matrix     | Fast exponentiation | O(n) → O(log n) |
+| Binet      | Direct formula      | O(n) → O(1)     |
 
 ### 8.2 Optimisations de compilation
 
@@ -780,12 +846,12 @@ opt-level = 3        # Toutes les optimisations
 
 ### 8.3 Optimisations mémoire
 
-| Structure | Mémoire | Notes |
-|-----------|---------|-------|
-| `fib_iterative` | 32 bytes stack | 2 × u128 |
-| `Matrix2x2` | 64 bytes stack | 4 × u128 |
-| `FibonacciCache(100)` | ~1.6 KB heap | Vec<u128> |
-| `fib_recursive_memo(n)` | n × 16 bytes | Allocation dynamique |
+| Structure               | Mémoire        | Notes                |
+| ----------------------- | -------------- | -------------------- |
+| `fib_iterative`         | 32 bytes stack | 2 × u128             |
+| `Matrix2x2`             | 64 bytes stack | 4 × u128             |
+| `FibonacciCache(100)`   | ~1.6 KB heap   | Vec<u128>            |
+| `fib_recursive_memo(n)` | n × 16 bytes   | Allocation dynamique |
 
 ### 8.4 Caractéristiques de performance
 
@@ -834,12 +900,12 @@ modular_arithmetic      // Opérations modulo
 
 ### 9.1 Stratégie d'erreurs
 
-| Situation | Stratégie | Justification |
-|-----------|-----------|---------------|
-| n invalide | Type système (u64) | Impossible d'avoir n négatif |
-| Overflow | Wrapping silencieux | Comportement défini pour u128 |
-| Method inconnue | `Result<FibMethod, String>` | Parsing utilisateur |
-| Binet imprécis | Documentation | Limitation connue |
+| Situation       | Stratégie                   | Justification                 |
+| --------------- | --------------------------- | ----------------------------- |
+| n invalide      | Type système (u64)          | Impossible d'avoir n négatif  |
+| Overflow        | Wrapping silencieux         | Comportement défini pour u128 |
+| Method inconnue | `Result<FibMethod, String>` | Parsing utilisateur           |
+| Binet imprécis  | Documentation               | Limitation connue             |
 
 ### 9.2 Types d'erreurs
 
@@ -850,7 +916,7 @@ modular_arithmetic      // Opérations modulo
 // fib-cli gère les erreurs utilisateur
 impl FromStr for FibMethod {
     type Err = String;
-    
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "recursive" => Ok(FibMethod::Recursive),
@@ -866,7 +932,7 @@ impl FromStr for FibMethod {
 ```rust
 fn main() {
     let cli = Cli::parse();
-    
+
     match run(cli) {
         Ok(()) => {}
         Err(e) => {
@@ -919,7 +985,7 @@ mod tests {
 
     // Valeurs connues
     const FIRST_20_FIBS: [u128; 21] = [
-        0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 
+        0, 1, 1, 2, 3, 5, 8, 13, 21, 34,
         55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765,
     ];
 
@@ -949,7 +1015,7 @@ mod tests {
 #[cfg(test)]
 mod property_tests {
     use proptest::prelude::*;
-    
+
     proptest! {
         #[test]
         fn fib_additive_property(n in 2u64..100) {
@@ -959,7 +1025,7 @@ mod property_tests {
             let fib_n2 = fib_iterative(n - 2);
             prop_assert_eq!(fib_n, fib_n1 + fib_n2);
         }
-        
+
         #[test]
         fn methods_agree(n in 0u64..50) {
             // Toutes les méthodes donnent le même résultat
@@ -973,7 +1039,7 @@ mod property_tests {
 
 ### 10.4 Doc-tests
 
-```rust
+````rust
 /// Calcule le n-ième nombre de Fibonacci.
 ///
 /// # Examples
@@ -986,16 +1052,16 @@ mod property_tests {
 /// assert_eq!(fib_iterative(50), 12586269025);
 /// ```
 pub fn fib_iterative(n: u64) -> u128 { ... }
-```
+````
 
 ### 10.5 Métriques de qualité
 
-| Métrique | Cible | Actuel |
-|----------|-------|--------|
-| Tests passants | 100% | ✅ 100% |
-| Doc-tests | 100% | ✅ 100% |
-| Clippy warnings | 0 | ✅ 0 |
-| Couverture | > 80% | 🔄 À mesurer |
+| Métrique        | Cible | Actuel       |
+| --------------- | ----- | ------------ |
+| Tests passants  | 100%  | ✅ 100%      |
+| Doc-tests       | 100%  | ✅ 100%      |
+| Clippy warnings | 0     | ✅ 0         |
+| Couverture      | > 80% | 🔄 À mesurer |
 
 ---
 
@@ -1010,11 +1076,13 @@ pub fn fib_iterative(n: u64) -> u128 { ... }
 **Décision**: Utiliser `u128` comme type de retour principal.
 
 **Justification**:
+
 - F(186) est le dernier Fibonacci qui tient dans u128
 - Couvre largement les cas d'usage courants
 - Performance native sans allocation
 
 **Conséquences**:
+
 - Limite à n ≤ 186 sans overflow
 - BigInt disponible pour extension future
 
@@ -1025,11 +1093,13 @@ pub fn fib_iterative(n: u64) -> u128 { ... }
 **Décision**: Utiliser un Cargo workspace avec crates séparées.
 
 **Justification**:
+
 - Séparation claire des responsabilités
 - Compilation incrémentale efficace
 - Réutilisation de fib-core comme bibliothèque
 
 **Conséquences**:
+
 - Complexité légèrement accrue
 - Gestion des versions par crate
 
@@ -1040,10 +1110,12 @@ pub fn fib_iterative(n: u64) -> u128 { ... }
 **Décision**: Conditionner pprof avec `cfg(unix)`.
 
 **Justification**:
+
 - Permet la compilation sur toutes les plateformes
 - Profiling reste disponible sur Unix/macOS
 
 **Conséquences**:
+
 - Fonctionnalités de profiling limitées sur Windows
 - Documentation des limitations
 
@@ -1054,22 +1126,24 @@ pub fn fib_iterative(n: u64) -> u128 { ... }
 **Décision**: Utiliser Criterion.rs.
 
 **Justification**:
+
 - Analyse statistique avancée
 - Détection des régressions
 - Rapports HTML
 
 **Conséquences**:
+
 - Dépendance dev importante
 - Temps de benchmark plus long
 
 ### 11.2 Choix technologiques
 
-| Choix | Alternatives | Raison du choix |
-|-------|--------------|-----------------|
-| clap 4.x | structopt, argh | Derive macros, complétions |
-| Criterion | built-in bench | Statistiques, rapports |
-| plotly | gnuplot, plotters | Interactif, web-friendly |
-| u128 | BigInt | Performance, simplicité |
+| Choix     | Alternatives      | Raison du choix            |
+| --------- | ----------------- | -------------------------- |
+| clap 4.x  | structopt, argh   | Derive macros, complétions |
+| Criterion | built-in bench    | Statistiques, rapports     |
+| plotly    | gnuplot, plotters | Interactif, web-friendly   |
+| u128      | BigInt            | Performance, simplicité    |
 
 ---
 
@@ -1101,36 +1175,31 @@ pub fn fib_iterative(n: u64) -> u128 { ... }
 3. Étendre `Commands` enum
 4. Ajouter au match dans `main.rs`
 
-### 12.2 Extension future: SIMD
+### 12.2 Extension: SIMD (Complétée)
+
+Le support SIMD a été implémenté en Phase 8 pour optimiser les calculs par lots (batch).
 
 ```rust
-// crates/fib-core/src/simd.rs (futur)
-#![feature(portable_simd)]
-
-use std::simd::*;
-
-/// Calcul batch avec SIMD
+// crates/fib-core/src/simd.rs
 pub fn fib_simd_batch(ns: &[u64]) -> Vec<u128> {
-    // Parallélisation SIMD pour calculs batch
-    ...
+    // Utilise le crate 'wide' pour abstraction SIMD
+    // Supporte AVX2, AVX512, NEON, SSE automatiquement
 }
 ```
 
-### 12.3 Extension future: FFI Go
+### 12.3 Extension: FFI Go (Complétée)
+
+Le bridge Go a été implémenté en Phase 7 pour comparer les performances entre les langages.
 
 ```rust
-// crates/fib-compare-go/src/go_bridge.rs (futur)
-
-#[link(name = "fib_go")]
+// crates/fib-go/src/lib.rs
 extern "C" {
-    fn go_fib_iterative(n: u64) -> u64;
-    fn go_fib_matrix(n: u64) -> u64;
+    fn FibonacciIterative(n: u64) -> u64;
+    fn FibonacciMatrix(n: u64) -> u64;
 }
 
-pub fn compare_go(n: u64) -> (u128, u64) {
-    let rust_result = fib_core::fib_iterative(n);
-    let go_result = unsafe { go_fib_iterative(n) };
-    (rust_result, go_result)
+pub fn compare_languages(n: u64) {
+    // Mesure et compare les temps d'exécution Rust vs Go
 }
 ```
 
@@ -1140,12 +1209,12 @@ pub fn compare_go(n: u64) -> (u128, u64) {
 
 ### 13.1 Considérations de sécurité
 
-| Risque | Mitigation |
-|--------|------------|
-| Integer overflow | Types u128, wrapping_add documenté |
+| Risque                     | Mitigation                            |
+| -------------------------- | ------------------------------------- |
+| Integer overflow           | Types u128, wrapping_add documenté    |
 | Stack overflow (recursion) | Limites documentées, memo recommandée |
-| Denial of Service | Limites sur n pour recursive |
-| Supply chain | cargo-audit en CI |
+| Denial of Service          | Limites sur n pour recursive          |
+| Supply chain               | cargo-audit en CI                     |
 
 ### 13.2 Audit des dépendances
 
@@ -1209,12 +1278,12 @@ jobs:
 
 ### A. Glossaire
 
-| Terme | Définition |
-|-------|------------|
-| **φ (phi)** | Nombre d'or ≈ 1.618 |
-| **Binet** | Formule close pour F(n) |
-| **Fast exponentiation** | Calcul de M^n en O(log n) |
-| **Memoization** | Cache des résultats intermédiaires |
+| Terme                   | Définition                         |
+| ----------------------- | ---------------------------------- |
+| **φ (phi)**             | Nombre d'or ≈ 1.618                |
+| **Binet**               | Formule close pour F(n)            |
+| **Fast exponentiation** | Calcul de M^n en O(log n)          |
+| **Memoization**         | Cache des résultats intermédiaires |
 
 ### B. Références
 

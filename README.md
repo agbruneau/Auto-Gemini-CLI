@@ -9,23 +9,26 @@
 ## ✨ Caractéristiques
 
 - **6 algorithmes Fibonacci** avec différentes complexités temporelles
+- **Optimisations SIMD** (AVX2/AVX512) pour le traitement par lots
+- **Comparaison Cross-Language** avec implémentation Go via FFI
 - **Benchmarking Criterion** pour des mesures précises et statistiquement rigoureuses
-- **CLI complète** avec 6 commandes pour calculs, comparaisons et analyses
-- **Documentation exhaustive** : architecture, benchmarks, mathématiques et planification
-- **Analyses de précision** pour la formule de Binet
-- **Workspace modulaire** avec 4 crates spécialisés
+- **CLI complète** avec 9 commandes pour calculs, comparaisons et analyses
+- **Profiling avancé** (Flamegraphs) et analyse mémoire
+- **Visualisations** graphiques et rapports HTML
+- **Documentation exhaustive** et Manuel Utilisateur
 - **CI/CD automatisé** avec tests et benchmarks
 
 ## 📊 Algorithmes Implémentés
 
-| Algorithme | Temps | Espace | Cas d'usage |
-|------------|-------|--------|-------------|
-| Récursif naïf | O(2ⁿ) | O(n) | Démonstration uniquement |
-| Récursif + Mémo | O(n) | O(n) | Petits n avec cache |
-| Itératif | O(n) | O(1) | Usage général |
-| Itératif branchless | O(n) | O(1) | Optimisation micro |
-| Matriciel | O(log n) | O(1) | Grands n |
-| Binet | O(1) | O(1) | Approximation (n ≤ 78) |
+| Algorithme          | Temps    | Espace | Cas d'usage              |
+| ------------------- | -------- | ------ | ------------------------ |
+| Récursif naïf       | O(2ⁿ)    | O(n)   | Démonstration uniquement |
+| Récursif + Mémo     | O(n)     | O(n)   | Petits n avec cache      |
+| Itératif            | O(n)     | O(1)   | Usage général            |
+| Itératif branchless | O(n)     | O(1)   | Optimisation micro       |
+| Matriciel           | O(log n) | O(1)   | Grands n                 |
+| Binet               | O(1)     | O(1)   | Approximation (n ≤ 78)   |
+| SIMD Batch          | O(n/k)   | O(k)   | Calculs massifs par lots |
 
 ## 🚀 Installation
 
@@ -33,6 +36,7 @@
 
 - Rust 1.70+ ([rustup](https://rustup.rs/))
 - Cargo (inclus avec Rust)
+- (Optionnel) Go 1.20+ pour `compare-go`
 
 ### Compilation
 
@@ -53,40 +57,32 @@ cargo bench
 
 ## 🛠️ Utilisation
 
+Voir le [**Manuel Utilisateur**](docs/MANUAL.md) pour un guide complet.
+
 ### CLI Tool
 
 Le projet fournit une interface en ligne de commande complète via `fib-bench` :
 
 ```bash
-# Calculer F(n) avec la méthode par défaut (itérative)
+# Calculer F(n)
 cargo run --bin fib-bench -- calc -n 100
 
-# Calculer avec une méthode spécifique et afficher le temps
-cargo run --bin fib-bench -- calc -n 50 --method matrix --time
+# Comparer toutes les méthodes
+cargo run --bin fib-bench -- compare -n 1000
 
-# Comparer toutes les méthodes pour un n donné
-cargo run --bin fib-bench -- compare -n 30
+# Lancer la démo SIMD
+cargo run --bin fib-bench -- simd -n 1000 --batch-size 1024
 
-# Afficher les informations détaillées sur les algorithmes
-cargo run --bin fib-bench -- info --method all
+# Comparer avec Go
+cargo run --bin fib-bench -- compare-go -n 10000
 
-# Générer une séquence de Fibonacci
-cargo run --bin fib-bench -- sequence --count 20
-
-# Analyser la précision de la formule de Binet
-cargo run --bin fib-bench -- binet-analysis --max-n 100
-
-# Lancer les benchmarks Criterion
-cargo run --bin fib-bench -- bench
+# Générer le rapport complet
+cargo run --bin fib-bench -- report --open
 ```
 
 **Commandes disponibles :**
-- `calc` - Calculer F(n) avec une méthode spécifique
-- `compare` - Comparer toutes les méthodes pour un n donné
-- `bench` - Lancer les benchmarks Criterion
-- `info` - Afficher les informations sur les algorithmes
-- `sequence` - Générer une séquence de Fibonacci
-- `binet-analysis` - Analyser la précision de la formule de Binet
+
+- `calc`, `compare`, `bench`, `info`, `sequence`, `binet-analysis`, `report`, `simd`, `compare-go`
 
 ### Comme bibliothèque
 
@@ -221,25 +217,16 @@ Le speedup de la méthode matricielle augmente avec n (O(log n) vs O(n)).
 
 Le projet inclut une documentation exhaustive organisée en plusieurs sections :
 
-### Documentation principale
+### Guides
 
-- [**ARCHITECTURE.md**](docs/ARCHITECTURE.md) - Architecture technique complète, patterns, API et décisions techniques
-- [**MATHEMATICS.md**](docs/MATHEMATICS.md) - Théorie mathématique approfondie de Fibonacci
-- [**BENCHMARKS.md**](docs/BENCHMARKS.md) - Résultats de benchmarks et analyses de performance
-- [**PLANNING.md**](docs/PLANNING.md) - Planification du projet, roadmap et état d'avancement
+- [**MANUEL.md**](docs/MANUAL.md) - Manuel d'utilisation complet 📘
+- [**ARCHITECTURE.md**](docs/ARCHITECTURE.md) - Architecture technique
+- [**BENCHMARKS.md**](docs/BENCHMARKS.md) - Résultats de performance
+- [**PLANNING.md**](docs/PLANNING.md) - Historique du projet
 
-### Documentation détaillée
+### Mathématiques et Théorie
 
-**Mathématiques :**
-- [**fibonacci_theory.md**](docs/math/fibonacci_theory.md) - Fondements théoriques
-- [**matrix_method.md**](docs/math/matrix_method.md) - Méthode matricielle expliquée
-- [**binet_formula.md**](docs/math/binet_formula.md) - Formule de Binet et limites de précision
-
-**Performance :**
-- [**optimization_techniques.md**](docs/performance/optimization_techniques.md) - Techniques d'optimisation
-
-**Usage :**
-- [**getting_started.md**](docs/usage/getting_started.md) - Guide de démarrage rapide
+- [**MATHEMATICS.md**](docs/MATHEMATICS.md) - Théorie mathématique
 
 ### Documentation générée
 
@@ -268,24 +255,11 @@ cargo test -p fib-core
 
 **Version actuelle :** 1.0.0 🎉
 
-### Phases complétées ✅
-
-- ✅ **Phase 1** - Fondation : Structure workspace, algorithmes de base
-- ✅ **Phase 2** - Algorithmes avancés : Matrice, Binet, utilitaires
-- ✅ **Phase 3** - CLI & Outils : Interface complète avec 6 commandes
-- ✅ **Phase 4** - Documentation : Documentation complète
-- ✅ **Phase 5** - Profiling avancé : Flamegraph (Unix), mémoire
-- ✅ **Phase 6** - Visualisations : Graphiques Plotly, rapports HTML
-- ✅ **Phase 9** - Release : Publication v1.0.0
-
-### Phases optionnelles (futures)
-
-- 🔮 **Phase 7** - Bridge Go : FFI avec Go (optionnel)
-- 🔮 **Phase 8** - SIMD : Optimisations nightly (optionnel)
+Projet complet et finalisé avec toutes les phases optionnelles (Go, SIMD) implémentées.
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! 
+Les contributions sont les bienvenues !
 
 1. Fork le projet
 2. Créer une branche (`git checkout -b feature/amazing-feature`)
@@ -333,9 +307,9 @@ let methods = [
 
 for method in methods {
     let result = method.calculate(n);
-    println!("{}: {} (complexity: {})", 
-        method.name(), 
-        result, 
+    println!("{}: {} (complexity: {})",
+        method.name(),
+        result,
         method.time_complexity()
     );
 }

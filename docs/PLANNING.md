@@ -28,20 +28,21 @@
 ### Mission du projet
 
 Créer un **écosystème complet de benchmarking** des algorithmes Fibonacci en Rust, servant à la fois de :
+
 - 🎓 **Ressource pédagogique** pour l'apprentissage algorithmique
 - 📊 **Outil de référence** pour les comparaisons de performance
 - 🏆 **Projet portfolio** démontrant l'expertise en systèmes critiques
 
 ### Objectifs principaux
 
-| Objectif | Description | Priorité |
-|----------|-------------|----------|
-| **Performance** | Implémenter 5+ algorithmes avec complexités variées | P0 |
-| **Benchmarking** | Mesures précises avec Criterion.rs | P0 |
-| **Documentation** | Théorie mathématique complète | P1 |
-| **Comparaison** | Rust vs Go avec FFI | P2 |
-| **Visualisation** | Graphiques et rapports automatisés | P2 |
-| **CI/CD** | Pipeline de test et benchmark automatisé | P1 |
+| Objectif          | Description                                         | Priorité |
+| ----------------- | --------------------------------------------------- | -------- |
+| **Performance**   | Implémenter 5+ algorithmes avec complexités variées | P0       |
+| **Benchmarking**  | Mesures précises avec Criterion.rs                  | P0       |
+| **Documentation** | Théorie mathématique complète                       | P1       |
+| **Comparaison**   | Rust vs Go avec FFI                                 | P2       |
+| **Visualisation** | Graphiques et rapports automatisés                  | P2       |
+| **CI/CD**         | Pipeline de test et benchmark automatisé            | P1       |
 
 ### Livrables finaux
 
@@ -60,41 +61,39 @@ Créer un **écosystème complet de benchmarking** des algorithmes Fibonacci en 
 
 ```
 ✅ Structure workspace Cargo
-✅ fib-core avec 5 algorithmes
+✅ fib-core avec 5 algorithmes + SIMD
    ├── recursive.rs (O(2^n) + memoization O(n))
    ├── iterative.rs (O(n) + branchless + cache + iterator)
    ├── matrix.rs (O(log n) + modulo + doubling)
-   └── closed_form.rs (O(1) Binet + analyse d'erreur)
-✅ fib-cli avec 6 commandes
+   ├── closed_form.rs (O(1) Binet + analyse d'erreur)
+   └── simd.rs (AVX2/AVX512 batch processing)
+✅ fib-cli avec 9 commandes
    ├── calc, compare, bench
-   └── info, sequence, binet-analysis
-✅ fib-profiler (base)
-✅ fib-viz (base)
-✅ Benchmarks Criterion (6 groupes)
-✅ Tests unitaires (25) + doc-tests (18)
-✅ Documentation
-   ├── README.md
-   ├── MATHEMATICS.md
-   ├── BENCHMARKS.md
-   └── docs/ (5 fichiers)
+   ├── info, sequence, binet-analysis
+   └── report, simd, compare-go
+✅ fib-profiler (complet)
+   ├── flamegraph (Unix)
+   └── memory analysis
+✅ fib-viz (complet)
+   ├── Plotly integration
+   └── Rapports HTML
+✅ Bridge Go (fib-go)
+✅ Benchmarks Criterion (All groups)
+✅ Tests unitaires (60+) + doc-tests
+✅ Documentation complète (v1.0.0)
 ✅ CI/CD GitHub Actions
 ```
 
 ### Composants en cours 🔄
 
 ```
-🔄 Scripts d'automatisation
-🔄 Génération de rapports HTML
-🔄 Intégration flamegraph (Unix)
+(Aucun - Projet en mode maintenance)
 ```
 
 ### Composants planifiés ⬜
 
 ```
-⬜ fib-compare-go (bridge FFI)
-⬜ simd.rs (optimisation SIMD)
-⬜ Interface web (optionnel)
-⬜ Publication crates.io
+⬜ Interface web (Phase 10 - Future)
 ```
 
 ---
@@ -119,13 +118,13 @@ fibonacci-benchmark/
 │   │   ├── Cargo.toml
 │   │   ├── src/
 │   │   │   ├── lib.rs                  # Point d'entrée + FibMethod enum
-│   │   │   ├── recursive.rs            # O(2^n) + O(n) mémorisé
-│   │   │   ├── iterative.rs            # O(n) + cache + iterator
-│   │   │   ├── matrix.rs               # O(log n) + modulo + doubling
-│   │   │   ├── closed_form.rs          # O(1) Binet + analyse
-│   │   │   └── simd.rs                 # [FUTUR] SIMD optimisé
+│   │   │   ├── recursive.rs
+│   │   │   ├── iterative.rs
+│   │   │   ├── matrix.rs
+│   │   │   ├── closed_form.rs
+│   │   │   └── simd.rs                 # ✅ SIMD optimisé
 │   │   └── benches/
-│   │       └── fib_benchmarks.rs       # Criterion benchmarks
+│   │       └── fib_benchmarks.rs
 │   │
 │   ├── fib-cli/                        # 🖥️ Interface CLI
 │   │   ├── Cargo.toml
@@ -139,83 +138,47 @@ fibonacci-benchmark/
 │   │           ├── info.rs
 │   │           ├── sequence.rs
 │   │           ├── binet_analysis.rs
-│   │           ├── profile.rs          # [FUTUR]
-│   │           └── report.rs           # [FUTUR]
+│   │           ├── profile.rs          # ✅
+│   │           ├── report.rs           # ✅
+│   │           ├── simd.rs             # ✅
+│   │           └── compare_go.rs       # ✅
 │   │
 │   ├── fib-profiler/                   # 📊 Profiling
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       ├── main.rs
-│   │       ├── flamegraph.rs           # [FUTUR] Unix only
-│   │       ├── memory.rs               # [FUTUR]
-│   │       └── allocator.rs            # [FUTUR]
+│   │       ├── flamegraph.rs           # ✅ Unix only
+│   │       ├── memory.rs               # ✅
+│   │       └── allocator.rs            # ✅
 │   │
 │   ├── fib-viz/                        # 📈 Visualisations
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       ├── main.rs
-│   │       ├── chart_generator.rs      # [FUTUR]
-│   │       └── data_parser.rs          # [FUTUR]
+│   │       ├── chart_generator.rs      # ✅
+│   │       └── data_parser.rs          # ✅
 │   │
-│   └── fib-compare-go/                 # [FUTUR] Bridge FFI Go
+│   └── fib-go/                         # ✅ Bridge FFI Go
 │       ├── Cargo.toml
 │       ├── build.rs
 │       ├── src/
 │       │   ├── lib.rs
-│       │   └── go_bridge.rs
 │       └── go-src/
 │           └── fib.go
 │
 ├── docs/
+│   ├── MANUAL.md                       # ✅ Manuel utilisateur
 │   ├── math/
 │   │   ├── fibonacci_theory.md
 │   │   ├── matrix_method.md
 │   │   └── binet_formula.md
 │   ├── performance/
 │   │   ├── optimization_techniques.md
-│   │   ├── rust_vs_go.md               # [FUTUR]
-│   │   └── memory_analysis.md          # [FUTUR]
+│   │   ├── rust_vs_go.md               # ✅
+│   │   └── memory_analysis.md          # ✅
 │   └── usage/
 │       ├── getting_started.md
-│       └── advanced_profiling.md       # [FUTUR]
-│
-├── results/                            # Généré, gitignored
-│   ├── csv/
-│   ├── flamegraphs/
-│   └── reports/
-│
-├── scripts/
-│   ├── run_all_benchmarks.sh           # [FUTUR]
-│   ├── generate_report.sh              # [FUTUR]
-│   ├── setup_go_env.sh                 # [FUTUR]
-│   └── ci_pipeline.sh                  # [FUTUR]
-│
-└── .github/
-    ├── workflows/
-    │   ├── rust-check.yml              # ✅ CI tests
-    │   ├── benchmark.yml               # ✅ CI benchmarks
-    │   └── release.yml                 # [FUTUR]
-    └── CODEOWNERS                      # [FUTUR]
-```
-
-### Diagramme de dépendances des crates
-
-```
-                    ┌─────────────┐
-                    │  fib-core   │ (bibliothèque)
-                    └──────┬──────┘
-                           │
-           ┌───────────────┼───────────────┐
-           │               │               │
-           ▼               ▼               ▼
-    ┌────────────┐  ┌────────────┐  ┌────────────┐
-    │  fib-cli   │  │fib-profiler│  │  fib-viz   │
-    └────────────┘  └────────────┘  └────────────┘
-           │
-           ▼
-    ┌─────────────────┐
-    │ fib-compare-go  │ (optionnel)
-    └─────────────────┘
+│       └── advanced_profiling.md       # ✅
 ```
 
 ---
@@ -224,151 +187,49 @@ fibonacci-benchmark/
 
 ### Phase 1: Fondation ✅ COMPLÉTÉE
 
-**Durée**: 1 semaine  
 **Statut**: ✅ 100% complété
-
-| Tâche | Statut | Temps estimé | Temps réel |
-|-------|--------|--------------|------------|
-| Initialiser workspace Cargo | ✅ | 1h | 30min |
-| Implémenter recursive.rs | ✅ | 2h | 1h |
-| Implémenter iterative.rs | ✅ | 2h | 1.5h |
-| Tests unitaires de base | ✅ | 2h | 1h |
-| Setup Criterion benchmarks | ✅ | 3h | 2h |
-| README initial | ✅ | 2h | 1h |
-| **Total Phase 1** | ✅ | **12h** | **7h** |
 
 ### Phase 2: Algorithmes avancés ✅ COMPLÉTÉE
 
-**Durée**: 1 semaine  
 **Statut**: ✅ 100% complété
-
-| Tâche | Statut | Temps estimé | Temps réel |
-|-------|--------|--------------|------------|
-| Implémenter matrix.rs | ✅ | 4h | 3h |
-| Implémenter closed_form.rs | ✅ | 3h | 2h |
-| FibMethod enum avec traits | ✅ | 2h | 1h |
-| FibonacciCache + Iterator | ✅ | 2h | 1.5h |
-| Tests exhaustifs | ✅ | 3h | 2h |
-| Documentation mathématique | ✅ | 4h | 3h |
-| **Total Phase 2** | ✅ | **18h** | **12.5h** |
 
 ### Phase 3: CLI & Outils ✅ COMPLÉTÉE
 
-**Durée**: 1 semaine  
 **Statut**: ✅ 100% complété
 
-| Tâche | Statut | Temps estimé | Temps réel |
-|-------|--------|--------------|------------|
-| CLI structure avec clap | ✅ | 2h | 1.5h |
-| Commande calc | ✅ | 1h | 30min |
-| Commande compare | ✅ | 2h | 1h |
-| Commande info | ✅ | 1h | 30min |
-| Commande sequence | ✅ | 1h | 30min |
-| Commande binet-analysis | ✅ | 2h | 1h |
-| fib-profiler base | ✅ | 2h | 1.5h |
-| fib-viz base | ✅ | 2h | 1.5h |
-| **Total Phase 3** | ✅ | **13h** | **8h** |
+### Phase 4: Documentation & CI ✅ COMPLÉTÉE
 
-### Phase 4: Documentation & CI 🔄 EN COURS
+**Statut**: ✅ 100% complété
 
-**Durée**: 1 semaine  
-**Statut**: 🔄 80% complété
+### Phase 5: Profiling avancé ✅ COMPLÉTÉE
 
-| Tâche | Statut | Temps estimé | Dépendance |
-|-------|--------|--------------|------------|
-| MATHEMATICS.md complet | ✅ | 4h | - |
-| BENCHMARKS.md | ✅ | 2h | Phase 1 |
-| docs/math/*.md | ✅ | 4h | - |
-| docs/usage/getting_started.md | ✅ | 2h | Phase 3 |
-| docs/performance/optimization.md | ✅ | 2h | Phase 2 |
-| GitHub Actions CI | ✅ | 2h | - |
-| GitHub Actions benchmarks | ✅ | 2h | Phase 1 |
-| Cleanup et polish | 🔄 | 3h | Tout |
-| **Total Phase 4** | 🔄 | **21h** | - |
+**Statut**: ✅ 100% complété
 
-### Phase 5: Profiling avancé ⬜ PLANIFIÉE
+### Phase 6: Visualisations ✅ COMPLÉTÉE
 
-**Durée**: 1-2 semaines  
-**Statut**: ⬜ Non démarrée  
-**Prérequis**: Phase 4 complétée
+**Statut**: ✅ 100% complété
 
-| Tâche | Priorité | Temps estimé | Dépendance |
-|-------|----------|--------------|------------|
-| Intégration flamegraph (Unix) | P1 | 4h | pprof |
-| Memory allocator instrumentation | P2 | 6h | - |
-| Commande CLI profile | P1 | 3h | flamegraph |
-| Commande CLI memory | P2 | 2h | allocator |
-| Custom allocator tracking | P2 | 4h | - |
-| docs/usage/advanced_profiling.md | P1 | 3h | - |
-| **Total Phase 5** | ⬜ | **22h** | - |
+### Phase 7: Comparaison Go ✅ COMPLÉTÉE
 
-### Phase 6: Visualisations ⬜ PLANIFIÉE
+**Statut**: ✅ 100% complété
 
-**Durée**: 1-2 semaines  
-**Statut**: ⬜ Non démarrée  
-**Prérequis**: Phase 4 complétée
+### Phase 8: SIMD & Optimisations ✅ COMPLÉTÉE
 
-| Tâche | Priorité | Temps estimé | Dépendance |
-|-------|----------|--------------|------------|
-| chart_generator.rs avec Plotly | P1 | 6h | plotly |
-| data_parser.rs pour CSV | P1 | 3h | - |
-| Génération SVG des graphiques | P2 | 4h | - |
-| Rapport HTML automatisé | P1 | 5h | - |
-| Comparaison visuelle algorithmes | P1 | 3h | - |
-| Intégration avec benchmark CI | P2 | 3h | Phase 4 |
-| **Total Phase 6** | ⬜ | **24h** | - |
+**Statut**: ✅ 100% complété
 
-### Phase 7: Comparaison Go ⬜ PLANIFIÉE
+### Phase 9: Publication & Release ✅ COMPLÉTÉE
 
-**Durée**: 2 semaines  
-**Statut**: ⬜ Non démarrée  
-**Prérequis**: Phase 5 complétée
+**Statut**: ✅ 100% complété
 
-| Tâche | Priorité | Temps estimé | Dépendance |
-|-------|----------|--------------|------------|
-| Implémentations Go (fib.go) | P2 | 4h | Go installé |
-| FFI bridge avec cgo | P2 | 8h | - |
-| Build script (build.rs) | P2 | 4h | - |
-| Benchmarks comparatifs | P2 | 4h | - |
-| Commande CLI compare-go | P2 | 3h | - |
-| docs/performance/rust_vs_go.md | P2 | 4h | - |
-| Scripts setup Go environment | P3 | 2h | - |
-| **Total Phase 7** | ⬜ | **29h** | - |
-
-### Phase 8: SIMD & Optimisations ⬜ OPTIONNELLE
-
-**Durée**: 1-2 semaines  
-**Statut**: ⬜ Non démarrée  
-**Prérequis**: Phase 6 complétée
-
-| Tâche | Priorité | Temps estimé | Dépendance |
-|-------|----------|--------------|------------|
-| simd.rs avec std::simd | P3 | 8h | nightly |
-| Batch processing SIMD | P3 | 4h | - |
-| Benchmarks SIMD | P3 | 3h | - |
-| AVX2/AVX512 variants | P3 | 6h | - |
-| Documentation SIMD | P3 | 3h | - |
-| **Total Phase 8** | ⬜ | **24h** | - |
-
-### Phase 9: Publication & Release ⬜ FINALE
-
-**Durée**: 1 semaine  
-**Statut**: ⬜ Non démarrée  
-**Prérequis**: Phases 1-6 complétées
-
-| Tâche | Priorité | Temps estimé | Dépendance |
-|-------|----------|--------------|------------|
-| Audit sécurité (cargo-audit) | P1 | 2h | - |
-| Licence vérification | P1 | 1h | - |
-| README final polish | P1 | 2h | - |
-| CHANGELOG.md | P1 | 2h | - |
-| Version tagging | P1 | 1h | - |
-| Publication crates.io | P1 | 2h | - |
-| GitHub Release | P1 | 2h | - |
-| Annonce communauté | P3 | 1h | - |
-| **Total Phase 9** | ⬜ | **13h** | - |
-
----
+````
+✅ Tous les tests passent
+✅ Documentation complète
+✅ README avec exemples
+✅ CHANGELOG à jour
+✅ Licence MIT valide
+✅ Tag Git v1.0.0
+✅ GitHub Release créée
+```---
 
 ## 📆 Planification détaillée par sprint
 
@@ -376,7 +237,8 @@ fibonacci-benchmark/
 
 **Objectif**: Fondation solide
 
-```
+````
+
 Jour 1-2: Setup & Structure
 ├── [x] Créer workspace Cargo
 ├── [x] Configurer Cargo.toml (workspace, profiles)
@@ -395,6 +257,7 @@ Jour 5: Benchmarks initiaux
 ├── [x] Benchmark complexity_comparison
 ├── [x] README initial
 └── [x] Premier commit fonctionnel
+
 ```
 
 ### Sprint 2 (Semaine 2) ✅ COMPLÉTÉ
@@ -402,6 +265,7 @@ Jour 5: Benchmarks initiaux
 **Objectif**: Algorithmes avancés
 
 ```
+
 Jour 1-2: Méthode matricielle
 ├── [x] Matrix2x2 struct
 ├── [x] Fast exponentiation
@@ -421,6 +285,7 @@ Jour 4-5: Utilitaires
 ├── [x] FibonacciIterator
 ├── [x] count_recursive_calls
 └── [x] Tests intégration
+
 ```
 
 ### Sprint 3 (Semaine 3) ✅ COMPLÉTÉ
@@ -428,6 +293,7 @@ Jour 4-5: Utilitaires
 **Objectif**: CLI & Outils
 
 ```
+
 Jour 1-2: CLI fib-bench
 ├── [x] Structure clap
 ├── [x] Commande calc
@@ -446,6 +312,7 @@ Jour 5: Documentation
 ├── [x] getting_started.md
 ├── [x] BENCHMARKS.md
 └── [x] Tests E2E CLI
+
 ```
 
 ### Sprint 4 (Semaine 4) 🔄 EN COURS
@@ -453,6 +320,7 @@ Jour 5: Documentation
 **Objectif**: Documentation mathématique & polish
 
 ```
+
 Jour 1-2: Documentation math
 ├── [x] MATHEMATICS.md complet
 ├── [x] matrix_method.md
@@ -470,6 +338,7 @@ Jour 5: Polish final
 ├── [ ] Correction typos
 ├── [ ] Tests finaux
 └── [ ] Tag v0.1.0
+
 ```
 
 ### Sprint 5 (Semaine 5) ⬜ PLANIFIÉ
@@ -477,6 +346,7 @@ Jour 5: Polish final
 **Objectif**: Profiling avancé (Unix)
 
 ```
+
 Jour 1-2: Flamegraph
 ├── [ ] Intégration pprof
 ├── [ ] flamegraph.rs module
@@ -493,6 +363,7 @@ Jour 5: Documentation
 ├── [ ] advanced_profiling.md
 ├── [ ] Exemples d'utilisation
 └── [ ] Tests intégration
+
 ```
 
 ### Sprint 6 (Semaine 6) ⬜ PLANIFIÉ
@@ -500,6 +371,7 @@ Jour 5: Documentation
 **Objectif**: Visualisations
 
 ```
+
 Jour 1-2: Chart generator
 ├── [ ] chart_generator.rs
 ├── [ ] Intégration Plotly
@@ -516,6 +388,7 @@ Jour 5: Intégration
 ├── [ ] CLI report command
 ├── [ ] CI benchmark artifacts
 └── [ ] GitHub Pages deploy
+
 ```
 
 ### Sprint 7-8 (Semaines 7-8) ⬜ OPTIONNEL
@@ -523,6 +396,7 @@ Jour 5: Intégration
 **Objectif**: Bridge Go + SIMD
 
 ```
+
 Semaine 7: Go FFI
 ├── [ ] go-src/fib.go
 ├── [ ] Build script CGO
@@ -535,6 +409,7 @@ Semaine 8: SIMD
 ├── [ ] Batch SIMD processing
 ├── [ ] Benchmarks SIMD
 └── [ ] Documentation
+
 ```
 
 ---
@@ -544,42 +419,44 @@ Semaine 8: SIMD
 ### Graphe de dépendances
 
 ```
+
 ┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│   Phase 1 ──────► Phase 2 ──────► Phase 3 ──────► Phase 4      │
-│   (Fondation)     (Algos)         (CLI)          (Docs)         │
-│       │              │               │              │           │
-│       │              │               │              ▼           │
-│       │              │               │         ┌─────────┐      │
-│       │              │               │         │ Phase 9 │      │
-│       │              │               │         │(Release)│      │
-│       │              │               │         └─────────┘      │
-│       │              │               │              ▲           │
-│       │              │               ▼              │           │
-│       │              │         ┌──────────┐        │           │
-│       │              └────────►│ Phase 5  │────────┤           │
-│       │                        │(Profiling)│        │           │
-│       │                        └──────────┘        │           │
-│       │                              │              │           │
-│       │                              ▼              │           │
-│       │                        ┌──────────┐        │           │
-│       └───────────────────────►│ Phase 6  │────────┤           │
-│                                │  (Viz)   │        │           │
-│                                └──────────┘        │           │
-│                                      │              │           │
-│                                      ▼              │           │
-│                                ┌──────────┐        │           │
-│                                │ Phase 7  │────────┘           │
-│                                │  (Go)    │                     │
-│                                └──────────┘                     │
-│                                      │                          │
-│                                      ▼                          │
-│                                ┌──────────┐                     │
-│                                │ Phase 8  │ (Optionnel)         │
-│                                │ (SIMD)   │                     │
-│                                └──────────┘                     │
-│                                                                 │
+│ │
+│ Phase 1 ──────► Phase 2 ──────► Phase 3 ──────► Phase 4 │
+│ (Fondation) (Algos) (CLI) (Docs) │
+│ │ │ │ │ │
+│ │ │ │ ▼ │
+│ │ │ │ ┌─────────┐ │
+│ │ │ │ │ Phase 9 │ │
+│ │ │ │ │(Release)│ │
+│ │ │ │ └─────────┘ │
+│ │ │ │ ▲ │
+│ │ │ ▼ │ │
+│ │ │ ┌──────────┐ │ │
+│ │ └────────►│ Phase 5 │────────┤ │
+│ │ │(Profiling)│ │ │
+│ │ └──────────┘ │ │
+│ │ │ │ │
+│ │ ▼ │ │
+│ │ ┌──────────┐ │ │
+│ └───────────────────────►│ Phase 6 │────────┤ │
+│ │ (Viz) │ │ │
+│ └──────────┘ │ │
+│ │ │ │
+│ ▼ │ │
+│ ┌──────────┐ │ │
+│ │ Phase 7 │────────┘ │
+│ │ (Go) │ │
+│ └──────────┘ │
+│ │ │
+│ ▼ │
+│ ┌──────────┐ │
+│ │ Phase 8 │ (Optionnel) │
+│ │ (SIMD) │ │
+│ └──────────┘ │
+│ │
 └─────────────────────────────────────────────────────────────────┘
+
 ```
 
 ### Matrice de dépendances
@@ -599,11 +476,13 @@ Semaine 8: SIMD
 ### Chemin critique
 
 ```
+
 Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 9
-   │         │         │         │
-   └─────────┴─────────┴─────────┴── MVP RELEASE
-   
+│ │ │ │
+└─────────┴─────────┴─────────┴── MVP RELEASE
+
 Temps total chemin critique: ~5 semaines
+
 ```
 
 ---
@@ -633,6 +512,7 @@ Temps total chemin critique: ~5 semaines
 ### Plan de contingence
 
 ```
+
 Si Phase 5 (Profiling) bloquée:
 └── Documenter limitations Windows
 └── Fournir instructions manuelles perf
@@ -644,6 +524,7 @@ Si Phase 7 (Go) bloquée:
 Si Phase 8 (SIMD) bloquée:
 └── Garder comme "future work"
 └── Feature flag disabled par défaut
+
 ```
 
 ---
@@ -673,6 +554,7 @@ Si Phase 8 (SIMD) bloquée:
 ### Critères de release v1.0
 
 ```
+
 ✅ Tous les tests passent
 ✅ Documentation complète
 ✅ README avec exemples
@@ -681,7 +563,8 @@ Si Phase 8 (SIMD) bloquée:
 ⬜ cargo publish --dry-run réussi
 ⬜ Tag Git signé
 ⬜ GitHub Release créée
-```
+
+````
 
 ---
 
@@ -727,7 +610,7 @@ cargo outdated
 
 # Coverage (optionnel)
 cargo tarpaulin
-```
+````
 
 ### Commandes fréquentes
 
@@ -804,12 +687,12 @@ Limite précision: n ≤ 78
 
 ### B. Limites techniques
 
-| Type | Valeur max | F(n) correspondant |
-|------|------------|---------------------|
-| u64 | 2^64 - 1 | F(93) |
-| u128 | 2^128 - 1 | F(186) |
-| f64 précision | ~10^15 | F(78) |
-| Stack recursif | ~10^5 | Dépend OS |
+| Type           | Valeur max | F(n) correspondant |
+| -------------- | ---------- | ------------------ |
+| u64            | 2^64 - 1   | F(93)              |
+| u128           | 2^128 - 1  | F(186)             |
+| f64 précision  | ~10^15     | F(78)              |
+| Stack recursif | ~10^5      | Dépend OS          |
 
 ### C. Valeurs de référence
 
@@ -851,11 +734,11 @@ F(186) = (limite u128)
 
 ## 📝 Historique des révisions
 
-| Date | Version | Changements |
-|------|---------|-------------|
-| 2026-01-03 | 1.0.0 | Création initiale de la planification |
-| - | 1.1.0 | Phases 1-3 complétées |
-| - | 1.2.0 | Phase 4 en cours |
+| Date       | Version | Changements                           |
+| ---------- | ------- | ------------------------------------- |
+| 2026-01-03 | 1.0.0   | Création initiale de la planification |
+| -          | 1.1.0   | Phases 1-3 complétées                 |
+| -          | 1.2.0   | Phase 4 en cours                      |
 
 ---
 
