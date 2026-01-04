@@ -71,19 +71,19 @@ cargo run --bin fib-bench -- calc -n 100
 # Comparer toutes les méthodes
 cargo run --bin fib-bench -- compare -n 1000
 
-# Lancer la démo SIMD
-cargo run --bin fib-bench -- simd -n 1000 --batch-size 1024
+# Démonstration SIMD (comparaison scalaire vs vectorielle)
+cargo run --bin fib-bench -- simd --batch 10,100,1000 --compare
 
 # Comparer avec Go
 cargo run --bin fib-bench -- compare-go -n 10000
 
-# Générer le rapport complet
-cargo run --bin fib-bench -- report --open
+# Générer le rapport complet (output dans results/)
+cargo run --bin fib-bench -- report
 ```
 
 **Commandes disponibles :**
 
-- `calc`, `compare`, `bench`, `info`, `sequence`, `binet-analysis`, `report`, `simd`, `compare-go`
+- `calc`, `compare`, `bench`, `info`, `sequence`, `binet-analysis`, `report`, `simd`, `compare-go`, `memory`
 
 ### Comme bibliothèque
 
@@ -117,7 +117,7 @@ FibBenchmark/
 │   │   │   ├── lib.rs            # Point d'entrée + FibMethod enum
 │   │   │   ├── recursive.rs     # O(2^n) + O(n) mémorisé
 │   │   │   ├── iterative.rs     # O(n) + branchless + cache
-│   │   │   ├── matrix.rs        # O(log n) + modulo + doubling
+│   │   │   ├── matrix.rs        # O(log n) + Fast Doubling
 │   │   │   └── closed_form.rs   # O(1) Binet + analyse
 │   │   └── benches/
 │   │       └── fib_benchmarks.rs # Benchmarks Criterion
@@ -131,7 +131,14 @@ FibBenchmark/
 │   │           ├── bench.rs
 │   │           ├── info.rs
 │   │           ├── sequence.rs
+│   │           ├── memory.rs
+│   │           ├── simd.rs
 │   │           └── binet_analysis.rs
+│   │
+│   ├── fib-go/                   # 🐹 Pont FFI vers Go
+│   │   ├── src/lib.rs            # Interface Rust (FFI)
+│   │   ├── go/fib.go             # Implémentation Go
+│   │   └── build.rs              # Script de build Go
 │   │
 │   ├── fib-profiler/             # 📊 Outil de profiling
 │   │   └── src/main.rs
@@ -142,6 +149,7 @@ FibBenchmark/
 ├── docs/                         # 📚 Documentation complète
 │   ├── ARCHITECTURE.md           # Architecture technique détaillée
 │   ├── BENCHMARKS.md             # Résultats et analyses de performance
+│   ├── MANUAL.md                 # Manuel Utilisateur
 │   ├── MATHEMATICS.md            # Théorie mathématique complète
 │   ├── PLANNING.md               # Planification et roadmap
 │   ├── math/

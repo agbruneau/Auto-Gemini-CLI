@@ -90,8 +90,11 @@ fib-bench compare -n <N>
 Lance la suite de benchmarks Criterion pour des mesures statistiques précises.
 
 ```bash
-fib-bench bench [FILTRE]
+fib-bench bench -f [FILTRE]
 ```
+
+**Options :**
+- `-f, --filter <nom>`: Filtre les benchmarks par nom.
 
 Les rapports HTML sont générés dans `target/criterion/report/index.html`.
 
@@ -100,7 +103,7 @@ Les rapports HTML sont générés dans `target/criterion/report/index.html`.
 Affiche les détails sur les algorithmes (complexité, description).
 
 ```bash
-fib-bench info
+fib-bench info --method <all|nom>
 ```
 
 ### 5. `sequence` - Générateur de suite
@@ -108,7 +111,7 @@ fib-bench info
 Génère une séquence de nombres de Fibonacci.
 
 ```bash
-fib-bench sequence --count 10
+fib-bench sequence --count 20 --start 0
 ```
 
 ### 6. `binet-analysis` - Analyse de précision
@@ -116,7 +119,7 @@ fib-bench sequence --count 10
 Analyse la précision de la formule de Binet (approximation flottante) par rapport au calcul entier exact.
 
 ```bash
-fib-bench binet-analysis --max-n 93
+fib-bench binet-analysis --max-n 100
 ```
 
 ### 7. `simd` - Démonstration SIMD
@@ -124,7 +127,14 @@ fib-bench binet-analysis --max-n 93
 Démontre les gains de performance du traitement par lots avec SIMD (AVX2/AVX512).
 
 ```bash
-fib-bench simd -n 1000 --batch-size 1024
+# Calculer un lot de nombres
+fib-bench simd --batch 10,100,1000
+
+# Comparer avec la version scalaire
+fib-bench simd --batch 10,100,1000 --compare
+
+# Voir les infos SIMD
+fib-bench simd --info
 ```
 
 ### 8. `compare-go` - Rust vs Go
@@ -132,15 +142,24 @@ fib-bench simd -n 1000 --batch-size 1024
 Compare les performances de l'implémentation Rust face à une implémentation Go compilée (via FFI).
 
 ```bash
-fib-bench compare-go -n 10000
+fib-bench compare-go -n 10000 --iterations 100
 ```
 
 ### 9. `report` - Génération de rapports
 
-Génère et ouvre le rapport HTML complet des benchmarks.
+Génère le rapport HTML complet des benchmarks.
 
 ```bash
-fib-bench report --open
+fib-bench report --input results --output results
+```
+*Note: Cette commande ne lance pas automatiquement le navigateur. Ouvrez le fichier `index.html` dans le dossier de sortie.*
+
+### 10. `memory` - Analyse Mémoire
+
+Analyse l'allocation mémoire pour différents algorithmes.
+
+```bash
+fib-bench memory -n 1000 --method matrix
 ```
 
 ---

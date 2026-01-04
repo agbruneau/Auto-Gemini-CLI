@@ -139,7 +139,7 @@ Temps (log)
 Les flamegraphs sont générés avec :
 
 ```bash
-cargo bench --bench fib_benchmarks -- --profile-time 5
+cargo run --bin fib-profiler -- profile --method iterative -n 100000
 ```
 
 ### Observations
