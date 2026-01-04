@@ -63,3 +63,78 @@ fn test_invalid_command() {
     let mut cmd = Command::cargo_bin("fib-bench").unwrap();
     cmd.arg("invalid_cmd").assert().failure();
 }
+
+#[test]
+fn test_compare_command() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("compare")
+        .arg("--n")
+        .arg("10")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Iterative"))
+        .stdout(predicate::str::contains("Matrix"));
+}
+
+#[test]
+fn test_sequence_command() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("sequence")
+        .arg("--count")
+        .arg("5")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("0"))
+        .stdout(predicate::str::contains("1"))
+        .stdout(predicate::str::contains("2"))
+        .stdout(predicate::str::contains("3"));
+}
+
+#[test]
+fn test_sequence_command_offset() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("sequence")
+        .arg("--count")
+        .arg("3")
+        .arg("--start")
+        .arg("5")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("5")) // F(5)
+        .stdout(predicate::str::contains("8")) // F(6)
+        .stdout(predicate::str::contains("13")); // F(7)
+}
+
+#[test]
+fn test_binet_analysis_command() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("binet-analysis")
+        .arg("--max-n")
+        .arg("10")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Accuracy"));
+}
+
+#[test]
+fn test_memory_command() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("memory")
+        .arg("--n")
+        .arg("100")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Memory"));
+}
+
+#[test]
+fn test_calc_invalid_method() {
+    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    cmd.arg("calc")
+        .arg("--n")
+        .arg("10")
+        .arg("--method")
+        .arg("invalid_method_name")
+        .assert()
+        .failure();
+}

@@ -225,4 +225,21 @@ mod tests {
         let fibs: Vec<u128> = FibonacciIterator::new().take(10).collect();
         assert_eq!(fibs, vec![0, 1, 1, 2, 3, 5, 8, 13, 21, 34]);
     }
+
+    #[test]
+    fn test_fibonacci_iterator_manual_next() {
+        let mut iter = FibonacciIterator::new();
+        assert_eq!(iter.next(), Some(0));
+        assert_eq!(iter.next(), Some(1));
+        assert_eq!(iter.next(), Some(1));
+        assert_eq!(iter.next(), Some(2));
+    }
+
+    #[test]
+    fn test_fibonacci_cache_limit() {
+        let cache = FibonacciCache::new(10);
+        assert_eq!(cache.max_n(), 10);
+        assert!(cache.get(10).is_some());
+        assert!(cache.get(11).is_none());
+    }
 }

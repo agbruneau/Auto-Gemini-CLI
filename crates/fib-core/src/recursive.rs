@@ -126,4 +126,11 @@ mod tests {
         // Approximately 3x growth per 5 increments in n
         assert!(calls_15 > calls_10 * 2);
     }
+
+    #[test]
+    fn test_count_recursive_calls_base_cases() {
+        assert_eq!(count_recursive_calls(0), 1);
+        assert_eq!(count_recursive_calls(1), 1);
+        assert_eq!(count_recursive_calls(2), 3); // 1 + calls(1) + calls(0) = 1 + 1 + 1 = 3
+    }
 }

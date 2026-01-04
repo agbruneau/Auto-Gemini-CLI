@@ -188,4 +188,43 @@ mod tests {
         assert_eq!(method.name(), "iterative");
         assert_eq!(method.time_complexity(), "O(n)");
     }
+
+    #[test]
+    fn test_fib_method_from_str() {
+        use std::str::FromStr;
+        assert_eq!(FibMethod::from_str("recursive").unwrap(), FibMethod::Recursive);
+        assert_eq!(FibMethod::from_str("RECURSIVE").unwrap(), FibMethod::Recursive);
+        assert_eq!(FibMethod::from_str("memo").unwrap(), FibMethod::RecursiveMemo);
+        assert_eq!(FibMethod::from_str("iterative").unwrap(), FibMethod::Iterative);
+        assert_eq!(
+            FibMethod::from_str("branchless").unwrap(),
+            FibMethod::IterativeBranchless
+        );
+        assert_eq!(FibMethod::from_str("matrix").unwrap(), FibMethod::Matrix);
+        assert_eq!(
+            FibMethod::from_str("doubling").unwrap(),
+            FibMethod::FastDoubling
+        );
+        assert_eq!(FibMethod::from_str("binet").unwrap(), FibMethod::Binet);
+
+        assert!(FibMethod::from_str("invalid").is_err());
+    }
+
+    #[test]
+    fn test_fib_method_complexity_strings() {
+        let methods = [
+            FibMethod::Recursive,
+            FibMethod::RecursiveMemo,
+            FibMethod::Iterative,
+            FibMethod::IterativeBranchless,
+            FibMethod::Matrix,
+            FibMethod::FastDoubling,
+            FibMethod::Binet,
+        ];
+
+        for method in methods {
+            assert!(!method.time_complexity().is_empty());
+            assert!(!method.space_complexity().is_empty());
+        }
+    }
 }

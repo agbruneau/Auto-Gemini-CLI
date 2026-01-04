@@ -222,4 +222,27 @@ mod tests {
         let calculated_phi = (1.0 + 5.0_f64.sqrt()) / 2.0;
         assert!((PHI - calculated_phi).abs() < 1e-10);
     }
+
+    #[test]
+    fn test_fib_binet_simplified_large_n() {
+        // For large n, simplified binet should be close to regular binet
+        let binet = fib_binet_f64(50);
+        let simplified = fib_binet_simplified(50);
+        assert!((binet - simplified).abs() < 1.0);
+    }
+
+    #[test]
+    fn test_convergence_to_phi_properties() {
+        // The convergence error should decrease as n increases
+        let err_10 = convergence_to_phi(10);
+        let err_20 = convergence_to_phi(20);
+        assert!(err_20 < err_10);
+    }
+
+    #[test]
+    fn test_find_binet_accuracy_limit_range() {
+        let limit = find_binet_accuracy_limit();
+        // Should be around 70-78
+        assert!(limit > 70 && limit <= 78);
+    }
 }
