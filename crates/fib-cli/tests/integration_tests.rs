@@ -3,7 +3,7 @@ use predicates::prelude::*;
 
 #[test]
 fn test_help_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     // Help can be on stdout or stderr depending on clap version/config
     // We just check that it runs successfully and mentions "Usage"
     cmd.arg("--help")
@@ -14,7 +14,7 @@ fn test_help_command() {
 
 #[test]
 fn test_calc_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("calc")
         .arg("--n")
         .arg("10")
@@ -25,7 +25,7 @@ fn test_calc_command() {
 
 #[test]
 fn test_calc_command_iterative_method() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("calc")
         .arg("--n")
         .arg("10")
@@ -38,7 +38,7 @@ fn test_calc_command_iterative_method() {
 
 #[test]
 fn test_calc_command_fast_doubling_method() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("calc")
         .arg("--n")
         .arg("10")
@@ -51,7 +51,7 @@ fn test_calc_command_fast_doubling_method() {
 
 #[test]
 fn test_info_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("info")
         .assert()
         .success()
@@ -60,13 +60,13 @@ fn test_info_command() {
 
 #[test]
 fn test_invalid_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("invalid_cmd").assert().failure();
 }
 
 #[test]
 fn test_compare_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("compare")
         .arg("--n")
         .arg("10")
@@ -78,7 +78,7 @@ fn test_compare_command() {
 
 #[test]
 fn test_sequence_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("sequence")
         .arg("--count")
         .arg("5")
@@ -92,7 +92,7 @@ fn test_sequence_command() {
 
 #[test]
 fn test_sequence_command_offset() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("sequence")
         .arg("--count")
         .arg("3")
@@ -107,7 +107,7 @@ fn test_sequence_command_offset() {
 
 #[test]
 fn test_binet_analysis_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("binet-analysis")
         .arg("--max-n")
         .arg("10")
@@ -118,7 +118,7 @@ fn test_binet_analysis_command() {
 
 #[test]
 fn test_memory_command() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("memory")
         .arg("--n")
         .arg("100")
@@ -129,7 +129,7 @@ fn test_memory_command() {
 
 #[test]
 fn test_calc_invalid_method() {
-    let mut cmd = Command::cargo_bin("fib-bench").unwrap();
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_fib-bench"));
     cmd.arg("calc")
         .arg("--n")
         .arg("10")
