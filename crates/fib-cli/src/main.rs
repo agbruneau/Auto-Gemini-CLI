@@ -103,6 +103,17 @@ enum Commands {
         #[arg(short, long, default_value = "results")]
         output: String,
     },
+
+    /// Compare Rust vs Go Fibonacci implementations
+    CompareGo {
+        /// The Fibonacci index to calculate
+        #[arg(short, long, default_value = "1000")]
+        n: u64,
+
+        /// Number of iterations for timing
+        #[arg(short, long, default_value = "100")]
+        iterations: u32,
+    },
 }
 
 fn main() {
@@ -132,6 +143,9 @@ fn main() {
         }
         Commands::Report { input, output } => {
             commands::report::run(&input, &output);
+        }
+        Commands::CompareGo { n, iterations } => {
+            commands::compare_go::run(n, iterations);
         }
     }
 }

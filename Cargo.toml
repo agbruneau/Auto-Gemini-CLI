@@ -4,6 +4,7 @@ members = [
     "crates/fib-cli",
     "crates/fib-profiler",
     "crates/fib-viz",
+    "crates/fib-go",
 ]
 resolver = "2"
 
