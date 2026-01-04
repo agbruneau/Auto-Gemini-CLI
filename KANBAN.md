@@ -154,16 +154,16 @@
 
 ### Phase 9: Release
 
-- [ ] cargo-audit
-- [ ] Vérif licence
-- [ ] README polish
-- [ ] CHANGELOG.md
-- [ ] Version bump
-- [ ] publish dry-run
-- [ ] **Tag v1.0.0** 🎯
-- [ ] Publication crates.io
-- [ ] GitHub Release
-- [ ] Notes release
+- [x] cargo-audit
+- [x] Vérif licence
+- [x] README polish
+- [x] CHANGELOG.md
+- [x] Version bump
+- [x] publish dry-run
+- [x] **Tag v1.0.0** 🎯
+- [x] Publication crates.io
+- [x] GitHub Release
+- [x] Notes release
 
 </td>
 <td>
