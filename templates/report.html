@@ -17,16 +17,62 @@
         </p>
       </header>
 
-      <nav class="tabs">
-        <button class="tab-btn active" data-tab="overview">Overview</button>
-        <button class="tab-btn" data-tab="complexity">Complexity</button>
-        <button class="tab-btn" data-tab="binet">Binet Accuracy</button>
-        <button class="tab-btn" data-tab="golden">Golden Ratio</button>
+      <nav class="tabs" role="tablist" aria-label="Report Sections">
+        <button
+          id="tab-overview"
+          class="tab-btn active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="overview"
+          tabindex="0"
+          data-tab="overview"
+        >
+          Overview
+        </button>
+        <button
+          id="tab-complexity"
+          class="tab-btn"
+          role="tab"
+          aria-selected="false"
+          aria-controls="complexity"
+          tabindex="-1"
+          data-tab="complexity"
+        >
+          Complexity
+        </button>
+        <button
+          id="tab-binet"
+          class="tab-btn"
+          role="tab"
+          aria-selected="false"
+          aria-controls="binet"
+          tabindex="-1"
+          data-tab="binet"
+        >
+          Binet Accuracy
+        </button>
+        <button
+          id="tab-golden"
+          class="tab-btn"
+          role="tab"
+          aria-selected="false"
+          aria-controls="golden"
+          tabindex="-1"
+          data-tab="golden"
+        >
+          Golden Ratio
+        </button>
       </nav>
 
       <main>
         <!-- Overview Tab -->
-        <section id="overview" class="tab-content active">
+        <section
+          id="overview"
+          class="tab-content active"
+          role="tabpanel"
+          aria-labelledby="tab-overview"
+          tabindex="0"
+        >
           <h2>📊 Executive Summary</h2>
           <div class="metrics-grid">
             <div class="metric-card">
@@ -99,7 +145,13 @@
         </section>
 
         <!-- Complexity Tab -->
-        <section id="complexity" class="tab-content">
+        <section
+          id="complexity"
+          class="tab-content"
+          role="tabpanel"
+          aria-labelledby="tab-complexity"
+          tabindex="0"
+        >
           <h2>⏱️ Complexity Comparison</h2>
           <p>
             Performance comparison between iterative O(n) and matrix O(log n)
@@ -112,7 +164,13 @@
         </section>
 
         <!-- Binet Accuracy Tab -->
-        <section id="binet" class="tab-content">
+        <section
+          id="binet"
+          class="tab-content"
+          role="tabpanel"
+          aria-labelledby="tab-binet"
+          tabindex="0"
+        >
           <h2>🎯 Binet Formula Accuracy</h2>
           <p>
             Analysis of floating-point precision limits for Binet's closed-form
@@ -129,7 +187,13 @@
         </section>
 
         <!-- Golden Ratio Tab -->
-        <section id="golden" class="tab-content">
+        <section
+          id="golden"
+          class="tab-content"
+          role="tabpanel"
+          aria-labelledby="tab-golden"
+          tabindex="0"
+        >
           <h2>φ Golden Ratio Convergence</h2>
           <p>
             Convergence of F(n+1)/F(n) to the golden ratio φ ≈

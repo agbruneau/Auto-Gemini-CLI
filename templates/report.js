@@ -4,17 +4,65 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tab navigation
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+    const tabList = document.querySelector('.tabs');
+
+    function activateTab(button) {
+        const tabId = button.dataset.tab;
+
+        tabButtons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+            btn.setAttribute('tabindex', '-1');
+        });
+
+        tabContents.forEach(content => {
+            content.classList.remove('active');
+        });
+
+        button.classList.add('active');
+        button.setAttribute('aria-selected', 'true');
+        button.setAttribute('tabindex', '0');
+        button.focus();
+
+        document.getElementById(tabId).classList.add('active');
+    }
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const tabId = button.dataset.tab;
-            
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            button.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+            activateTab(button);
         });
+    });
+
+    // Keyboard navigation
+    tabList.addEventListener('keydown', (e) => {
+        const key = e.key;
+        const currentTab = document.activeElement;
+
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
+        if (!Array.from(tabButtons).includes(currentTab)) return;
+
+        let nextTab = null;
+        const index = Array.from(tabButtons).indexOf(currentTab);
+
+        switch (key) {
+            case 'ArrowLeft':
+                nextTab = tabButtons[index - 1] || tabButtons[tabButtons.length - 1];
+                break;
+            case 'ArrowRight':
+                nextTab = tabButtons[index + 1] || tabButtons[0];
+                break;
+            case 'Home':
+                nextTab = tabButtons[0];
+                break;
+            case 'End':
+                nextTab = tabButtons[tabButtons.length - 1];
+                break;
+        }
+
+        if (nextTab) {
+            e.preventDefault();
+            activateTab(nextTab);
+        }
     });
 
     // Load and visualize data
