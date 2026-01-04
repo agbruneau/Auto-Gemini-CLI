@@ -1,7 +1,0 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
-     Running `target\debug\fib-profiler.exe`
-
-thread 'main' (25244) panicked at crates\fib-core\src\iterative.rs:32:28:
-attempt to add with overflow
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-error: process didn't exit successfully: `target\debug\fib-profiler.exe` (exit code: 101)
